@@ -27,10 +27,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Navigation/>
-        <br/>
-
-        <br/><br/>
-        <br/><br/>
         <Route exact path={ROUTES.HOME} component={HomePage}/>
         <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
         <Route path={ROUTES.SIGN_UP} component={SignUpPage}/>

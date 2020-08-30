@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import mapboxgl from 'mapbox-gl';
-import './mapWrapper.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import axios from 'axios';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
@@ -47,12 +45,13 @@ function MapBox (props) {
         });
         
         map.addControl(directions, 'top-left');
+        console.log(directions);
       
     },[]);
 
     return (
         <div>
-            <div style={{position: "absolute", top: 0, right: 0, left: 0, bottom: 0}} ref={el => (mapContainer.current = el)} className="mapWrapper"></div>
+            <div style={{position: "absolute", top: 0, right: 0, left: 0, bottom: 0}} ref={el => (mapContainer.current = el)}></div>
         </div>
     )
 }
