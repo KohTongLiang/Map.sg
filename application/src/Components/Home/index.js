@@ -3,7 +3,7 @@ import { Fab, Typography, Container, Box, Input } from '@material-ui/core';
 import { Create as CreateIcon } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-import MapBoxTest from '../Map/MapBoxTest';
+import MapBoxTest from '../Map';
 
 const useStyles = makeStyles((theme) => ({
     fab: {
