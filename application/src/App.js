@@ -12,15 +12,16 @@ import * as ROUTES from './Constants/routes';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const prefersLightMode = useMediaQuery('(prefers-color-scheme: light)');
 
   const theme = React.useMemo(
     () =>
       createMuiTheme({
         palette: {
-          type: prefersDarkMode ? 'dark' : 'light',
+          type: prefersLightMode ? 'dark' : 'light',
         },
       }),
-    [prefersDarkMode],
+    [prefersLightMode],
   );
 
   return (

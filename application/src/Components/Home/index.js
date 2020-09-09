@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
         margin: 0,
         top: '80vh',
         left: '80vh',
-        position: 'absolute',
+        position: 'fixed',
         zIndex: '10',
     },
 }));
