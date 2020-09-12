@@ -31,23 +31,6 @@ function MapBox (props) {
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
     useEffect(() => {
-        window.navigator.geolocation.watchPosition(position => {
-            setCurrentPoint(currentPoint, ({ lng: position.coords.longitude, lat: position.coords.latitude }));
-            marker.setLngLat({ lng: currentPoint.lng, lat: currentPoint.lat});
-
-            if (map !== null) {
-                map.flyTo({
-                    center: [
-                        currentPoint.lng,
-                        currentPoint.lat
-                    ],
-                    essential: true // this animation is considered essential with respect to prefers-reduced-motion
-                });
-            }
-        });
-    }, [currentPoint])
-    
-    useEffect(() => {
         if (destinationPoint !== null) {
             axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${currentPoint.lng},${currentPoint.lat};${destinationPoint.lng},${destinationPoint.lat}`,{
                 params: {
@@ -98,9 +81,10 @@ function MapBox (props) {
         }
     }, [destinationPoint]);
 
-    // mount map and initialize it.
     useEffect(() => {
+        // init map function
         const initializeMap = ({ setMap, mapContainer }) => {
+
             const map = new mapboxgl.Map({
                 container: mapContainer.current,
                 style: "mapbox://styles/mapbox/streets-v11", // stylesheet location
@@ -108,9 +92,6 @@ function MapBox (props) {
                 zoom: 17,
                 pitch: 45,
             });
-
-            marker.setLngLat({ lng: currentPoint.lng, lat: currentPoint.lat});
-            marker.addTo(map);
         
             map.on("load", () => {
                 // Insert the layer beneath any symbol layer.
@@ -123,42 +104,41 @@ function MapBox (props) {
                     }
                 }
  
-                    map.addLayer(
-                    {
-                        'id': '3d-buildings',
-                        'source': 'composite',
-                        'source-layer': 'building',
-                        'filter': ['==', 'extrude', 'true'],
-                        'type': 'fill-extrusion',
-                        'minzoom': 15,
-                        'paint': {
-                        'fill-extrusion-color': '#aaa',
-                        
-                        // use an 'interpolate' expression to add a smooth transition effect to the
-                        // buildings as the user zooms in
-                        'fill-extrusion-height': [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        15,
-                        0,
-                        15.05,
-                        ['get', 'height']
-                        ],
-                        'fill-extrusion-base': [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        15,
-                        0,
-                        15.05,
-                        ['get', 'min_height']
-                        ],
-                        'fill-extrusion-opacity': 0.6
-                        }
-                    },
-                    labelLayerId
-                );
+                map.addLayer(
+                {
+                    'id': '3d-buildings',
+                    'source': 'composite',
+                    'source-layer': 'building',
+                    'filter': ['==', 'extrude', 'true'],
+                    'type': 'fill-extrusion',
+                    'minzoom': 15,
+                    'paint': {
+                    'fill-extrusion-color': '#aaa',
+                    
+                    // use an 'interpolate' expression to add a smooth transition effect to the
+                    // buildings as the user zooms in
+                    'fill-extrusion-height': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    15,
+                    0,
+                    15.05,
+                    ['get', 'height']
+                    ],
+                    'fill-extrusion-base': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    15,
+                    0,
+                    15.05,
+                    ['get', 'min_height']
+                    ],
+                    'fill-extrusion-opacity': 0.6
+                    }
+                }, labelLayerId);
+
                 setMap(map);
                 map.resize();
             });
@@ -171,19 +151,15 @@ function MapBox (props) {
             });
         };
 
-        if (!map) initializeMap({ setMap, mapContainer });
-    },[map, destinationPoint]);
+        if (!map) {
+            // if map not yet initialized, initialize it
+            initializeMap({ setMap, mapContainer });
+        }
+    },[map, currentPoint, destinationPoint]);
 
     return (
         <div>
-            <div style={{ zIndex: "-1", position: "absolute", top: 0, right: 0, left: 0, bottom: 0}} ref={el => (mapContainer.current = el)}></div>
-
-            <Paper elevation={5}>
-                <h4>Instructions</h4>
-                {routeInstruction && (routeInstruction.forEach(displayInstruction => (
-                    <p>{displayInstruction}</p>
-                )))}
-            </Paper>
+            <div style={{ zIndex: "-1", position: "absolute", width: '100%', height: '100%', top: 0, bottom: 0}} ref={el => (mapContainer.current = el)}></div>
         </div>
     )
 }

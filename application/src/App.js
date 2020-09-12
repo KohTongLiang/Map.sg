@@ -12,16 +12,15 @@ import * as ROUTES from './Constants/routes';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const prefersLightMode = useMediaQuery('(prefers-color-scheme: light)');
 
   const theme = React.useMemo(
     () =>
       createMuiTheme({
         palette: {
-          type: prefersLightMode ? 'dark' : 'light',
+          type: true ? 'dark' : 'light',
         },
       }),
-    [prefersLightMode],
+    [prefersDarkMode],
   );
 
   return (
@@ -32,6 +31,7 @@ function App() {
         <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
         <Route path={ROUTES.SIGN_UP} component={SignUpPage}/>
       </Router>
+      <CssBaseline />
     </ThemeProvider>
   );
 }
