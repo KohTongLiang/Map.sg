@@ -22,17 +22,22 @@ function MapBox (props) {
         lng: props.startPoint.lng,
         lat: props.startPoint.lat,
         zoom: 2,
-    })
-    const [destinationPoint, setDestinationPoint] = useState(null);
+    });
+    const [destinationPoint, setDestinationPoint] = useState({
+        lng: props.endPoint.lng,
+        lat: props.endPoint.lat,
+    });
+
     const [routeInstruction, setRouteInstruction] = useState([]);
     const [map, setMap] = useState(null);
     const mapContainer = useRef("");
     const marker = new mapboxgl.Marker();
+    var userMarker = new mapboxgl.Marker(); // use to track user location
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
     useEffect(() => {
-        if (destinationPoint !== null) {
-            axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${currentPoint.lng},${currentPoint.lat};${destinationPoint.lng},${destinationPoint.lat}`,{
+        if (props.startPoint !== null && props.endPoint !== null) {
+            axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${props.startPoint.lng},${props.startPoint.lat};${props.endPoint.lng},${props.endPoint.lat}`,{
                 params: {
                     access_token: mapboxgl.accessToken,
                     steps: true,
@@ -52,6 +57,7 @@ function MapBox (props) {
 
                 // plotting route on the map
                 var coordinates = response.data.routes[0].geometry;
+                console.log(coordinates);
 
                 map.addSource('LineString', {
                     'type': 'geojson',
@@ -73,13 +79,13 @@ function MapBox (props) {
                 });
 
                 let destinationMarker = new mapboxgl.Marker();
-                destinationMarker.setLngLat(destinationPoint);
+                destinationMarker.setLngLat(props.endPoint);
                 destinationMarker.addTo(map);
             }).catch(function (error) {
                 console.log(error);
             });
         }
-    }, [destinationPoint]);
+    }, [props.endPoint]);
 
     useEffect(() => {
         // init map function
@@ -103,7 +109,8 @@ function MapBox (props) {
                         break;
                     }
                 }
- 
+                
+                // Code for making the buildings look  3D on the map
                 map.addLayer(
                 {
                     'id': '3d-buildings',
@@ -143,12 +150,15 @@ function MapBox (props) {
                 map.resize();
             });
 
-            map.on('click', (e) => {
-                setDestinationPoint(destinationPoint => ({
-                    lng: e.lngLat.lng,
-                    lat: e.lngLat.lat,
-                }));
-            });
+            /*
+            * on click set end point, temporarily disabled
+            */
+            // map.on('click', (e) => {
+            //     setDestinationPoint(destinationPoint => ({
+            //         lng: e.lngLat.lng,
+            //         lat: e.lngLat.lat,
+            //     }));
+            // });
         };
 
         if (!map) {
@@ -156,6 +166,17 @@ function MapBox (props) {
             initializeMap({ setMap, mapContainer });
         }
     },[map, currentPoint, destinationPoint]);
+
+    useEffect(() => {
+        if (map != null) {
+            map.flyTo({
+                center: [props.userLocation.lng, props.userLocation.lat]
+            });
+
+            marker.setLngLat([props.userLocation.lng, props.userLocation.lat]);
+            marker.addTo(map);
+        }
+    }, [props.userLocation])
 
     return (
         <div>

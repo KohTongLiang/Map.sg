@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Fab, Paper, Typography, Container, Box, Input, Slide,
-        Dialog, DialogTitle, DialogContent, DialogContentText, Button,
-        DialogActions, FormGroup, FormControl, InputLabel, IconButton, Toolbar,
-        AppBar } from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon,
-    Create as CreateIcon, Search as SearchIcon, Navigation as NavigationIcon,
-    Close as CloseIcon } from '@material-ui/icons';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Fab, Paper, Container } from '@material-ui/core';
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
 
 import MapBoxTest from '../Map';
+import RoutePlanner from './RoutePlanner';
 
-// slide up transition fragment
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const useStyles = makeStyles((theme) => ({
     navFab: {
@@ -44,27 +36,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home (props) {
-    const [startLat, setStartLat] = useState(1.3483);
-    const [startLng, setStartLng] = useState(103.6831);
-    const [endLat, setEndLat] = useState(1.5563);
-    const [endLng, setEndLng] = useState(103.6631);
+    const [startLocation, setStartLocation] = useState({
+        lat: 1.3483,
+        lng: 103.6831,
+    });
+    const [endLocation, setEndlocation] = useState({
+        lat: 1.5563,
+        lng: 103.6631,
+    })
     const [plannerDialog, setPlannerDialog] = useState(false);
-    const [userLocation, setUserLocation] = useState(null);
+    const [userLocation, setUserLocation] = useState({lng: 0, lat: 0});
     const classes = useStyles();
 
     // check userlocation change
     useEffect(() => {
-        console.log(userLocation);
+        //console.log(userLocation);
     }, [userLocation])
 
     const getUserLocation = () => {
         window.navigator.geolocation.watchPosition(position => {
+            // to be modified
             setUserLocation(userLocation => ({ lng: position.coords.longitude, lat: position.coords.latitude }));
+            setStartLocation(startLocation => ({ lng: position.coords.longitude, lat: position.coords.latitude }));
         });
     };
 
     const planTrip = () => {
         setPlannerDialog(true);
+    }
+
+    const dialogHandler = () => {
+        setPlannerDialog(!plannerDialog);
+    }
+
+    const routeHandler = (startObj, endObj) => {
+
+        // null case where user location is used instead
+        if (startObj !== null) {
+            setStartLocation(startObj);
+        }
+
+        if (endObj !== null) {
+            setEndlocation(endObj);
+        }
     }
 
     return (
@@ -74,57 +88,19 @@ function Home (props) {
                     <h4>Placeholder</h4>
                 </Container>
             </Paper>
+
             <Fab className={classes.navFab} color="primary">
                 <MyLocationIcon onClick={() => getUserLocation()} />
             </Fab>
+
             <Fab className={classes.searchFab} color="primary">
                 <DirectionsIcon onClick={() => planTrip()}/>
             </Fab>
-            <MapBoxTest userLocation={userLocation} startPoint={{lat: startLat, lng: startLng}} endPoint={{lat: endLat, lng: endLng}} />
 
-            {/* slide up directions setter */}
-            <Dialog
-                fullScreen
-                open={plannerDialog}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={() => setPlannerDialog(false)}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={() => setPlannerDialog(false)} aria-label="close">
-                        <CloseIcon />
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Sound
-                        </Typography>
-                        {/* <Button autoFocus color="inherit" onClick={handleClose}>
-                            save
-                        </Button> */}
-                    </Toolbar>
-                </AppBar>
-                <Container>
-                    <form onSubmit={() => console.log('s')}>
-                        <FormGroup>
-                            <FormControl>
-                            <InputLabel>Start Location</InputLabel>
-                            <Input name="startLocation"/>
-                            </FormControl>
-                        </FormGroup>
-                        <FormGroup>
-                            <FormControl>
-                            <InputLabel>End Location</InputLabel>
-                            <Input name="endLocation"/>
-                            </FormControl>
-                        </FormGroup>
-                        <FormGroup>
-                            <Button type="submit" color="inherit">Plan</Button>
-                        </FormGroup>
-                    </form>
-                </Container>
-            </Dialog>
+            <MapBoxTest userLocation={userLocation} startPoint={startLocation} endPoint={endLocation} />
+
+            <RoutePlanner userLocation={userLocation} plannerDialog={plannerDialog} toggleDialog={dialogHandler}
+                getUserLocation={() => getUserLocation()} routeHandler={routeHandler} classes={classes} />
         </div>
     )
 }
