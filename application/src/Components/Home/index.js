@@ -3,7 +3,7 @@ import { Fab, Paper, Container } from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import MapBoxTest from '../Map';
+import Map from '../Map';
 import RoutePlanner from './RoutePlanner';
 
 
@@ -36,14 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home (props) {
-    const [startLocation, setStartLocation] = useState({
-        lat: 1.3483,
-        lng: 103.6831,
-    });
-    const [endLocation, setEndlocation] = useState({
-        lat: 1.5563,
-        lng: 103.6631,
-    })
+    const [startLocation, setStartLocation] = useState({});
+    const [endLocation, setEndlocation] = useState({});
     const [plannerDialog, setPlannerDialog] = useState(false);
     const [userLocation, setUserLocation] = useState({lng: 0, lat: 0});
     const classes = useStyles();
@@ -97,7 +91,7 @@ function Home (props) {
                 <DirectionsIcon onClick={() => planTrip()}/>
             </Fab>
 
-            <MapBoxTest userLocation={userLocation} startPoint={startLocation} endPoint={endLocation} />
+            <Map userLocation={userLocation} startPoint={startLocation} endPoint={endLocation} />
 
             <RoutePlanner userLocation={userLocation} plannerDialog={plannerDialog} toggleDialog={dialogHandler}
                 getUserLocation={() => getUserLocation()} routeHandler={routeHandler} classes={classes} />

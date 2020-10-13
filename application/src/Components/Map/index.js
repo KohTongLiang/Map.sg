@@ -6,37 +6,40 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
+import { Paper, Container, IconButton, Typography } from '@material-ui/core';
+import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
         position: 'fixed',
-        top: 0,
-        width: "70%",
+        width: "100%",
         zIndex: '5',
+        flexGrow: 1,
+    },
+    instr: {
+        flexGrow: 1,
+    },
+    stepsButton: {
+        marginRight: theme.spacing(2),
     },
   }));
 
 function MapBox (props) {
-    const [currentPoint, setCurrentPoint] = useState({
-        lng: props.startPoint.lng,
-        lat: props.startPoint.lat,
-        zoom: 2,
-    });
-    const [destinationPoint, setDestinationPoint] = useState({
-        lng: props.endPoint.lng,
-        lat: props.endPoint.lat,
-    });
-
-    const [routeInstruction, setRouteInstruction] = useState([]);
+    const [currentPoint, setCurrentPoint] = useState({});
+    const [destinationPoint, setDestinationPoint] = useState({});
+    const [routeInstruction, setRouteInstruction] = useState(null);
+    const [ongoingTrip, setOngoingTrip] = useState(false);
+    const [stepNo, setStepNo] = useState(null);
+    const [route, setRoute] = useState(null);
     const [map, setMap] = useState(null);
     const mapContainer = useRef("");
     const marker = new mapboxgl.Marker();
     var userMarker = new mapboxgl.Marker(); // use to track user location
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
+    const classes = useStyles();
 
     useEffect(() => {
-        if (props.startPoint !== null && props.endPoint !== null) {
+        if (props.startPoint !== {} && props.endPoint !== {}) {
             axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${props.startPoint.lng},${props.startPoint.lat};${props.endPoint.lng},${props.endPoint.lat}`,{
                 params: {
                     access_token: mapboxgl.accessToken,
@@ -46,18 +49,36 @@ function MapBox (props) {
                     geometries: 'geojson',
                 }
             }).then(function (response) {
-                // console.log(response.data.routes[0].legs[0]);
+                //console.log(response.data.routes[0].legs[0]);
 
+                // setting up path
+                setStepNo(0);
+                setRouteInstruction([]);
+                var steps = 1;
                 response.data.routes[0].legs[0].steps.forEach(instruction => {
-                    // console.log(instruction.maneuver.instruction)
-                    setRouteInstruction(routeInstruction => [...routeInstruction, instruction.maneuver.instruction]);
+                    var el = document.createElement('div');
+                    el.className = 'marker';
+                    // el.style.backgroundImage = 'url(https://placekitten.com/g/120/120/)';
+                    el.style.backgroundColor = "black";
+                    el.style.textAlign = "center";
+                    el.textContent = steps;
+                    el.style.width = '30px';
+                    el.style.height = '30px';
+                    el.addEventListener('click', function () {
+                        window.alert(instruction.maneuver.instruction);
+                    });
+
+                    let stepMarkers = new mapboxgl.Marker(el);
+                    stepMarkers.setLngLat(instruction.maneuver.location);
+                    stepMarkers.addTo(map);
+                    setRouteInstruction(routeInstruction => [...routeInstruction, instruction]);
+                    steps++;
                 });
+
                 // display step by step instruction
-
-
                 // plotting route on the map
                 var coordinates = response.data.routes[0].geometry;
-                console.log(coordinates);
+                setRoute(coordinates);
 
                 map.addSource('LineString', {
                     'type': 'geojson',
@@ -78,9 +99,15 @@ function MapBox (props) {
                     }
                 });
 
+                let startMarker = new mapboxgl.Marker();
+                startMarker.setLngLat(props.startPoint);
+                startMarker.addTo(map);
+
                 let destinationMarker = new mapboxgl.Marker();
                 destinationMarker.setLngLat(props.endPoint);
                 destinationMarker.addTo(map);
+
+                setUpTrafficImages();
             }).catch(function (error) {
                 console.log(error);
             });
@@ -94,7 +121,7 @@ function MapBox (props) {
             const map = new mapboxgl.Map({
                 container: mapContainer.current,
                 style: "mapbox://styles/mapbox/streets-v11", // stylesheet location
-                center: [currentPoint.lng, currentPoint.lat],
+                center: [103.6831, 1.3483],
                 zoom: 17,
                 pitch: 45,
             });
@@ -178,8 +205,46 @@ function MapBox (props) {
         }
     }, [props.userLocation])
 
+    const setUpTrafficImages = () => {
+        axios.get('https://api.data.gov.sg/v1/transport/traffic-images').then(function (response) {
+                // console.log(response.data.items);
+
+                response.data.items[0].cameras.map(camera => {
+                    var el = document.createElement('img');
+                    el.className = 'marker';
+                    el.src = camera.image;
+                    // el.style.backgroundImage = camera.image;
+                    el.style.width = '120px';
+                    el.style.height = '120px';
+                    // el.addEventListener('click', function () {
+                    //     window.alert(instruction.maneuver.instruction);
+                    // });
+
+                    let stepMarkers = new mapboxgl.Marker(el);
+                    stepMarkers.setLngLat([camera.location.longitude, camera.location.latitude]);
+                    stepMarkers.addTo(map);
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
+
     return (
         <div>
+            {(routeInstruction && routeInstruction.length > 0) && (
+                <Paper className={classes.paper} elevation={5}>
+                    <IconButton className={classes.stepsButton} color="inherit" onClick={() => stepNo > 0 ? setStepNo(stepNo => stepNo - 1) : stepNo}>
+                        <ChevronLeft/>
+                    </IconButton>
+                    <Typography variant="p" className={classes.instr}>
+                        {routeInstruction[stepNo].maneuver.instruction}
+                    </Typography>
+                    <IconButton className={classes.stepsButton} color="inherit" onClick={() => stepNo < routeInstruction.length - 1 ? setStepNo(stepNo => stepNo + 1) : stepNo}>
+                        <ChevronRight/>
+                    </IconButton>
+                </Paper>
+            )}
+
             <div style={{ zIndex: "-1", position: "absolute", width: '100%', height: '100%', top: 0, bottom: 0}} ref={el => (mapContainer.current = el)}></div>
         </div>
     )

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
-import { Fab, Paper, Typography, Container, Box, Input, Slide,
-    Dialog, DialogTitle, DialogContent, DialogContentText, Button,
-    DialogActions, FormGroup, FormControl, InputLabel, IconButton, Toolbar,
+import { Typography, Container, Input, Slide,
+    Dialog, Button, FormGroup, FormControl, InputLabel, IconButton, Toolbar,
     AppBar, FormLabel } from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon,
 Close as CloseIcon, Search as SearchIcon } from '@material-ui/icons';
@@ -25,7 +24,7 @@ function RoutePlanner (props) {
 
     // temporary
     useEffect(() => {
-        if (props.userLocation.lng != 0) {
+        if (props.userLocation.lng !== 0) {
             setStartLocationSearch(props.userLocation.lng + " : " + props.userLocation.lat);
         }
     }, [props.userLocation])
