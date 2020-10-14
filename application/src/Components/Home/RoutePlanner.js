@@ -8,7 +8,6 @@ import { MyLocation as MyLocationIcon, Directions as DirectionsIcon,
 Close as CloseIcon, Search as SearchIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });

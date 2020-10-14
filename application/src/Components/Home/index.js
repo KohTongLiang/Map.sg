@@ -55,6 +55,11 @@ function Home (props) {
         });
     };
 
+    // debug function to forcefully override user current location
+    const debugOverrideUserLocation = lngLat => {
+        setUserLocation(userLocation => lngLat);
+    }
+
     const planTrip = () => {
         setPlannerDialog(true);
     }
@@ -91,7 +96,9 @@ function Home (props) {
                 <DirectionsIcon onClick={() => planTrip()}/>
             </Fab>
 
-            <Map userLocation={userLocation} startPoint={startLocation} endPoint={endLocation} />
+            {/* added debug function */}
+            <Map userLocation={userLocation} startPoint={startLocation} endPoint={endLocation}
+                debugOverrideUserLocation={debugOverrideUserLocation} />
 
             <RoutePlanner userLocation={userLocation} plannerDialog={plannerDialog} toggleDialog={dialogHandler}
                 getUserLocation={() => getUserLocation()} routeHandler={routeHandler} classes={classes} />

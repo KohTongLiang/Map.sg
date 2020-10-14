@@ -32,8 +32,9 @@ function MapBox (props) {
     const [stepNo, setStepNo] = useState(null);
     const [route, setRoute] = useState(null);
     const [map, setMap] = useState(null);
+    const [stepMarkers, setStepMarkers] = useState([]);
     const mapContainer = useRef("");
-    const marker = new mapboxgl.Marker();
+    var marker = new mapboxgl.Marker();
     var userMarker = new mapboxgl.Marker(); // use to track user location
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
     const classes = useStyles();
@@ -64,19 +65,21 @@ function MapBox (props) {
                     el.textContent = steps;
                     el.style.width = '30px';
                     el.style.height = '30px';
-                    el.addEventListener('click', function () {
-                        window.alert(instruction.maneuver.instruction);
-                    });
+                    // el.addEventListener('click', function () {
+                    //     window.alert(instruction.maneuver.instruction);
+                    // });
 
-                    let stepMarkers = new mapboxgl.Marker(el);
-                    stepMarkers.setLngLat(instruction.maneuver.location);
-                    stepMarkers.addTo(map);
+                    let step = new mapboxgl.Marker(el);
+                    step.setLngLat(instruction.maneuver.location);
+                    step.addTo(map);
                     setRouteInstruction(routeInstruction => [...routeInstruction, instruction]);
+                    setStepMarkers(stepMarkers => [...stepMarkers, step]);
                     steps++;
                 });
 
                 // display step by step instruction
                 // plotting route on the map
+                console.log(response.data.routes);
                 var coordinates = response.data.routes[0].geometry;
                 setRoute(coordinates);
 
@@ -178,14 +181,16 @@ function MapBox (props) {
             });
 
             /*
-            * on click set end point, temporarily disabled
+            * FOR DEBUGGING and DEMO only
+            * on click set user current location
+            * used as temporary override user location
             */
-            // map.on('click', (e) => {
-            //     setDestinationPoint(destinationPoint => ({
-            //         lng: e.lngLat.lng,
-            //         lat: e.lngLat.lat,
-            //     }));
-            // });
+            map.on('click', (e) => {
+                props.debugOverrideUserLocation({
+                    lng: e.lngLat.lng,
+                    lat: e.lngLat.lat,
+                });
+            });
         };
 
         if (!map) {
@@ -200,33 +205,48 @@ function MapBox (props) {
                 center: [props.userLocation.lng, props.userLocation.lat]
             });
 
+
             marker.setLngLat([props.userLocation.lng, props.userLocation.lat]);
+
+            console.log(stepMarkers);
+
+            if (marker !== undefined && stepMarkers[stepNo] !== undefined) {
+                if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= 1 ||
+                    marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng >= -1) &&
+                    (marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat <= 1 ||
+                    marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat >= -1)) {
+                    stepMarkers[stepNo].remove();
+                    setStepNo(stepNo => stepNo + 1);
+                }
+            }
+            
+            // console.log(marker.getLngLat());
             marker.addTo(map);
         }
     }, [props.userLocation])
 
     const setUpTrafficImages = () => {
         axios.get('https://api.data.gov.sg/v1/transport/traffic-images').then(function (response) {
-                // console.log(response.data.items);
+            // console.log(response.data.items);
 
-                response.data.items[0].cameras.map(camera => {
-                    var el = document.createElement('img');
-                    el.className = 'marker';
-                    el.src = camera.image;
-                    // el.style.backgroundImage = camera.image;
-                    el.style.width = '120px';
-                    el.style.height = '120px';
-                    // el.addEventListener('click', function () {
-                    //     window.alert(instruction.maneuver.instruction);
-                    // });
+            response.data.items[0].cameras.map(camera => {
+                var el = document.createElement('img');
+                el.className = 'marker';
+                el.src = camera.image;
+                // el.style.backgroundImage = camera.image;
+                el.style.width = '120px';
+                el.style.height = '120px';
+                // el.addEventListener('click', function () {
+                //     window.alert(instruction.maneuver.instruction);
+                // });
 
-                    let stepMarkers = new mapboxgl.Marker(el);
-                    stepMarkers.setLngLat([camera.location.longitude, camera.location.latitude]);
-                    stepMarkers.addTo(map);
-                });
-            }).catch(function (error) {
-                console.log(error);
+                let stepMarkers = new mapboxgl.Marker(el);
+                stepMarkers.setLngLat([camera.location.longitude, camera.location.latitude]);
+                stepMarkers.addTo(map);
             });
+        }).catch(function (error) {
+            console.log(error);
+        });
     }
 
     return (
