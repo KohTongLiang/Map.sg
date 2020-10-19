@@ -1,7 +1,7 @@
 import React from 'react';
  
 import {Button} from '@material-ui/core';
-import { withFirebase } from '../Firebase';
+import { withFirebase } from '../../Entity/Firebase';
 
 const SignOutButton = ({ firebase }) => (
   <div onClick={firebase.doSignOut}>

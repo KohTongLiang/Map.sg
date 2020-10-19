@@ -3,9 +3,8 @@ import { Fab, Paper, Container } from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Map from '../Map';
-import RoutePlanner from './RoutePlanner';
-
+import Map from '../../Control/Map';
+import RoutePlanner from '../../Control/Route/RoutePlanner';
 
 const useStyles = makeStyles((theme) => ({
     navFab: {

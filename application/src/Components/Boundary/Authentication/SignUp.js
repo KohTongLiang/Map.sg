@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { withFirebase } from '../Firebase';
+import { withFirebase } from '../../Entity/Firebase';
 import { useForm, Controller } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import { Container, Box, FormGroup, FormControl, Button,
     Input, InputLabel, FormHelperText, Snackbar, makeStyles,
     Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress  } from '@material-ui/core';
-import * as ROUTES from '../../Constants/routes';
+import * as ROUTES from '../../../Constants/routes';
 
 const useStyles = makeStyles((theme) => ({
         errorText: {

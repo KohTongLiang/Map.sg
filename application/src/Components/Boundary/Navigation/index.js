@@ -7,9 +7,10 @@ SwipeableDrawer } from '@material-ui/core';
 import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon,
     Menu as MenuIcon, AccountCircle, ExitToApp as ExitToAppIcon} from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import * as VALUES from '../../Constants/values';
-import * as ROUTES from '../../Constants/routes';
-import { AuthUserContext } from '../Session';
+import * as VALUES from '../../../Constants/values';
+import * as ROUTES from '../../../Constants/routes';
+import { AuthUserContext } from '../../Entity/Session';
+// import SignOutButton from '../Authentication/SignOut';
 import SignOutButton from '../Authentication/SignOut';
 
 const useStyles = makeStyles((theme) => ({
