@@ -13,6 +13,15 @@ const config = {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID,
   };
 
+
+   /* *
+    * 
+    * Configuration file that stores firebase configuration and API methods
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
 class Firebase {
     constructor () {
         app.initializeApp(config);

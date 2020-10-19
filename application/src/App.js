@@ -33,7 +33,10 @@ function App() {
 
 /* *
   * 
-  * Main entry point of the applications.
+  * Different pages are organized into routes for ease of navigation for the users.
+  * Router component contains route which are linked to the individual pages packaged
+  * as components. Navigation component is loaded here as navigation will remain fixed
+  * throughout all pages.
   * 
   * @Koh Tong Liang
   * @Version 1.0

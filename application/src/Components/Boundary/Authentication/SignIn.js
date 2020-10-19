@@ -14,9 +14,9 @@ const useStyles = makeStyles((theme) => ({
     })
 );
 
-
 /* *
  * 
+ * Sign in page to take in user inputs and authenticate user inputs
  * 
  * @Koh Tong Liang
  * @Version 1.0
@@ -31,8 +31,7 @@ const SignInPage = (props) => {
     const onSubmit = data => {
         props.firebase.doSignInWithEmailAndPassword(data.email, data.password).then(() => {
             props.history.push(ROUTES.HOME);
-        })
-        .catch(error => {
+        }).catch(error => {
             setError(error.message);
             setOpen(true);
         });

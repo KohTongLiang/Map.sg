@@ -4,6 +4,16 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../../Constants/routes';
 import AuthUserContext from './context';
 
+
+ /* *
+    * 
+    * Higher-order-component to allow child components to access auth user context
+    * to determine if user is authenticated
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
 const withAuthorization = condition => Component => {
     class WithAuthorization  extends React.Component {
         componentDidMount() {

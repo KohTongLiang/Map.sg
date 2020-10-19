@@ -12,6 +12,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+/* *
+* 
+* Routeplanner component that handle planning of route. User searches start and endlocation
+* and the data is stored in hooks and returned to the main component
+* 
+* @Koh Tong Liang
+* @Version 1.0
+* @Since 19/10/2018
+* */
 function RoutePlanner (props) {
     const [startLocationSearch, setStartLocationSearch] = useState('');
     const [endLocationSearch, setEndLocationSearch] = useState('');
@@ -28,6 +38,15 @@ function RoutePlanner (props) {
         }
     }, [props.userLocation])
 
+    /* *
+    * 
+    * Search mapbox api with user input for start location and all locations similar to the query
+    * will be returned to the component. User chooses the location he is looking for, and selectes it.
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     const searchStartLocation = () => {
         axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${startLocationSearch}.json`,{
             params: {
@@ -53,6 +72,15 @@ function RoutePlanner (props) {
         });
     }
 
+   /* *
+    * 
+    * When user select the location they want, the coordinates is stored in hooks and later
+    * retrieved for route searching
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     const processStartLocation = (geometryArr, placeName) => {
         setSelectedStartLocation({
             lng: geometryArr[0],

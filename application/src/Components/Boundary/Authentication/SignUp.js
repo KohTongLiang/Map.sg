@@ -14,6 +14,15 @@ const useStyles = makeStyles((theme) => ({
     })
 );
 
+/* *
+ * 
+ * For users that do not have a user account, they may wish to create a new account.
+ * Sign Up Page takes in inputs given by users and create an account for them.
+ * 
+ * @Koh Tong Liang
+ * @Version 1.0
+ * @Since 19/10/2018
+ * */
 function SignUpPage (props) {
     const {register, handleSubmit, control, errors } = useForm();
     const [open, setOpen] = useState(false);
@@ -24,6 +33,14 @@ function SignUpPage (props) {
     const passwordStrengthIndicator = ['very weak', 'weak', 'weak', 'medium', 'strong'];
 
 
+ /* *
+    * 
+    * Validate user inputs before calling firebase API to register user account
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     const onSubmit = data => {
         if (data.passwordOne === data.passwordTwo) {
             props.firebase.doCreateUserWithEmailAndPassword(data.email, data.passwordOne).then(authUser => {

@@ -34,18 +34,53 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
+/* *
+ * 
+ * Home page is where all subcomponents will be loaded into.
+ * 
+ * @Koh Tong Liang
+ * @Version 1.0
+ * @Since 19/10/2018
+ * */
 function Home (props) {
+    /* *
+    * 
+    * const [x,setX] = useState() are essentially get and set for a variable/attribute
+    * they will be used throughout the program as a way to store global values among some
+    * of the components.
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     const [startLocation, setStartLocation] = useState({});
     const [endLocation, setEndlocation] = useState({});
     const [plannerDialog, setPlannerDialog] = useState(false);
     const [userLocation, setUserLocation] = useState({lng: 0, lat: 0});
     const classes = useStyles();
 
-    // check userlocation change
+   /* *
+    * 
+    * Actions which will be taken here when user location is changed
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     useEffect(() => {
         //console.log(userLocation);
     }, [userLocation])
 
+    /* *
+    * 
+    * Calls browser location service to constantly watch user's location and update
+    * the hooks storing userlocation
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     const getUserLocation = () => {
         window.navigator.geolocation.watchPosition(position => {
             // to be modified
@@ -67,8 +102,16 @@ function Home (props) {
         setPlannerDialog(!plannerDialog);
     }
 
+    /* *
+    * 
+    * Once user has selected the starting location and ending location,
+    * the values are validated and stored in hooks.
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
     const routeHandler = (startObj, endObj) => {
-
         // null case where user location is used instead
         if (startObj !== null) {
             setStartLocation(startObj);

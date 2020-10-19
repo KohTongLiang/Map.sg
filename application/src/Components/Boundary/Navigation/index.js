@@ -10,7 +10,6 @@ import { useHistory } from 'react-router-dom';
 import * as VALUES from '../../../Constants/values';
 import * as ROUTES from '../../../Constants/routes';
 import { AuthUserContext } from '../../Entity/Session';
-// import SignOutButton from '../Authentication/SignOut';
 import SignOutButton from '../Authentication/SignOut';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +24,14 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
+  /* *
+    * 
+    * Handle navigation bar events located at the bottom of the application
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2018
+    * */
 const Navigation = () => { 
     const history = useHistory();
     const [value, setValue] = React.useState(0);
@@ -49,13 +56,6 @@ const Navigation = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const toggleDrawer = (anchor, open) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
-        }
-        setState({ ...state, [anchor]: open });
     };
 
     return (
