@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Navigation from './Components/Boundary/Navigation';
-import HomePage from './Components/Boundary/Home';
-import SignInPage from './Components/Boundary/Authentication/SignIn';
-import SignUpPage from './Components/Boundary/Authentication/SignUp';
+import Navigation from './Components/Navigation';
+import HomePage from './Components/Home';
+import SignInPage from './Components/Authentication/SignIn';
+import SignUpPage from './Components/Authentication/SignUp';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { withAuthentication } from './Components/Entity/Session';
+import { withAuthentication } from './Components/Session';
 import { useMediaQuery, createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 
 import * as ROUTES from './Constants/routes';
@@ -17,7 +17,7 @@ import * as ROUTES from './Constants/routes';
  * 
  * @Koh Tong Liang
  * @Version 1.0
- * @Since 19/10/2018
+ * @Since 19/10/2020
  * */
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -33,7 +33,10 @@ function App() {
 
 /* *
   * 
-  * Main entry point of the applications.
+  * Different pages are organized into routes for ease of navigation for the users.
+  * Router component contains route which are linked to the individual pages packaged
+  * as components. Navigation component is loaded here as navigation will remain fixed
+  * throughout all pages.
   * 
   * @Koh Tong Liang
   * @Version 1.0
