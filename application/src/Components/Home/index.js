@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 /* *
  * 
  * Home page is where all subcomponents will be loaded into.

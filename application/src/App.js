@@ -17,7 +17,7 @@ import * as ROUTES from './Constants/routes';
  * 
  * @Koh Tong Liang
  * @Version 1.0
- * @Since 19/10/2018
+ * @Since 19/10/2020
  * */
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');

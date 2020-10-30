@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { withFirebase } from '../../Entity/Firebase';
+import { withFirebase } from '../Entity/Firebase';
 import { Container, FormGroup, makeStyles, FormControl, Button,
      Input, InputLabel, FormHelperText, Snackbar, Box } from '@material-ui/core';
 
-import * as ROUTES from '../../../Constants/routes';
+import * as ROUTES from '../../Constants/routes';
 
 const useStyles = makeStyles((theme) => ({
         errorText: {
