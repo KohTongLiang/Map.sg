@@ -1,6 +1,5 @@
 import { GET_USER_LOCATION, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
 
-
 /**
  * Home reducers to update states belonging to Home view
  * 
@@ -12,10 +11,10 @@ import { GET_USER_LOCATION, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } f
 const initialState = {
     routePlannerView: false,
     trafficImagesView: false,
-    userLocation: {}
+    userLocation: {},
 }
 
-function homeReducer (state = initialState, action) {
+function HomeReducer (state = initialState, action) {
 
     // determine what action to perform and which state to update
     switch (action.type) {
@@ -35,4 +34,4 @@ function homeReducer (state = initialState, action) {
     return state;
 }
 
-export default homeReducer;
+export default HomeReducer;

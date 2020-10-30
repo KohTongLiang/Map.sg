@@ -20,6 +20,8 @@ export const TOGGLE_ROUTE_PLANNER = 'TOGGLE_ROUTE_PLANNER';
 /**
  * Action types for Navigation/Route Planner
  */
+export const SEARCH_START_LOCATION = 'SEARCH_START_LOCATION';
+export const SEARCH_END_LOCATION = 'SEARCH_END_LOCATION';
 export const PLAN_ROUTE = 'PLAN_ROUTE';
 
 /**

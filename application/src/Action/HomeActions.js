@@ -21,7 +21,6 @@ export function getUserLocation (payload) {
     return { type: GET_USER_LOCATION, payload };
 }
 
-
 /**
  * Open route planner menu
  */

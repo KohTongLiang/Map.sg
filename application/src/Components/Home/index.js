@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 function mapDispatchToProps (dispatch) {
     return {
-        toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView))
+        toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
     }
 }
 
@@ -103,8 +103,7 @@ function HomeView (props) {
         setPlannerDialog(!plannerDialog);
     }
 
-    /* *
-    * 
+ /* *
     * Once user has selected the starting location and ending location,
     * the values are validated and stored in hooks.
     * 
@@ -125,7 +124,8 @@ function HomeView (props) {
 
     // open route planner form page
     const toggleRoutePlanner = () => {
-        props.toggleRoutePlanner(true);
+        setPlannerDialog(!plannerDialog);
+        props.toggleRoutePlanner({plannerDialog});
     }
 
     return (
@@ -148,15 +148,14 @@ function HomeView (props) {
             <Map userLocation={userLocation} startPoint={startLocation} endPoint={endLocation}
                 debugOverrideUserLocation={debugOverrideUserLocation} />
 
-            <RoutePlanner userLocation={userLocation} plannerDialog={plannerDialog} toggleDialog={dialogHandler}
-                getUserLocation={() => getUserLocation()} routeHandler={routeHandler} classes={classes} />
+            <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
         </div>
     )
 }
 
-const home = connect(
+const Home = connect(
     null,
     mapDispatchToProps,
     )(HomeView);
-    
-export default home;
+
+export default Home;

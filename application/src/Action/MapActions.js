@@ -1,5 +1,4 @@
 
-
 /**
  * Action definitions. Defines action input, types and payload that will be delivered to the reducers
  * 
