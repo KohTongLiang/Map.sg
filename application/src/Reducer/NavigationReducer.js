@@ -1,4 +1,4 @@
-import { SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE } from '../Constants/actionTypes';
+import { SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE, PROCESS_START_LOCATION, PROCESS_END_LOCATION } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -13,6 +13,7 @@ const initialState = {
     endLocation: [],
     startLocationSearchResult: [],
     endLocationSearchResult: [],
+    navigationRoute: []
 }
 
 function NavigationReducer (state = initialState, action) {
@@ -28,8 +29,21 @@ function NavigationReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 endLocationSearchResult: state.endLocationSearchResult.concat(action.payload)
             });
+
+        case PROCESS_START_LOCATION:
+            return Object.assign({}, state, {
+                startLocationSearchResult: initialState.startLocationSearchResult,
+                startLocation: state.startLocation.concat({lng: action.payload.geometry.coordinates[0], lat: action.payload.geometry.coordinates[1]}),
+            });
+        case PROCESS_END_LOCATION:
+            return Object.assign({}, state, {
+                endLocationSearchResult: initialState.endLocationSearchResult,
+                endLocation: state.endLocation.concat({lng: action.payload.geometry.coordinates[0], lat: action.payload.geometry.coordinates[1]}),
+            });
         case PLAN_ROUTE:
-            break;
+            return Object.assign({}, state, {
+                navigationRoute: state.navigationRoute.concat(action.payload),
+            });
         default:
     } // end of switch case
 

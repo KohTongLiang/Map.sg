@@ -35,16 +35,7 @@ const useStyles = makeStyles((theme) => ({
     * @Version 1.0
     * @Since 19/10/2018
     * */
-
-// function MapBox() {
-//     return (
-//         <MapBoxController>
-//             <MapBoxView />
-//         </MapBoxController>
-//     )
-// }
-
-function MapBox (props,children) {
+function MapBox (props) {
     const [currentPoint, setCurrentPoint] = useState({});
     const [destinationPoint, setDestinationPoint] = useState({});
     const [routeInstruction, setRouteInstruction] = useState(null);
@@ -69,83 +60,83 @@ function MapBox (props,children) {
     * @Version 1.0
     * @Since 19/10/2018
     * */
-    useEffect(() => {
-        if (props.startPoint !== {} && props.endPoint !== {}) {
-            axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${props.startPoint.lng},${props.startPoint.lat};${props.endPoint.lng},${props.endPoint.lat}`,{
-                params: {
-                    access_token: mapboxgl.accessToken,
-                    steps: true,
-                    banner_instructions: true,
-                    voice_instructions: true,
-                    geometries: 'geojson',
-                }
-            }).then(function (response) {
-                //console.log(response.data.routes[0].legs[0]);
+    // useEffect(() => {
+    //     if (props.startPoint !== {} && props.endPoint !== {}) {
+    //         axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${props.startPoint.lng},${props.startPoint.lat};${props.endPoint.lng},${props.endPoint.lat}`,{
+    //             params: {
+    //                 access_token: mapboxgl.accessToken,
+    //                 steps: true,
+    //                 banner_instructions: true,
+    //                 voice_instructions: true,
+    //                 geometries: 'geojson',
+    //             }
+    //         }).then(function (response) {
+    //             //console.log(response.data.routes[0].legs[0]);
 
-                // setting up path
-                setStepNo(0);
-                setRouteInstruction([]);
-                var steps = 1;
-                response.data.routes[0].legs[0].steps.forEach(instruction => {
-                    var el = document.createElement('div');
-                    el.className = 'marker';
-                    // el.style.backgroundImage = 'url(https://placekitten.com/g/120/120/)';
-                    el.style.backgroundColor = "black";
-                    el.style.textAlign = "center";
-                    el.textContent = steps;
-                    el.style.width = '30px';
-                    el.style.height = '30px';
-                    // el.addEventListener('click', function () {
-                    //     window.alert(instruction.maneuver.instruction);
-                    // });
+    //             // setting up path
+    //             setStepNo(0);
+    //             setRouteInstruction([]);
+    //             var steps = 1;
+    //             response.data.routes[0].legs[0].steps.forEach(instruction => {
+    //                 var el = document.createElement('div');
+    //                 el.className = 'marker';
+    //                 // el.style.backgroundImage = 'url(https://placekitten.com/g/120/120/)';
+    //                 el.style.backgroundColor = "black";
+    //                 el.style.textAlign = "center";
+    //                 el.textContent = steps;
+    //                 el.style.width = '30px';
+    //                 el.style.height = '30px';
+    //                 // el.addEventListener('click', function () {
+    //                 //     window.alert(instruction.maneuver.instruction);
+    //                 // });
 
-                    let step = new mapboxgl.Marker(el);
-                    step.setLngLat(instruction.maneuver.location);
-                    step.addTo(map);
-                    setRouteInstruction(routeInstruction => [...routeInstruction, instruction]);
-                    setStepMarkers(stepMarkers => [...stepMarkers, step]);
-                    steps++;
-                });
+    //                 let step = new mapboxgl.Marker(el);
+    //                 step.setLngLat(instruction.maneuver.location);
+    //                 step.addTo(map);
+    //                 setRouteInstruction(routeInstruction => [...routeInstruction, instruction]);
+    //                 setStepMarkers(stepMarkers => [...stepMarkers, step]);
+    //                 steps++;
+    //             });
 
-                // display step by step instruction
-                // plotting route on the map
-                console.log(response.data.routes);
-                var coordinates = response.data.routes[0].geometry;
-                setRoute(coordinates);
+    //             // display step by step instruction
+    //             // plotting route on the map
+    //             console.log(response.data.routes);
+    //             var coordinates = response.data.routes[0].geometry;
+    //             setRoute(coordinates);
 
-                map.addSource('LineString', {
-                    'type': 'geojson',
-                    'data': coordinates
-                });
+    //             map.addSource('LineString', {
+    //                 'type': 'geojson',
+    //                 'data': coordinates
+    //             });
 
-                map.addLayer({
-                    'id': 'LineString',
-                    'type': 'line',
-                    'source': 'LineString',
-                    'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                    },
-                    'paint': {
-                    'line-color': '#BF93E4',
-                    'line-width': 5
-                    }
-                });
+    //             map.addLayer({
+    //                 'id': 'LineString',
+    //                 'type': 'line',
+    //                 'source': 'LineString',
+    //                 'layout': {
+    //                 'line-join': 'round',
+    //                 'line-cap': 'round'
+    //                 },
+    //                 'paint': {
+    //                 'line-color': '#BF93E4',
+    //                 'line-width': 5
+    //                 }
+    //             });
 
-                let startMarker = new mapboxgl.Marker();
-                startMarker.setLngLat(props.startPoint);
-                startMarker.addTo(map);
+    //             let startMarker = new mapboxgl.Marker();
+    //             startMarker.setLngLat(props.startPoint);
+    //             startMarker.addTo(map);
 
-                let destinationMarker = new mapboxgl.Marker();
-                destinationMarker.setLngLat(props.endPoint);
-                destinationMarker.addTo(map);
+    //             let destinationMarker = new mapboxgl.Marker();
+    //             destinationMarker.setLngLat(props.endPoint);
+    //             destinationMarker.addTo(map);
 
-                setUpTrafficImages();
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    }, [props.endPoint]);
+    //             setUpTrafficImages();
+    //         }).catch(function (error) {
+    //             console.log(error);
+    //         });
+    //     }
+    // }, [props.endPoint]);
 
    /* *
     * 
@@ -305,11 +296,6 @@ function MapBox (props,children) {
         });
     }
 
-    // return React.cloneElement(children, {
-    //     routeInstruction: routeInstruction,
-    //     passStepNo: stepNo,
-    //     mapContainer: mapContainer,
-    //   });
     return (
         <div>
             {(routeInstruction && routeInstruction.length > 0) && (

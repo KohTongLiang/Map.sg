@@ -43,12 +43,11 @@ function mapDispatchToProps (dispatch) {
 }
 
 /* *
- * 
  * Home page is where all subcomponents will be loaded into.
- * 
+
  * @Koh Tong Liang
- * @Version 1.0
- * @Since 19/10/2018
+ * @Version 2
+ * @Since 31/10/2020
  * */
 function HomeView (props) {
     /* *
@@ -56,70 +55,26 @@ function HomeView (props) {
     * they will be used throughout the program as a way to store global values among some
     * of the components.
     * */
-    const [startLocation, setStartLocation] = useState({});
-    const [endLocation, setEndlocation] = useState({});
     const [plannerDialog, setPlannerDialog] = useState(false);
     const [userLocation, setUserLocation] = useState({lng: 0, lat: 0});
     const classes = useStyles();
 
-   /* *
-    * 
-    * Actions which will be taken here when user location is changed
-    * 
-    * @Koh Tong Liang
-    * @Version 1.0
-    * @Since 19/10/2018
-    * */
+    // to be shifted
     useEffect(() => {
         //console.log(userLocation);
     }, [userLocation])
 
-   /* *
-    * Calls browser location service to constantly watch user's location and update
-    * the hooks storing userlocation
-    * 
-    * @Koh Tong Liang
-    * @Version 1.0
-    * @Since 19/10/2018
-    * */
+   // to be shifted away
     const getUserLocation = () => {
         window.navigator.geolocation.watchPosition(position => {
             // to be modified
             setUserLocation(userLocation => ({ lng: position.coords.longitude, lat: position.coords.latitude }));
-            setStartLocation(startLocation => ({ lng: position.coords.longitude, lat: position.coords.latitude }));
         });
     };
 
     // debug function to forcefully override user current location
     const debugOverrideUserLocation = lngLat => {
         setUserLocation(userLocation => lngLat);
-    }
-
-    const planTrip = () => {
-        setPlannerDialog(true);
-    }
-
-    const dialogHandler = () => {
-        setPlannerDialog(!plannerDialog);
-    }
-
- /* *
-    * Once user has selected the starting location and ending location,
-    * the values are validated and stored in hooks.
-    * 
-    * @Koh Tong Liang
-    * @Version 1.0
-    * @Since 19/10/2018
-    * */
-    const routeHandler = (startObj, endObj) => {
-        // null case where user location is used instead
-        if (startObj !== null) {
-            setStartLocation(startObj);
-        }
-
-        if (endObj !== null) {
-            setEndlocation(endObj);
-        }
     }
 
     // open route planner form page
@@ -145,8 +100,7 @@ function HomeView (props) {
             </Fab>
 
             {/* added debug function */}
-            <Map userLocation={userLocation} startPoint={startLocation} endPoint={endLocation}
-                debugOverrideUserLocation={debugOverrideUserLocation} />
+            <Map userLocation={userLocation} debugOverrideUserLocation={debugOverrideUserLocation} />
 
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
         </div>
