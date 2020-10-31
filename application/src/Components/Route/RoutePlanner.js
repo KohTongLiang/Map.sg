@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Typography, Container, Input, Slide,
     Dialog, Button, FormGroup, FormControl, InputLabel, IconButton, Toolbar,
     AppBar, FormLabel } from '@material-ui/core';
-import { Close as CloseIcon, Search as SearchIcon, YoutubeSearchedFor } from '@material-ui/icons';
+import { Close as CloseIcon, Search as SearchIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute } from '../../Action/NavigationActions';
 import { getUserLocation } from '../../Action/HomeActions';

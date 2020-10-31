@@ -17,6 +17,12 @@ export const GET_USER_LOCATION_SUCCEEDED = 'GET_USER_LOCATION_SUCCEEDED';
 /**
  * Action types for Map Actions
  */
+export const GET_TRAFFIC_IMAGES = 'GET_TRAFFIC_IMAGES';
+export const GET_TRAFFIC_IMAGES_SUCCEEDED = 'GET_TRAFFIC_IMAGES_SUCCEEDED';
+export const GET_ERP_DATA = 'GET_ERP_DATA';
+export const GET_ERP_DATA_SUCCEEDED = 'GET_ERP_DATA_SUCCEEDED';
+export const UPDATE_STEPS = 'UPDATE_STEPS';
+export const UPDATE_CAMERA_MARKERS = 'UPDATE_CAMERA_MARKERS';
 
 /**
  * Action types for Navigation/Route Planner
@@ -29,6 +35,10 @@ export const PROCESS_START_LOCATION = 'PROCESS_START_LOCATION';
 export const PROCESS_END_LOCATION = 'PROCESS_END_LOCATION';
 export const PLAN_ROUTE = 'PLAN_ROUTE';
 export const PLAN_ROUTE_SUCCEEDED = 'PLAN_ROUTE_SUCCEEDED';
+export const TRIP_SUMMARY = 'TRIP_SUMMARY';
+export const SAVE_TRIP = 'SAVE_TRIP';
+export const MAP_MATCHING = 'MAP_MATCHING';
+export const MAP_MATCHING_SUCCEEDED = 'MAP_MATCHING_SUCCEEDED';
 
 /**
  * Action types for Settings

@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import HomeReducer from './HomeReducer';
 import NavigationReducer from './NavigationReducer';
+import MapReducer from './MapReducer';
 
 /* *
  * This is the root reducers, it uses combineReducers to group multiple reducers together
@@ -11,4 +12,4 @@ import NavigationReducer from './NavigationReducer';
  * @Since 30/10/2020
  * */
 
-export default combineReducers({ HomeReducer, NavigationReducer });
+export default combineReducers({ HomeReducer, NavigationReducer, MapReducer });

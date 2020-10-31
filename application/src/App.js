@@ -28,7 +28,7 @@ function App() {
           type: true ? 'dark' : 'light',
         },
       }),
-    [prefersDarkMode],
+    // [prefersDarkMode],
   );
 
 /* *

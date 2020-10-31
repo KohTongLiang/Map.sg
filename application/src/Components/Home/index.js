@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Fab, Paper, Container } from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
+import { Fab, Paper, Container, GridList, GridListTileBar, GridListTile } from '@material-ui/core';
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
@@ -9,6 +9,13 @@ import Map from '../Map';
 import RoutePlanner from '../Route/RoutePlanner';
 
 const useStyles = makeStyles((theme) => ({
+    sliderGridList: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
     navFab: {
         top: 'auto',
         right: 35,
@@ -22,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
     },
     slidePanel: {
-        width: '50%',
+        width: '80%',
         left: 10,
-        bottom: 45,
+        bottom: 50,
         position: 'fixed',
     },
     appBar: {
@@ -34,7 +41,19 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(2),
         flex: 1,
     },
+    gridList: {
+      flexWrap: 'nowrap',
+      // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+      transform: 'translateZ(0)',
+    },
 }));
+
+const mapStateToProps = (state) => {
+    const appState = {
+            cameraMarkers: state.MapReducer.cameraMarkers,
+        };
+    return appState;
+};
 
 function mapDispatchToProps (dispatch) {
     return {
@@ -45,6 +64,7 @@ function mapDispatchToProps (dispatch) {
 
 /* *
  * Home page is where all subcomponents will be loaded into.
+ 
  * @Koh Tong Liang
  * @Version 2
  * @Since 31/10/2020
@@ -69,6 +89,27 @@ function HomeView (props) {
             <Paper className={classes.slidePanel} elevation={5}>
                 <Container>
                     <h4>Placeholder</h4>
+                    <div className={classes.sliderGridList}>
+                        <GridList className={classes.gridList} cols={2.5}>
+                            {props.cameraMarkers.map((camera) => (
+                            <GridListTile key={camera.image}>
+                                <img src={camera.image} alt='test' />
+                                <GridListTileBar
+                                title='Test'
+                                classes={{
+                                    root: classes.titleBar,
+                                    title: classes.title,
+                                }}
+                                // actionIcon={
+                                    // <IconButton aria-label={`star test`}>
+                                    // <StarBorderIcon className={classes.title} />
+                                    // </IconButton>
+                                // }
+                                />
+                            </GridListTile>
+                            ))}
+                        </GridList>
+                    </div>
                 </Container>
             </Paper>
 
@@ -87,7 +128,7 @@ function HomeView (props) {
 }
 
 const Home = connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
     )(HomeView);
 

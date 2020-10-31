@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from "react-redux";
 
+import * as turf from '@turf/turf';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, Typography } from '@material-ui/core';
-import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, ContactSupportOutlined } from '@material-ui/icons';
 import { overrideUserLocation } from '../../Action/HomeActions';
+import { getTrafficImages, getErpData, updateCameraMarkers } from '../../Action/MapActions';
+import { tripSummary, mapMatching } from '../../Action/NavigationActions';
+import TripSummary from '../Map/TripSummary';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -30,6 +34,10 @@ const mapStateToProps = (state) => {
             navigationRoute: state.NavigationReducer.navigationRoute,
             startLocation: state.NavigationReducer.startLocation,
             endLocation: state.NavigationReducer.endLocation,
+            mapMatchedRoute: state.NavigationReducer.mapMatchedRoute,
+            cameras: state.MapReducer.cameras,
+            ERP: state.MapReducer.ERP,
+            cameraMarkers: state.MapReducer.cameraMarkers,
         };
     return appState;
 };
@@ -37,6 +45,11 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps (dispatch) {
     return {
         overrideUserLocation:  newCoords => dispatch(overrideUserLocation(newCoords)),
+        getTrafficImages: () => dispatch(getTrafficImages()),
+        getErpData: () => dispatch(getErpData()),
+        tripSummary: () => dispatch(tripSummary()),
+        mapMatching: routeCoordinates => dispatch(mapMatching(routeCoordinates)),
+        updateCameraMarkers: cameraMarker => dispatch(updateCameraMarkers(cameraMarker)),
     }
 }
 
@@ -52,15 +65,31 @@ function mapDispatchToProps (dispatch) {
     * */
 function MapBoxView (props) {
     const [routeInstruction, setRouteInstruction] = useState(null);
-    const [ongoingTrip, setOngoingTrip] = useState(false);
     const [stepNo, setStepNo] = useState(null);
-    const [route, setRoute] = useState(null);
     const [map, setMap] = useState(null);
     const [stepMarkers, setStepMarkers] = useState([]);
     const mapContainer = useRef("");
     var marker = new mapboxgl.Marker();
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
     const classes = useStyles();
+
+
+    /**
+     * On component mount, gather ERP rates and traffic images
+     */
+    useEffect(() => {
+        props.getTrafficImages();
+        props.getErpData();
+    })
+
+    /**
+     * Each time traffic images data are refreshed via api call, update the markers on the map
+    //  */
+    // useEffect(() => {
+    //     if (props.cameras) {
+    //         // mark out all traffic images
+    //     }
+    // }, [props.cameras])
 
    /* *
     * Create a map object, and load it into the component. Render it.
@@ -93,8 +122,7 @@ function MapBoxView (props) {
                 }
                 
                 // Code for making the buildings look 3D on the map
-                map.addLayer(
-                {
+                map.addLayer({
                     'id': '3d-buildings',
                     'source': 'composite',
                     'source-layer': 'building',
@@ -151,8 +179,7 @@ function MapBoxView (props) {
         }
     }, [map]);
 
-
-    /* *
+ /* *
     * 
     * When userlocation change, detect if user has reach waypoint, if user has reach the
     * waypoint, remove the marker on the waypoint and progress to next step in step by step
@@ -167,113 +194,153 @@ function MapBoxView (props) {
             map.flyTo({
                 center: [props.userLocation[0].lng, props.userLocation[0].lat]
             });
-            marker.setLngLat([props.userLocation[0].lng, props.userLocation[0].lat]);
 
+            if (marker !== undefined) {
+                marker.remove();
+            }
+
+            marker.setLngLat([props.userLocation[0].lng, props.userLocation[0].lat]);
             if (marker !== undefined && stepMarkers[stepNo] !== undefined) {
-                if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= 0.0005 ||
+                if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= 0.0005 &&
                     marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng >= -0.0005) &&
-                    (marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat <= 0.0005 ||
+                    (marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat <= 0.0005 &&
                     marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat >= -0.0005)) {
                     stepMarkers[stepNo].remove();
-                    setStepNo(stepNo => stepNo + 1);
+
+                    if (stepNo < routeInstruction.length - 1) {
+                        setStepNo(stepNo => stepNo + 1);
+                    } else {
+                        // User reaches end of the route
+                        props.tripSummary();
+                        map.removeLayer('LineString');
+                        map.removeSource('LineString');
+                    }
                 }
             }
-            
             marker.addTo(map);
         }
     }, [props.userLocation])
 
-    /* *
-    * To Be Shifted
-    * */
-    // const setUpTrafficImages = () => {
-    //     axios.get('https://api.data.gov.sg/v1/transport/traffic-images').then(function (response) {
-    //         // console.log(response.data.items);
+    /**
+     * When a route has been set
+     */
+    useEffect(() => {
+        if (props.navigationRoute !== [] && props.navigationRoute.length > 0 ) {
+            map.flyTo({
+                center: [props.startLocation[0].lng, props.startLocation[0].lat]
+            });
 
-    //         response.data.items[0].cameras.map(camera => {
-    //             var el = document.createElement('img');
-    //             el.className = 'marker';
-    //             el.src = camera.image;
-    //             // el.style.backgroundImage = camera.image;
-    //             el.style.width = '120px';
-    //             el.style.height = '120px';
-    //             // el.addEventListener('click', function () {
-    //             //     window.alert(instruction.maneuver.instruction);
-    //             // });
+            // props.navigationRoute[0].data.routes[0].geometry
+            // array of coordinates
+            // maybe use to detect traffic images
 
-    //             let stepMarkers = new mapboxgl.Marker(el);
-    //             stepMarkers.setLngLat([camera.location.longitude, camera.location.latitude]);
-    //             stepMarkers.addTo(map);
-    //         });
-    //     }).catch(function (error) {
-    //         console.log(error);
-    //     });
-    // }
+            // setting up path
+            setStepNo(0);
+            setRouteInstruction([]);
+            var steps = 1;
+            props.navigationRoute[0].data.routes[0].legs[0].steps.forEach(instruction => {
+                var el = document.createElement('div');
+                el.className = 'marker';
+                el.style.backgroundColor = "black";
+                el.style.textAlign = "center";
+                el.textContent = steps;
+                el.style.width = '30px';
+                el.style.height = '30px';
 
-        useEffect(() => {
-            if (props.navigationRoute !== [] && props.navigationRoute.length > 0 ) {
-                map.flyTo({
-                    center: [props.startLocation[0].lng, props.startLocation[0].lat]
-                });
-                // setting up path
-                setStepNo(0);
-                setRouteInstruction([]);
-                var steps = 1;
-                props.navigationRoute[0].data.routes[0].legs[0].steps.forEach(instruction => {
-                    var el = document.createElement('div');
-                    el.className = 'marker';
-                    el.style.backgroundColor = "black";
+                let step = new mapboxgl.Marker(el);
+                step.setLngLat(instruction.maneuver.location);
+                step.addTo(map);
+                setRouteInstruction(routeInstruction => [...routeInstruction, instruction]);
+                setStepMarkers(stepMarkers => [...stepMarkers, step]);
+                steps++;
+            });
+
+            // display step by step instruction
+            // plotting route on the map
+            var coordinates = props.navigationRoute[0].data.routes[0].geometry;
+            
+            map.addSource('LineString', {
+                'type': 'geojson',
+                'data': coordinates
+            });
+            map.addLayer({
+                'id': 'LineString',
+                'type': 'line',
+                'source': 'LineString',
+                'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+                },
+                'paint': {
+                'line-color': '#BF93E4',
+                'line-width': 5
+                }
+            });
+
+            let startMarker = new mapboxgl.Marker();
+            startMarker.setLngLat(props.startLocation[0]);
+            startMarker.addTo(map);
+
+            let destinationMarker = new mapboxgl.Marker();
+            destinationMarker.setLngLat(props.endLocation[0]);
+            destinationMarker.addTo(map);
+
+            // Detect if there is any traffic cameras on the way
+            let cameraArr = [];
+            props.cameras.map(c => {
+                var cameraPosition = { lng: c.location.longitude, lat: c.location.latitude };
+                var points = turf.lineIntersect(turf.lineString(coordinates.coordinates), turf.polygon([[[cameraPosition.lng+0.0005, cameraPosition.lat],
+                     [cameraPosition.lng, cameraPosition.lat+0.0005],[cameraPosition.lng-0.0005, cameraPosition.lat], [cameraPosition.lng, cameraPosition.lat-0.0005],[cameraPosition.lng+0.0005, cameraPosition.lat]]]));
+                if (points.features.length > 0) {
+                    var el = document.createElement('img');
+                    el.src = c.image;
                     el.style.textAlign = "center";
-                    el.textContent = steps;
-                    el.style.width = '30px';
-                    el.style.height = '30px';
+                    el.style.width = '80px';
+                    el.style.height = '80px';
+    
+                    let cameraMarker = new mapboxgl.Marker(el);
+                    cameraMarker.setLngLat(cameraPosition);
+                    cameraMarker.addTo(map)
+                    cameraArr.push(c);
+                }
+            });
 
-                    let step = new mapboxgl.Marker(el);
-                    step.setLngLat(instruction.maneuver.location);
-                    step.addTo(map);
-                    setRouteInstruction(routeInstruction => [...routeInstruction, instruction]);
-                    setStepMarkers(stepMarkers => [...stepMarkers, step]);
-                    steps++;
-                });
+            // store only cameras on the route to destination
+            props.updateCameraMarkers(cameraArr);
 
-                // display step by step instruction
-                // plotting route on the map
-                var coordinates = props.navigationRoute[0].data.routes[0].geometry;
-                setRoute(coordinates);
+            
+            // let cameraArr = [];
+            // props.cameras.map(camera => {
+            //     var el = document.createElement('img');
+            //     el.src = camera.image;
+            //     el.style.textAlign = "center";
+            //     el.style.width = '80px';
+            //     el.style.height = '80px';
 
-                map.addSource('Route', {
-                    'type': 'geojson',
-                    'data': coordinates
-                });
+            //     let cameraMarker = new mapboxgl.Marker(el);
+            //     cameraMarker.setLngLat({ lng: camera.location.longitude, lat: camera.location.latitude });
+            //     cameraArr.push(cameraMarker);
+            // });
+            // props.updateCameraMarkers(cameraArr);
 
-                map.addLayer({
-                    'id': 'Route',
-                    'type': 'line',
-                    'source': 'LineString',
-                    'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                    },
-                    'paint': {
-                    'line-color': '#BF93E4',
-                    'line-width': 5
-                    }
-                });
-
-                let startMarker = new mapboxgl.Marker();
-                startMarker.setLngLat(props.startLocation[0]);
-                startMarker.addTo(map);
-
-                let destinationMarker = new mapboxgl.Marker();
-                destinationMarker.setLngLat(props.endLocation[0]);
-                destinationMarker.addTo(map);
-
-                // setUpTrafficImages();
-            }
-        }, [props.navigationRoute]);
+            // props.mapMatching(coordinates.coordinates);
+            // var coordinates = coordinates.coordinates.splice(0, coordinates.coordinates.length - 1).join(';');
+            // axios.get(`https://api.mapbox.com/matching/v5/mapbox/driving/${coordinates}`,{
+            //     params: {
+            //         access_token: mapboxgl.accessToken,
+            //         steps: true,
+            //         geometries: 'geojson',
+            //     }
+            // }).then(function (response) {
+                // console.log(response)
+                // coordinates = response.data.matchings[0].geometry;
+            // })
+        }
+    }, [props.navigationRoute]);
 
     return (
         <div>
+            {/* Turn by turn instruction banner */}
             {(routeInstruction && routeInstruction.length > 0) && (
                 <Paper className={classes.paper} elevation={5}>
                     <IconButton className={classes.stepsButton} color="inherit" onClick={() => stepNo > 0 ? setStepNo(stepNo => stepNo - 1) : stepNo}>
@@ -288,6 +355,10 @@ function MapBoxView (props) {
                 </Paper>
             )}
 
+            {/* TripSummary */}
+            <TripSummary/>
+
+            {/* Map element */}
             <div style={{ zIndex: "-1", position: "absolute", width: '100%', height: '100%', top: 0, bottom: 0}} ref={el => (mapContainer.current = el)}></div>
         </div>
     )

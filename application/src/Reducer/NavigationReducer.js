@@ -1,8 +1,8 @@
-import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION, PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED } from '../Constants/actionTypes';
+import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
+    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
- * 
  * @Koh Tong Liang
  * @Version 1
  * @Since 31/10/2020
@@ -13,7 +13,9 @@ const initialState = {
     endLocation: [],
     startLocationSearchResult: [],
     endLocationSearchResult: [],
-    navigationRoute: []
+    navigationRoute: [],
+    mapMatchedRoute: [],
+    tripSummaryView: false,
 }
 
 function NavigationReducer (state = initialState, action) {
@@ -41,6 +43,20 @@ function NavigationReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 navigationRoute: state.navigationRoute.concat(action.payload),
             });
+        case MAP_MATCHING_SUCCEEDED:
+            return Object.assign({}, state, {
+                mapMatchedRoute: state.mapMatchedRoute.concat(action.payload),
+            });
+        case TRIP_SUMMARY:
+            return Object.assign({}, state, {
+                tripSummaryView: !state.tripSummaryView,
+                startLocation: initialState.startLocation,
+                endLocation: initialState.endLocation,
+                navigationRoute: initialState.navigationRoute,
+            });
+        case SAVE_TRIP:
+            // store navigation route
+            break;
         default:
     } // end of switch case
     return state;

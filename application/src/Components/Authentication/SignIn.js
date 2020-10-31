@@ -26,7 +26,7 @@ const SignInPage = (props) => {
     const classes = useStyles();
     const [error, setError] = useState('');
     const [open, setOpen] = useState(false);
-    const {register, handleSubmit, control, errors } = useForm();
+    const {register, handleSubmit, errors } = useForm();
 
     const onSubmit = data => {
         props.firebase.doSignInWithEmailAndPassword(data.email, data.password).then(() => {
