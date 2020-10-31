@@ -1,11 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Paper, Tabs, Tab, AppBar, Toolbar, Typography, IconButton, Drawer, List,
-Divider, ListItem, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem,
-SwipeableDrawer } from '@material-ui/core';
-import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon,
-    Menu as MenuIcon, AccountCircle, ExitToApp as ExitToAppIcon} from '@material-ui/icons';
+import { Paper, Tabs, Tab, makeStyles, Menu, MenuItem } from '@material-ui/core';
+import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon, AccountCircle, ExitToApp as ExitToAppIcon} from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import * as VALUES from '../../Constants/values';
 import * as ROUTES from '../../Constants/routes';

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Fab, Paper, Container } from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { toggleRoutePlanner } from '../../Action/HomeActions';
+import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
 import Map from '../Map';
 import RoutePlanner from '../Route/RoutePlanner';
 
@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme) => ({
 function mapDispatchToProps (dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
+        getUserLocation: () => dispatch(getUserLocation())
     }
 }
 
 /* *
  * Home page is where all subcomponents will be loaded into.
-
  * @Koh Tong Liang
  * @Version 2
  * @Since 31/10/2020
@@ -56,26 +56,7 @@ function HomeView (props) {
     * of the components.
     * */
     const [plannerDialog, setPlannerDialog] = useState(false);
-    const [userLocation, setUserLocation] = useState({lng: 0, lat: 0});
     const classes = useStyles();
-
-    // to be shifted
-    useEffect(() => {
-        //console.log(userLocation);
-    }, [userLocation])
-
-   // to be shifted away
-    const getUserLocation = () => {
-        window.navigator.geolocation.watchPosition(position => {
-            // to be modified
-            setUserLocation(userLocation => ({ lng: position.coords.longitude, lat: position.coords.latitude }));
-        });
-    };
-
-    // debug function to forcefully override user current location
-    const debugOverrideUserLocation = lngLat => {
-        setUserLocation(userLocation => lngLat);
-    }
 
     // open route planner form page
     const toggleRoutePlanner = () => {
@@ -92,16 +73,14 @@ function HomeView (props) {
             </Paper>
 
             <Fab className={classes.navFab} color="primary">
-                <MyLocationIcon onClick={() => getUserLocation()} />
+                <MyLocationIcon onClick={() => props.getUserLocation()} />
             </Fab>
 
             <Fab className={classes.searchFab} color="primary">
                 <DirectionsIcon onClick={() => toggleRoutePlanner()}/>
             </Fab>
 
-            {/* added debug function */}
-            <Map userLocation={userLocation} debugOverrideUserLocation={debugOverrideUserLocation} />
-
+            <Map/>
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
         </div>
     )

@@ -1,4 +1,4 @@
-import { GET_USER_LOCATION, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
+import { GET_USER_LOCATION_SUCCEEDED, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -11,15 +11,21 @@ import { GET_USER_LOCATION, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } f
 const initialState = {
     routePlannerView: false,
     trafficImagesView: false,
-    userLocation: {},
+    userLocation: [],
 }
 
 function HomeReducer (state = initialState, action) {
-
     // determine what action to perform and which state to update
     switch (action.type) {
-        case GET_USER_LOCATION:
-            break;
+        case 'OVERRIDE_USER_LOCATION':
+            return Object.assign({}, state, {
+                userLocation: initialState.userLocation.concat( { lng: action.payload.lng, lat: action.payload.lat } )
+            });
+            
+        case GET_USER_LOCATION_SUCCEEDED:
+            return Object.assign({}, state, {
+                userLocation: initialState.userLocation.concat( {lng: action.payload.coords.longitude, lat: action.payload.coords.latitude } )
+            });
          
         case TOGGLE_ROUTE_PLANNER:
             return Object.assign({}, state, {

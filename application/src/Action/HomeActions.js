@@ -11,14 +11,12 @@ import { GET_USER_LOCATION, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } f
  * @Since 30/10/2020
 */
 
-let userLocation = [];
-
 /**
  * Call on browser location service to provide location of user's device
  * MAYBE TRANSFER TO MAP ACTIONS
  */
-export function getUserLocation (payload) {
-    return { type: GET_USER_LOCATION, payload };
+export function getUserLocation () {
+    return { type: GET_USER_LOCATION };
 }
 
 /**
@@ -35,3 +33,12 @@ export function toggleRoutePlanner (payload) {
 export function toggleTrafficImagesView (payload) {
     return { type: TOGGLE_TRAFFIC_IMAGES_VIEW, payload }
 }
+
+
+/**
+ * DEBUG function to override user location
+ */
+
+ export function overrideUserLocation (payload) {
+     return { type: 'OVERRIDE_USER_LOCATION', payload }
+ }

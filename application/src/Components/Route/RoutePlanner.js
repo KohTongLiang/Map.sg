@@ -4,13 +4,14 @@ import { connect } from "react-redux";
 import { Typography, Container, Input, Slide,
     Dialog, Button, FormGroup, FormControl, InputLabel, IconButton, Toolbar,
     AppBar, FormLabel } from '@material-ui/core';
-import { Close as CloseIcon, Search as SearchIcon } from '@material-ui/icons';
+import { Close as CloseIcon, Search as SearchIcon, YoutubeSearchedFor } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation,planRoute } from '../../Action/NavigationActions';
+import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute } from '../../Action/NavigationActions';
+import { getUserLocation } from '../../Action/HomeActions';
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-// });
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const useStyles = makeStyles((theme) => ({
     navFab: {
@@ -47,6 +48,7 @@ const mapStateToProps = (state) => {
             endLocation: state.NavigationReducer.endLocation,
             startLocationSearchResult: state.NavigationReducer.startLocationSearchResult,
             endLocationSearchResult: state.NavigationReducer.endLocationSearchResult,
+            userLocation: state.HomeReducer.userLocation,
         };
     return appState;
 };
@@ -58,6 +60,7 @@ function mapDispatchToProps (dispatch) {
         processStartLocation: startLocation => dispatch(processStartLocation(startLocation)),
         processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
         planRoute: (startLocation, endLocation) => dispatch(planRoute(startLocation, endLocation)),
+        getUserLocation: () => dispatch(getUserLocation()),
     };
     return actions;
 }
@@ -89,13 +92,20 @@ function RoutePlannerView (props) {
     const handlePlanRoute = () => {
         props.planRoute(props.startLocation, props.endLocation);
         props.toggleRoutePlanner();
+        setStartLocationSearch('');
+        setEndLocationSearch('');
+    }
+
+    const handleGetUserLocation = () => {
+        // ignored if user location already present
+        props.getUserLocation();
     }
 
     return (
         <Dialog
             fullScreen
             open={props.routePlannerView}
-            // TransitionComponent={Transition}
+            TransitionComponent={Transition}
             keepMounted
             onClose={() => props.toggleRoutePlanner()}
             aria-labelledby="alert-dialog-slide-title"
@@ -107,7 +117,7 @@ function RoutePlannerView (props) {
                         <CloseIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        Choose Locations
+                        Choose Locations 
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -120,7 +130,7 @@ function RoutePlannerView (props) {
                             <IconButton color="inherit" onClick={() => props.searchStartLocation(startLocationSearch)} aria-label="Search">
                                 <SearchIcon/>
                             </IconButton>
-                            <Button color="inherit" onClick={() => alert()}>Use Current Location</Button>
+                            <Button color="inherit" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
@@ -161,66 +171,3 @@ const RoutePlanner = connect(
     )(RoutePlannerView)
 
 export default RoutePlanner;
-
- //////////////////// CODES TO BE DELETED ////////////////////////////
-    //  const [startLocationSearchResult, setStartLocationSearchResult] = useState([]);
-    //  const [endLocationSearchResult, setEndLocationSearchResult] = useState([]);
-    //  const [selectedStartLocation, setSelectedStartLocation] = useState(null);
-    //  const [selectedEndLocation, setSelectedEndLocation] = useState(null);
-    // useEffect(() => {
-    //     if (props.userLocation.lng !== 0) {
-    //         setStartLocationSearch(props.userLocation.lng + " : " + props.userLocation.lat);
-    //     }
-    // }, [props.userLocation])
-
-    // const searchStartLocation = () => {
-    //     // axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${startLocationSearch}.json`,{
-    //     //     params: {
-    //     //         access_token: accessToken,
-    //     //     }
-    //     // }).then(function (response) {
-    //     //     // response.data.features contains array of possible location that the entered text referred to.
-    //     //     var result = response.data.features;
-    //     //     setStartLocationSearchResult(result);
-    //     // });
-    // }
-    // const searchEndLocation = () => {
-    //     // axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${endLocationSearch}.json`,{
-    //     //     params: {
-    //     //         access_token: accessToken,
-    //     //         country: "sg"
-    //     //     }
-    //     // }).then(function (response) {
-    //     //     // response.data.features contains array of possible location that the entered text referred to.
-    //     //     var result = response.data.features;
-    //     //     setEndLocationSearchResult(result);
-    //     // });
-    // }
-    //////////////////////////
-
-   /* *
-    * 
-    * When user select the location they want, the coordinates is stored in hooks and later
-    * retrieved for route searching
-    * 
-    * @Koh Tong Liang
-    * @Version 1.0
-    * @Since 19/10/2018
-    * */
-    // const processStartLocation = (geometryArr, placeName) => {
-    //     setSelectedStartLocation({
-    //         lng: geometryArr[0],
-    //         lat: geometryArr[1]
-    //     });
-    //     setStartLocationSearchResult([]);
-    //     setStartLocationSearch(placeName);
-    // }
-
-    // const processEndLocation = (geometryArr, placeName) => {
-    //     setSelectedEndLocation({
-    //         lng: geometryArr[0],
-    //         lat: geometryArr[1]
-    //     });
-    //     setEndLocationSearchResult([]);
-    //     setEndLocationSearch(placeName);
-    // }
