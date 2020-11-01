@@ -11,8 +11,6 @@ const initialState = {
     cameras: [],
     cameraMarkers: [],
     ERP: [],
-    stepNo: [],
-    routeInstruction: [],
 }
 
 export default function MapReducer (state = initialState, action) {
@@ -29,10 +27,6 @@ export default function MapReducer (state = initialState, action) {
         case GET_ERP_DATA_SUCCEEDED:
             return Object.assign({}, state, {
                 ERP: initialState.ERP.concat(action.payload)
-            });
-        case UPDATE_STEPS:
-            return Object.assign({}, state, {
-                stepNo: state.stepNo.concat(action.payload)
             });
         default:
     }

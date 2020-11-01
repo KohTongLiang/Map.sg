@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Fab, Paper, Container, GridList, GridListTileBar, GridListTile } from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, } from '@material-ui/icons';
+import { Fab, Paper, Container, GridList, GridListTileBar, GridListTile, Button } from '@material-ui/core';
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
+import { cancelRoute } from '../../Action/NavigationActions'
 import Map from '../Map';
 import RoutePlanner from '../Route/RoutePlanner';
 
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state) => {
     const appState = {
             cameraMarkers: state.MapReducer.cameraMarkers,
+            onRoute: state.NavigationReducer.onRoute,
         };
     return appState;
 };
@@ -58,7 +60,8 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps (dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
-        getUserLocation: () => dispatch(getUserLocation())
+        getUserLocation: () => dispatch(getUserLocation()),
+        cancelRoute: () => dispatch(cancelRoute()),
     }
 }
 
@@ -86,40 +89,52 @@ function HomeView (props) {
 
     return (
         <div>
-            <Paper className={classes.slidePanel} elevation={5}>
-                <Container>
-                    <h4>Placeholder</h4>
-                    <div className={classes.sliderGridList}>
-                        <GridList className={classes.gridList} cols={2.5}>
-                            {props.cameraMarkers.map((camera) => (
-                            <GridListTile key={camera.image}>
-                                <img src={camera.image} alt='test' />
-                                <GridListTileBar
-                                title='Test'
-                                classes={{
-                                    root: classes.titleBar,
-                                    title: classes.title,
-                                }}
-                                // actionIcon={
-                                    // <IconButton aria-label={`star test`}>
-                                    // <StarBorderIcon className={classes.title} />
-                                    // </IconButton>
-                                // }
-                                />
-                            </GridListTile>
-                            ))}
-                        </GridList>
-                    </div>
-                </Container>
-            </Paper>
+            {props.onRoute && (
+                <div>
+                    <Paper className={classes.slidePanel} elevation={5}>
+                        <Container>
+                            <h4>Route in Progress</h4>
+                            <div className={classes.sliderGridList}>
+                                <GridList className={classes.gridList} cols={2.5}>
+                                    {props.cameraMarkers.map((camera) => (
+                                    <GridListTile key={camera.image}>
+                                        <img src={camera.image} alt='test' />
+                                        <GridListTileBar
+                                        title='Test'
+                                        classes={{
+                                            root: classes.titleBar,
+                                            title: classes.title,
+                                        }}
+                                        // actionIcon={
+                                            // <IconButton aria-label={`star test`}>
+                                            // <StarBorderIcon className={classes.title} />
+                                            // </IconButton>
+                                        // }
+                                        />
+                                    </GridListTile>
+                                    ))}
+                                </GridList>
+                            </div>
+                        </Container>
+                    </Paper>
 
-            <Fab className={classes.navFab} color="primary">
-                <MyLocationIcon onClick={() => props.getUserLocation()} />
-            </Fab>
+                    <Fab className={classes.searchFab} color="secondary">
+                        <StopIcon onClick={() => props.cancelRoute()}/>
+                    </Fab>
+                </div>
+            )}
 
-            <Fab className={classes.searchFab} color="primary">
-                <DirectionsIcon onClick={() => toggleRoutePlanner()}/>
-            </Fab>
+            {!props.onRoute && (
+                <div>
+                    <Fab className={classes.navFab} color="primary">
+                        <MyLocationIcon onClick={() => props.getUserLocation()} />
+                    </Fab>
+
+                    <Fab className={classes.searchFab} color="primary">
+                        <DirectionsIcon onClick={() => toggleRoutePlanner()}/>
+                    </Fab>
+                </div>
+            )}
 
             <Map/>
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>

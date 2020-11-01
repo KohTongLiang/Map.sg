@@ -1,4 +1,5 @@
-import { SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE, PROCESS_START_LOCATION, PROCESS_END_LOCATION, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING } from '../Constants/actionTypes';
+import { SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE, PROCESS_START_LOCATION, PROCESS_END_LOCATION, TRIP_SUMMARY,
+    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS } from '../Constants/actionTypes';
 
 /**
  * Navigation action definitions.
@@ -66,8 +67,30 @@ export function saveTrip (payload) {
 
 /**
  * Takes in coordinates provided by directions API and run it through another API to perfect the linestring geojson
- * @param {object} 
+ * @param {object} payload
  */
 export function mapMatching (payload) {
     return { type: MAP_MATCHING, payload }
+}
+
+/**
+ * Update steps for turn by turn instruction as user reaches the different waypoints.
+ * @param {int} payload
+ */
+export function updateSteps (payload) {
+    return { type: UPDATE_STEPS, payload }
+}
+
+/**
+ * Cancel route. If user choose to do so, they may prematurely cancel the ongoing route. This would reset the map state
+ */
+export function cancelRoute () {
+    return { type: CANCEL_ROUTE }
+}
+
+/**
+ * If user goes off course. May not need to do this here
+ */
+export function reRoute () {
+    return { type: REROUTE }
 }

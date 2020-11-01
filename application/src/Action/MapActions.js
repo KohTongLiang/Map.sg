@@ -1,4 +1,4 @@
-import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, UPDATE_STEPS, UPDATE_CAMERA_MARKERS } from '../Constants/actionTypes';
+import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, UPDATE_CAMERA_MARKERS } from '../Constants/actionTypes';
 
 /**
  * Action definitions. Defines action input, types and payload that will be delivered to the reducers
@@ -14,10 +14,6 @@ export function getTrafficImages () {
 
 export function getErpData () {
     return { type: GET_ERP_DATA }
-}
-
-export function updateSteps (payload) {
-    return { type: UPDATE_STEPS, payload }
 }
 
 /**

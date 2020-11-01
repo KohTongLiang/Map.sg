@@ -1,5 +1,5 @@
 import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
-    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED } from '../Constants/actionTypes';
+    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED, CANCEL_ROUTE, UPDATE_STEPS } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -11,16 +11,23 @@ import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS
 const initialState = {
     startLocation: [],
     endLocation: [],
-    startLocationSearchResult: [],
-    endLocationSearchResult: [],
-    navigationRoute: [],
-    mapMatchedRoute: [],
-    tripSummaryView: false,
+    startLocationSearchResult: [], // for routeplanner form
+    endLocationSearchResult: [], // for routeplanner form
+    navigationRoute: [], // geometric data of the route user is taking
+    mapMatchedRoute: [], // fixed route linestring
+    tripSummaryView: false, // toggle view for end of trip summary
+    onRoute: false, // show that user is on journey
+    stepNo: 0, // indiciate which stage of step by step instruction user is in
+    routeInstruction: [], // stores step by step instruction
 }
 
 function NavigationReducer (state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
+        case UPDATE_STEPS:
+            return Object.assign({}, state, {
+                stepNo: initialState.stepNo + action.payload,
+            });
         case SEARCH_START_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
                 startLocationSearchResult: state.startLocationSearchResult.concat(action.payload)
@@ -41,7 +48,9 @@ function NavigationReducer (state = initialState, action) {
             });
         case PLAN_ROUTE_SUCCEEDED:
             return Object.assign({}, state, {
-                navigationRoute: state.navigationRoute.concat(action.payload),
+                navigationRoute: state.navigationRoute.concat(action.payload.route),
+                onRoute: !state.onRoute,
+                routeInstruction: state.routeInstruction.concat(action.payload.routeInstruction),
             });
         case MAP_MATCHING_SUCCEEDED:
             return Object.assign({}, state, {
@@ -49,9 +58,13 @@ function NavigationReducer (state = initialState, action) {
             });
         case TRIP_SUMMARY:
             return Object.assign({}, state, {
-                tripSummaryView: !state.tripSummaryView,
-                startLocation: initialState.startLocation,
-                endLocation: initialState.endLocation,
+                ...initialState,
+                tripSummaryView: !state.tripSummaryView
+            });
+        case CANCEL_ROUTE:
+            // return initialState;
+            return Object.assign({}, state, {
+                ...initialState,
                 navigationRoute: initialState.navigationRoute,
             });
         case SAVE_TRIP:

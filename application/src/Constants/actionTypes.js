@@ -21,7 +21,6 @@ export const GET_TRAFFIC_IMAGES = 'GET_TRAFFIC_IMAGES';
 export const GET_TRAFFIC_IMAGES_SUCCEEDED = 'GET_TRAFFIC_IMAGES_SUCCEEDED';
 export const GET_ERP_DATA = 'GET_ERP_DATA';
 export const GET_ERP_DATA_SUCCEEDED = 'GET_ERP_DATA_SUCCEEDED';
-export const UPDATE_STEPS = 'UPDATE_STEPS';
 export const UPDATE_CAMERA_MARKERS = 'UPDATE_CAMERA_MARKERS';
 
 /**
@@ -39,6 +38,9 @@ export const TRIP_SUMMARY = 'TRIP_SUMMARY';
 export const SAVE_TRIP = 'SAVE_TRIP';
 export const MAP_MATCHING = 'MAP_MATCHING';
 export const MAP_MATCHING_SUCCEEDED = 'MAP_MATCHING_SUCCEEDED';
+export const CANCEL_ROUTE = 'CANCEL_ROUTE';
+export const REROUTE = 'REROUTE';
+export const UPDATE_STEPS = 'UPDATE_STEPS';
 
 /**
  * Action types for Settings

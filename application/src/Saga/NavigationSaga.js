@@ -85,7 +85,11 @@ function* handlePlanRoute (action) {
                         geometries: 'geojson',
                     }
                 }).then(function (response) {
-                    return response;
+                    let routeInstruction = [];
+                    response.data.routes[0].legs[0].steps.forEach(instruction => {        
+                        routeInstruction.push(instruction)
+                    });
+                    return { route: response, routeInstruction: routeInstruction };
                 })
             ));
         yield put({ type: PLAN_ROUTE_SUCCEEDED, payload})
