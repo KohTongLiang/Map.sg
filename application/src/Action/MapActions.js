@@ -16,10 +16,18 @@ export function getErpData () {
     return { type: GET_ERP_DATA }
 }
 
+/**
+ * Currently not in use
+ * @param {string} payload 
+ */
 export function updateLineString (payload) {
     return { type: UPDATE_LINE_STRING, payload }
 }
 
+/**
+ * Get a array of cameras as input.
+ * @param {array[string]} payload 
+ */
 export function updateNextCamera (payload) {
     return { type: UPDATE_NEXT_CAMERA, payload }
 }

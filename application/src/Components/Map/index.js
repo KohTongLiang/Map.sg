@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from "react-redux";
-
+import Gantry from '../../json/Gantry';
 import * as turf from '@turf/turf';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -90,6 +90,7 @@ function MapBoxView (props) {
     useEffect(() => {
         props.getTrafficImages();
         props.getErpData();
+        console.log(Gantry);
     }, [])
 
    /* *
@@ -219,17 +220,19 @@ function MapBoxView (props) {
 
             // detect if user passed a camera location
             let tolerance = 0.0005;
-            let user = props.userLocation[0];
-            let nextCamera = props.cameraMarkers[0].camera.location;
-            if ((user.lng - nextCamera.longitude <= tolerance &&
-                user.lng - nextCamera.longitude >= -tolerance) &&
-                (user.lat - nextCamera.latitude <= tolerance &&
-                user.lat - nextCamera.latitude >= -tolerance)) {
-                // update cameramarker state
-                // remove cameras as they pass through
-                let a = props.cameraMarkers;
-                a.splice(0,1);
-                props.updateNextCamera(a);
+            if (props.cameraMarkers.length > 0) {
+                let user = props.userLocation[0];
+                let nextCamera = props.cameraMarkers[0].camera.location;
+                if ((user.lng - nextCamera.longitude <= tolerance &&
+                    user.lng - nextCamera.longitude >= -tolerance) &&
+                    (user.lat - nextCamera.latitude <= tolerance &&
+                    user.lat - nextCamera.latitude >= -tolerance)) {
+                    // update cameramarker state
+                    // remove cameras as they pass through
+                    let a = props.cameraMarkers;
+                    a.splice(0,1);
+                    props.updateNextCamera(a);
+                }
             }
 
             marker.setLngLat([props.userLocation[0].lng, props.userLocation[0].lat]);

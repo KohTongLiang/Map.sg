@@ -15,7 +15,7 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
  export default function* MapSaga() {
     // yield takeLatest(GET_TRAFFIC_IMAGES, handleGetTrafficImages)
-    // yield takeLatest('disabled', handleGetErpData);
+    yield takeEvery(GET_ERP_DATA, handleGetErpData);
     yield takeEvery(GET_TRAFFIC_IMAGES, handleGetTrafficImages);
  }
 
@@ -41,13 +41,13 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY;
            () => (axios.get('https://cors-anywhere.herokuapp.com/http://datamall2.mytransport.sg/ltaodataservice/ERPRates',{
                 headers: {
                     'AccountKey' : 'oeIw+flHT8CMv/MTFMtY1A==',
+                    'accept' : 'application/json',
                 }
             }).then(function (response) {
-               return response;
+               return response.data.value;
            })
         ));
-        yield delay(20000);
-        yield put({ type: 'TUT', payload})
+        yield put({ type: GET_ERP_DATA_SUCCEEDED, payload})
     } catch (error) {
         console.log(error)
     }
