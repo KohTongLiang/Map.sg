@@ -24,7 +24,7 @@ function HomeReducer (state = initialState, action) {
             
         case GET_USER_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
-                userLocation: initialState.userLocation.concat( {lng: action.payload.coords.longitude, lat: action.payload.coords.latitude } )
+                userLocation: initialState.userLocation.concat(action.payload)
             });
          
         case TOGGLE_ROUTE_PLANNER:

@@ -112,11 +112,11 @@ function HomeView (props) {
                 </div>
             )}
 
+            <Fab className={classes.navFab} color="primary">
+                <MyLocationIcon onClick={() => props.getUserLocation()} />
+            </Fab>
             {!props.onRoute && (
                 <div>
-                    <Fab className={classes.navFab} color="primary">
-                        <MyLocationIcon onClick={() => props.getUserLocation()} />
-                    </Fab>
 
                     <Fab className={classes.searchFab} color="primary">
                         <DirectionsIcon onClick={() => toggleRoutePlanner()}/>

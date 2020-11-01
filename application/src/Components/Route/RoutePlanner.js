@@ -6,7 +6,9 @@ import { Typography, Container, Input, Slide,
     AppBar, FormLabel } from '@material-ui/core';
 import { Close as CloseIcon, Search as SearchIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute } from '../../Action/NavigationActions';
+import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute
+ } from '../../Action/NavigationActions';
+ import { getTrafficImages, getErpData} from '../../Action/MapActions'
 import { getUserLocation } from '../../Action/HomeActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -61,6 +63,8 @@ function mapDispatchToProps (dispatch) {
         processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
         planRoute: (startLocation, endLocation) => dispatch(planRoute(startLocation, endLocation)),
         getUserLocation: () => dispatch(getUserLocation()),
+        getTrafficImages: () => dispatch(getTrafficImages()),
+        getErpData: () => dispatch(getErpData()),
     };
     return actions;
 }
@@ -76,6 +80,7 @@ function mapDispatchToProps (dispatch) {
 function RoutePlannerView (props) {
     const [startLocationSearch, setStartLocationSearch] = useState('');
     const [endLocationSearch, setEndLocationSearch] = useState('');
+    const [usingUserLocation, setUsingUserLocation] = useState(false);
     const classes = useStyles();
 
     // handlers to clean up the form after user choose the location they want
@@ -90,15 +95,21 @@ function RoutePlannerView (props) {
     }
 
     const handlePlanRoute = () => {
+        props.getTrafficImages();
+        props.getErpData();
         props.planRoute(props.startLocation, props.endLocation);
         props.toggleRoutePlanner();
         setStartLocationSearch('');
         setEndLocationSearch('');
     }
 
+
     const handleGetUserLocation = () => {
-        // ignored if user location already present
         props.getUserLocation();
+        if (props.userLocation.length > 0) {
+            props.processStartLocation({lng: props.userLocation[0].lng, lat: props.userLocation[0].lat});
+        }
+        setStartLocationSearch('Current Location');
     }
 
     return (
@@ -126,7 +137,7 @@ function RoutePlannerView (props) {
                     <FormGroup>
                         <FormControl>
                             <InputLabel>Start Location</InputLabel>
-                            <Input name="startLocation" value={startLocationSearch} onChange={e => setStartLocationSearch(e.target.value)}/>
+                            <Input disabled={usingUserLocation} name="startLocation" value={startLocationSearch} onChange={e => setStartLocationSearch(e.target.value)}/>
                             <IconButton color="inherit" onClick={() => props.searchStartLocation(startLocationSearch)} aria-label="Search">
                                 <SearchIcon/>
                             </IconButton>

@@ -1,4 +1,4 @@
-import { GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED, UPDATE_STEPS, UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA } from '../Constants/actionTypes';
+import { GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED, UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA } from '../Constants/actionTypes';
 /**
  * Map Reducer serves to update the state as certain actions are
  * 

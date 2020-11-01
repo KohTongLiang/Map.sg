@@ -1,5 +1,5 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
-import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED } from '../Constants/actionTypes';
+import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED, PROCESS_START_LOCATION } from '../Constants/actionTypes';
 
 /**
  * Hopme saga, used to handle side-effects like AJAX/API calls for Home view.
@@ -15,14 +15,15 @@ export default function* HomeSaga() {
 
 function* handleGetUserLocation () {
     try {
-        const payload = yield call(() => new Promise((resolve, reject) => {
+        const result = yield call(() => new Promise((resolve, reject) => {
             navigator.geolocation.watchPosition(
                 location => resolve(location),
                 error => reject(error),
             )
         }));
-
-        yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload})
+        const payload = {lng: result.coords.longitude, lat: result.coords.latitude }
+        yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
+        yield put({ type: PROCESS_START_LOCATION, payload });
     } catch (error) {
         console.log(error);
     }

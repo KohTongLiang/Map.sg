@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from "react-redux";
-import Gantry from '../../json/Gantry';
+import { Gantry } from '../../json/Gantry';
+import { GantryCoordinates } from '../../json/GantryCoordinates';
 import * as turf from '@turf/turf';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
     },
   }));
-
+ 
 const mapStateToProps = (state) => {
     const appState = {
             userLocation: state.HomeReducer.userLocation,
@@ -78,20 +79,12 @@ function mapDispatchToProps (dispatch) {
 function MapBoxView (props) {
     const [map, setMap] = useState(null);
     const [stepMarkers, setStepMarkers] = useState([]);
+    const [erpMarkers, setErpMarkers] = useState([]);
     const [pinnedCameraMarkers, setPinnedCameraMarkers] = useState([]);
     const mapContainer = useRef("");
     var marker = new mapboxgl.Marker();
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
     const classes = useStyles();
-
-    /**
-     * On component mount, gather ERP rates and traffic images
-     */
-    useEffect(() => {
-        props.getTrafficImages();
-        props.getErpData();
-        console.log(Gantry);
-    }, [])
 
    /* *
     * MAP INIT
@@ -158,9 +151,27 @@ function MapBoxView (props) {
                     'fill-extrusion-opacity': 0.6
                     }
                 }, labelLayerId);
+                map.addSource("my_data", {
+                    'type': "geojson",
+                    'data': Gantry[0]
+                });
+                map.addLayer({
+                    'id': 'erp',
+                    'type': 'line',
+                    'source': 'my_data',
+                    'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                    },
+                    'paint': {
+                    'line-color': '#000000',
+                    'line-width': 5
+                    }
+                });
 
                 setMap(map);
                 map.resize();
+                
             });
 
             /*
@@ -210,7 +221,6 @@ function MapBoxView (props) {
                 if (distance.properties.dist > 100) {
                     // if user is 100m off the plotted route, do a reroute
                     const endLocation = props.endLocation;
-                    
                     props.cancelRoute();
                     props.processStartLocation(props.userLocation);
                     props.processEndLocation(endLocation);
@@ -249,8 +259,9 @@ function MapBoxView (props) {
                         props.updateSteps(props.stepNo + 1);
                     } else {
                         // User reaches end of the route
+                        // map.removeLayer('LineString');
                         clearMap();
-                        props.updateCameraMarkers([]);
+                        props.tripSummary();
                     }
                 }
             } //
@@ -289,7 +300,6 @@ function MapBoxView (props) {
             // display step by step instruction
             // plotting route on the map
             var coordinates = props.navigationRoute[0].data.routes[0].geometry;
-            
             map.addSource('LineString', {
                 'type': 'geojson',
                 'data': coordinates
@@ -325,6 +335,8 @@ function MapBoxView (props) {
             } else {
                 pivotLocation = props.startLocation[0];
             }
+
+            // process through all the cameras and store necessary cameras in a state
             props.cameras.map(c => {
                 var cameraPosition = { lng: c.location.longitude, lat: c.location.latitude };
                 // detect if route plot by mapbox intersects position of camera
@@ -345,33 +357,58 @@ function MapBoxView (props) {
                     cameraArr.push({camera: c, dist: distance});
                 }
             });
-
             // store only cameras on the route to destination
             cameraArr.sort(function(a, b) { 
                 return a.dist - b.dist;
-            });
+            });            
             props.updateCameraMarkers(cameraArr);
+
+            // process erp data
+            // take id and location of GantryCoordinates and plot stuff
+            // GantryCoordinates {id,coordinates}
+            // props.ERP {}
+            GantryCoordinates.map(gantry => {
+                const gantryCoordinates = {lng: gantry.coordinates[0], lat: gantry.coordinates[1]};
+                var points = turf.lineIntersect(turf.lineString(coordinates.coordinates), turf.polygon([[[gantryCoordinates.lng+0.0005, gantryCoordinates.lat],
+                    [gantryCoordinates.lng, gantryCoordinates.lat+0.0005],[gantryCoordinates.lng-0.0005, gantryCoordinates.lat], [gantryCoordinates.lng, gantryCoordinates.lat-0.0005],[gantryCoordinates.lng+0.0005, gantryCoordinates.lat]]]));
+                if (points.features.length > 0) {
+                    var el = document.createElement('div');
+                    el.className = 'marker';
+                    el.style.backgroundColor = "black";
+                    el.style.textAlign = "center";
+                    el.textContent = 'Zone: ' + gantry.zoneId;
+                    el.style.width = '60px';
+                    el.style.height = '60px';
+
+                    let erp = new mapboxgl.Marker(el);
+                    erp.setLngLat(gantryCoordinates);
+                    erp.addTo(map);
+                    setErpMarkers(erpMarkers => [...erpMarkers, erp]);
+                }
+            });
         } else {
             if (map != null) {
+                // end of route, clear everything
+                map.removeLayer('LineString');
+                map.removeSource('LineString');
                 clearMap();
             }
         }
     }, [props.navigationRoute]);
 
-    /**
-     * Clear route elements plotted on the map
-     */
-    function clearMap () {
-        map.removeLayer('LineString');
-        map.removeSource('LineString');
+    function clearMap() {
         pinnedCameraMarkers.map(c => {
             c.remove();
         });
         stepMarkers.map(s => {
             s.remove();
         });
+        erpMarkers.map(e => {
+            e.remove();
+        });
         setPinnedCameraMarkers([]);
         setStepMarkers([]);
+        setErpMarkers([]);
         props.updateCameraMarkers([]);
     }
 
