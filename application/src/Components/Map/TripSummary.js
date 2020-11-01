@@ -44,7 +44,6 @@ const mapStateToProps = (state) => {
     return appState;
 };
 
-
 function mapDispatchToProps (dispatch) {
     return {
         tripSummary: () => dispatch(tripSummary()),

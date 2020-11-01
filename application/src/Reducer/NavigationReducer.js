@@ -40,12 +40,12 @@ function NavigationReducer (state = initialState, action) {
         case PROCESS_START_LOCATION:
             return Object.assign({}, state, {
                 startLocationSearchResult: initialState.startLocationSearchResult,
-                startLocation: state.startLocation.concat(action.payload),
+                startLocation: initialState.startLocation.concat(action.payload),
             });
         case PROCESS_END_LOCATION:
             return Object.assign({}, state, {
                 endLocationSearchResult: initialState.endLocationSearchResult,
-                endLocation: state.endLocation.concat(action.payload),
+                endLocation: initialState.endLocation.concat(action.payload),
             });
         case PLAN_ROUTE_SUCCEEDED:
             return Object.assign({}, state, {
