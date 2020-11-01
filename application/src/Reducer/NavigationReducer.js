@@ -1,6 +1,6 @@
 import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
     PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED,
-    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED } from '../Constants/actionTypes';
+    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -20,6 +20,9 @@ const initialState = {
     onRoute: false, // show that user is on journey
     stepNo: 0, // indiciate which stage of step by step instruction user is in
     routeInstruction: [], // stores step by step instruction
+    erpCharge: [], // store erp charges along the
+    erpTotalCharge: [], // store total erp charges incurred
+    erpFiltered: [],
 }
 
 function NavigationReducer (state = initialState, action) {
@@ -74,6 +77,10 @@ function NavigationReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 ...initialState,
                 navigationRoute: initialState.navigationRoute,
+            });
+        case FILTER_ROUTE_ERP:
+            return Object.assign({}, state, {
+                erpFiltered: initialState.erpFiltered.concat(action.payload)
             });
         case SAVE_TRIP:
             // store navigation route

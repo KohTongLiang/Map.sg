@@ -11,7 +11,8 @@ import { Paper, IconButton, Typography } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import { overrideUserLocation } from '../../Action/HomeActions';
 import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../../Action/MapActions';
-import { tripSummary, mapMatching, updateSteps, reroute, planRoute, cancelRoute,processEndLocation,processStartLocation } from '../../Action/NavigationActions';
+import { tripSummary, mapMatching, updateSteps, reroute, planRoute, cancelRoute,processEndLocation,processStartLocation,
+    filterRouteErp } from '../../Action/NavigationActions';
 import TripSummary from '../Map/TripSummary';
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +63,8 @@ function mapDispatchToProps (dispatch) {
         cancelRoute: () => dispatch(cancelRoute()),
         processStartLocation: startLocation => dispatch(processStartLocation(startLocation)),
         processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
-        updateNextCamera: cameraArr => dispatch(updateNextCamera(cameraArr))
+        updateNextCamera: cameraArr => dispatch(updateNextCamera(cameraArr)),
+        filterRouteErp: filteredErp => dispatch(filterRouteErp(filteredErp)),
     }
 }
 
@@ -81,11 +83,16 @@ function MapBoxView (props) {
     const [stepMarkers, setStepMarkers] = useState([]);
     const [erpMarkers, setErpMarkers] = useState([]);
     const [pinnedCameraMarkers, setPinnedCameraMarkers] = useState([]);
+    const [erpInRoute, setErpInRoute] = useState([]);
     const mapContainer = useRef("");
     var marker = new mapboxgl.Marker();
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
     const classes = useStyles();
 
+    useEffect(() => {
+        props.getErpData();
+        props.getTrafficImages();
+    },[]);
    /* *
     * MAP INIT
     * Create a map object, and load it into the component. Render it.
@@ -367,25 +374,43 @@ function MapBoxView (props) {
             // take id and location of GantryCoordinates and plot stuff
             // GantryCoordinates {id,coordinates}
             // props.ERP {}
-            GantryCoordinates.map(gantry => {
-                const gantryCoordinates = {lng: gantry.coordinates[0], lat: gantry.coordinates[1]};
-                var points = turf.lineIntersect(turf.lineString(coordinates.coordinates), turf.polygon([[[gantryCoordinates.lng+0.0005, gantryCoordinates.lat],
-                    [gantryCoordinates.lng, gantryCoordinates.lat+0.0005],[gantryCoordinates.lng-0.0005, gantryCoordinates.lat], [gantryCoordinates.lng, gantryCoordinates.lat-0.0005],[gantryCoordinates.lng+0.0005, gantryCoordinates.lat]]]));
-                if (points.features.length > 0) {
-                    var el = document.createElement('div');
-                    el.className = 'marker';
-                    el.style.backgroundColor = "black";
-                    el.style.textAlign = "center";
-                    el.textContent = 'Zone: ' + gantry.zoneId;
-                    el.style.width = '60px';
-                    el.style.height = '60px';
+            // let routeErps = [];
+            // var d = new Date();
+            // var currentDayType = '';
+            // if (d.getDay() === 0 || d.getDay() === 6 ) {
+            //     currentDayType = 'Weekdays';
+            // } else {
+            //     currentDayType = 'Weekends';
+            // }
+            // GantryCoordinates.map(gantry => {
+            //     const gantryCoordinates = {lng: gantry.coordinates[0], lat: gantry.coordinates[1]};
+            //     var points = turf.lineIntersect(turf.lineString(coordinates.coordinates), turf.polygon([[[gantryCoordinates.lng+0.0005, gantryCoordinates.lat],
+            //         [gantryCoordinates.lng, gantryCoordinates.lat+0.0005],[gantryCoordinates.lng-0.0005, gantryCoordinates.lat], [gantryCoordinates.lng, gantryCoordinates.lat-0.0005],[gantryCoordinates.lng+0.0005, gantryCoordinates.lat]]]));
+            //     if (points.features.length > 0) {
+            //         var el = document.createElement('div');
+            //         el.className = 'marker';
+            //         el.style.backgroundColor = "black";
+            //         el.style.textAlign = "center";
+            //         el.textContent = 'Zone: ' + gantry.zoneId;
+            //         el.style.width = '60px';
+            //         el.style.height = '60px';
 
-                    let erp = new mapboxgl.Marker(el);
-                    erp.setLngLat(gantryCoordinates);
-                    erp.addTo(map);
-                    setErpMarkers(erpMarkers => [...erpMarkers, erp]);
-                }
-            });
+            //         const distance = turf.distance(turf.point([pivotLocation.lng, pivotLocation.lat]),turf.point([gantryCoordinates.lng, gantryCoordinates.lat]), { units: 'metres' });
+            //         let abstract = props.ERP;
+            //         routeErps.push([abstract.filter(e => e.ZoneID === gantry.zoneId), distance]);
+
+            //         let erp = new mapboxgl.Marker(el);
+            //         erp.setLngLat(gantryCoordinates);
+            //         erp.addTo(map);
+            //         setErpMarkers(erpMarkers => [...erpMarkers, erp]);
+            //     }
+            // });
+
+            // routeErps.sort(function(a, b) { 
+            //     return a[1] - b[1];
+            // });
+
+            // props.filterRouteErp(routeErps);
         } else {
             if (map != null) {
                 // end of route, clear everything

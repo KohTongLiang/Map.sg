@@ -8,7 +8,6 @@ import { tripSummary } from '../../Action/NavigationActions';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
 const useStyles = makeStyles((theme) => ({
     navFab: {
         top: 'auto',
@@ -61,7 +60,6 @@ function TripSummaryView (props) {
 
     return(
         <Dialog
-            fullscreen
             open={props.tripSummaryView}
             TransitionComponent={Transition}
             keepMounted
@@ -71,17 +69,20 @@ function TripSummaryView (props) {
         >
             <AppBar className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" onClick={() => props.tripSummary()}  aria-label="close">
+                    {/* <IconButton edge="start" color="inherit" onClick={() => props.tripSummary()}  aria-label="close">
                         <CloseIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Typography variant="h6" className={classes.title}>
-                        Trip summary
+                        End of Trip
                     </Typography>
                 </Toolbar>
             </AppBar>
             <Container>
-                <p>Hi</p>
-                <Button>Save Trip</Button>
+                <form>
+                    <p>Save trip?</p>
+                    <Button>Ja</Button>
+                    <Button onClick={() => props.tripSummary()}>Nein</Button>
+                </form>
             </Container>
         </Dialog>
     )

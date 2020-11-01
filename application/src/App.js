@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Navigation from './Components/Navigation';
 import HomePage from './Components/Home';
 import SignInPage from './Components/Authentication/SignIn';
 import SignUpPage from './Components/Authentication/SignUp';
@@ -45,7 +44,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Navigation/>
         <Route exact path={ROUTES.HOME} component={HomePage}/>
         <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
         <Route path={ROUTES.SIGN_UP} component={SignUpPage}/>

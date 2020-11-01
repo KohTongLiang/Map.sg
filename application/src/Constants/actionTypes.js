@@ -44,6 +44,7 @@ export const CANCEL_ROUTE = 'CANCEL_ROUTE';
 export const REROUTE = 'REROUTE';
 export const REROUTE_SUCCEEDED = 'REROUTE';
 export const UPDATE_STEPS = 'UPDATE_STEPS';
+export const FILTER_ROUTE_ERP = 'FILTER_ROUTE_ERP';
 
 /**
  * Action types for Settings

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Fab, Paper, Container, GridList, GridListTileBar, GridListTile, Button } from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import Navigation from '../Navigation';
 
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
 import { cancelRoute } from '../../Action/NavigationActions'
@@ -53,6 +54,7 @@ const mapStateToProps = (state) => {
     const appState = {
             cameraMarkers: state.MapReducer.cameraMarkers,
             onRoute: state.NavigationReducer.onRoute,
+            erpFiltered: state.NavigationReducer.erpFiltered,
         };
     return appState;
 };
@@ -94,6 +96,10 @@ function HomeView (props) {
                     <Paper className={classes.slidePanel} elevation={5}>
                         <Container>
                             <h4>Route in Progress</h4>
+                            <ul>
+                                <li>Next ERP zone: {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{props.erpFiltered[0][0][0].ZoneID}</span>)}</li>
+                                <li>Price (SGD): {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{props.erpFiltered[0][0][0].ChargeAmount}</span>)}</li>
+                            </ul>
                             <div className={classes.sliderGridList}>
                                 <GridList className={classes.gridList} cols={2.5}>
                                     {props.cameraMarkers.map((camera) => (
@@ -117,7 +123,6 @@ function HomeView (props) {
             </Fab>
             {!props.onRoute && (
                 <div>
-
                     <Fab className={classes.searchFab} color="primary">
                         <DirectionsIcon onClick={() => toggleRoutePlanner()}/>
                     </Fab>
@@ -126,6 +131,9 @@ function HomeView (props) {
 
             <Map/>
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
+
+            
+            <Navigation/>
         </div>
     )
 }

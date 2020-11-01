@@ -1,5 +1,5 @@
 import { SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE, PROCESS_START_LOCATION, PROCESS_END_LOCATION, TRIP_SUMMARY,
-    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS } from '../Constants/actionTypes';
+    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS, FILTER_ROUTE_ERP } from '../Constants/actionTypes';
 
 /**
  * Navigation action definitions.
@@ -93,4 +93,8 @@ export function updateSteps (payload) {
  */
 export function cancelRoute () {
     return { type: CANCEL_ROUTE }
+}
+
+export function filterRouteErp (payload) {
+    return { type: FILTER_ROUTE_ERP, payload }
 }
