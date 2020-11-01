@@ -1,11 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from "react-redux";
-<<<<<<< Updated upstream
 import { Gantry } from '../../json/Gantry';
 import { GantryCoordinates } from '../../json/GantryCoordinates';
-=======
-//import Gantry from '../../json/Gantry';
->>>>>>> Stashed changes
 import * as turf from '@turf/turf';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
