@@ -1,5 +1,6 @@
 import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
-    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED, CANCEL_ROUTE, UPDATE_STEPS } from '../Constants/actionTypes';
+    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED,
+    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -39,18 +40,25 @@ function NavigationReducer (state = initialState, action) {
         case PROCESS_START_LOCATION:
             return Object.assign({}, state, {
                 startLocationSearchResult: initialState.startLocationSearchResult,
-                startLocation: state.startLocation.concat({lng: action.payload.geometry.coordinates[0], lat: action.payload.geometry.coordinates[1]}),
+                startLocation: state.startLocation.concat(action.payload),
             });
         case PROCESS_END_LOCATION:
             return Object.assign({}, state, {
                 endLocationSearchResult: initialState.endLocationSearchResult,
-                endLocation: state.endLocation.concat({lng: action.payload.geometry.coordinates[0], lat: action.payload.geometry.coordinates[1]}),
+                endLocation: state.endLocation.concat(action.payload),
             });
         case PLAN_ROUTE_SUCCEEDED:
             return Object.assign({}, state, {
-                navigationRoute: state.navigationRoute.concat(action.payload.route),
-                onRoute: !state.onRoute,
-                routeInstruction: state.routeInstruction.concat(action.payload.routeInstruction),
+                navigationRoute: initialState.navigationRoute.concat(action.payload.route),
+                onRoute: !initialState.onRoute,
+                routeInstruction: initialState.routeInstruction.concat(action.payload.routeInstruction),
+            });
+        case REROUTE_SUCCEEDED:
+            return Object.assign({}, state, {
+                stepNo: initialState.stepNo,
+                onRoute: !initialState.onRoute,
+                navigationRoute: initialState.navigationRoute.concat(action.payload.route),
+                routeInstruction: initialState.routeInstruction.concat(action.payload.routeInstruction),
             });
         case MAP_MATCHING_SUCCEEDED:
             return Object.assign({}, state, {

@@ -7,10 +7,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, Typography } from '@material-ui/core';
-import { ChevronLeft, ChevronRight, ContactSupportOutlined } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import { overrideUserLocation } from '../../Action/HomeActions';
-import { getTrafficImages, getErpData, updateCameraMarkers } from '../../Action/MapActions';
-import { tripSummary, mapMatching, updateSteps } from '../../Action/NavigationActions';
+import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../../Action/MapActions';
+import { tripSummary, mapMatching, updateSteps, reroute, planRoute, cancelRoute,processEndLocation,processStartLocation } from '../../Action/NavigationActions';
 import TripSummary from '../Map/TripSummary';
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +40,8 @@ const mapStateToProps = (state) => {
             cameraMarkers: state.MapReducer.cameraMarkers,
             stepNo: state.NavigationReducer.stepNo,
             routeInstruction: state.NavigationReducer.routeInstruction,
+            lineString: state.MapReducer.lineString,
+            onRoute: state.NavigationReducer.onRoute,
         };
     return appState;
 };
@@ -53,6 +55,13 @@ function mapDispatchToProps (dispatch) {
         mapMatching: routeCoordinates => dispatch(mapMatching(routeCoordinates)),
         updateCameraMarkers: cameraMarker => dispatch(updateCameraMarkers(cameraMarker)),
         updateSteps: stepNo => dispatch(updateSteps(stepNo)),
+        updateLineString: lineString => dispatch(updateLineString(lineString)),
+        reroute: (userLocation, endLocation) => dispatch(reroute(userLocation, endLocation)),
+        planRoute: (startLocation, endLocation) => dispatch(planRoute(startLocation, endLocation)),
+        cancelRoute: () => dispatch(cancelRoute()),
+        processStartLocation: startLocation => dispatch(processStartLocation(startLocation)),
+        processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
+        updateNextCamera: cameraArr => dispatch(updateNextCamera(cameraArr))
     }
 }
 
@@ -81,7 +90,7 @@ function MapBoxView (props) {
     useEffect(() => {
         props.getTrafficImages();
         props.getErpData();
-    })
+    }, [])
 
    /* *
     * MAP INIT
@@ -192,39 +201,62 @@ function MapBoxView (props) {
                 marker.remove();
             }
 
+            // detect if user out of route
+            if (props.onRoute) {
+                const routeOnMap = turf.lineString(props.navigationRoute[0].data.routes[0].geometry.coordinates);
+                const userLocation = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
+                const distance = turf.nearestPointOnLine(routeOnMap, userLocation, { units: 'metres' });
+                if (distance.properties.dist > 100) {
+                    // if user is 100m off the plotted route, do a reroute
+                    const endLocation = props.endLocation;
+                    
+                    props.cancelRoute();
+                    props.processStartLocation(props.userLocation);
+                    props.processEndLocation(endLocation);
+                    props.planRoute(props.userLocation, endLocation);
+                }
+            } // end of onroute
+
+            // detect if user passed a camera location
+            let tolerance = 0.0005;
+            let user = props.userLocation[0];
+            let nextCamera = props.cameraMarkers[0].camera.location;
+            if ((user.lng - nextCamera.longitude <= tolerance &&
+                user.lng - nextCamera.longitude >= -tolerance) &&
+                (user.lat - nextCamera.latitude <= tolerance &&
+                user.lat - nextCamera.latitude >= -tolerance)) {
+                // update cameramarker state
+                // remove cameras as they pass through
+                let a = props.cameraMarkers;
+                a.splice(0,1);
+                props.updateNextCamera(a);
+            }
+
             marker.setLngLat([props.userLocation[0].lng, props.userLocation[0].lat]);
             const stepNo = props.stepNo;
             if (marker !== undefined && stepMarkers[stepNo] !== undefined) {
                 // detect if user has reached a checkpoint
-                if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= 0.0005 &&
-                    marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng >= -0.0005) &&
-                    (marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat <= 0.0005 &&
-                    marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat >= -0.0005)) {
+                if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= tolerance &&
+                    marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng >= -tolerance) &&
+                    (marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat <= tolerance &&
+                    marker.getLngLat().lat - stepMarkers[stepNo].getLngLat().lat >= -tolerance)) {
                     stepMarkers[stepNo].remove();
 
                     if (props.stepNo < props.routeInstruction.length - 1) {
                         props.updateSteps(props.stepNo + 1);
                     } else {
                         // User reaches end of the route
-                        props.tripSummary();
-                        map.removeSource('LineString');
-                        map.removeLayer('LineString');
-                        props.updateSteps(0);
-                        pinnedCameraMarkers.map(c => {
-                            c.remove();
-                        });
-                        
-                        setStepMarkers([]);
+                        clearMap();
                         props.updateCameraMarkers([]);
                     }
                 }
-            }
+            } //
             marker.addTo(map);
         }
     }, [props.userLocation])
 
     /**
-     * ROUT PLOTTING
+     * ROUTE PLOTTING
      * When a route has been set
      */
     useEffect(() => {
@@ -268,7 +300,7 @@ function MapBoxView (props) {
                 'line-cap': 'round'
                 },
                 'paint': {
-                'line-color': '#BF93E4',
+                'line-color': '#000000',
                 'line-width': 5
                 }
             });
@@ -283,6 +315,13 @@ function MapBoxView (props) {
 
             // Detect if there is any traffic cameras on the way
             let cameraArr = [];
+            
+            let pivotLocation = {};
+            if (props.userLocation.length > 0) {
+                pivotLocation = props.userLocation[0];
+            } else {
+                pivotLocation = props.startLocation[0];
+            }
             props.cameras.map(c => {
                 var cameraPosition = { lng: c.location.longitude, lat: c.location.latitude };
                 // detect if route plot by mapbox intersects position of camera
@@ -299,33 +338,44 @@ function MapBoxView (props) {
                     cameraMarker.setLngLat(cameraPosition);
                     cameraMarker.addTo(map);
                     setPinnedCameraMarkers(pinnedCameraMarkers => [...pinnedCameraMarkers, cameraMarker]);
-                    cameraArr.push(c);
+                    const distance = turf.distance(turf.point([pivotLocation.lng, pivotLocation.lat]),turf.point([cameraPosition.lng, cameraPosition.lat]), { units: 'metres' });
+                    cameraArr.push({camera: c, dist: distance});
                 }
             });
 
             // store only cameras on the route to destination
+            cameraArr.sort(function(a, b) { 
+                return a.dist - b.dist;
+            });
             props.updateCameraMarkers(cameraArr);
         } else {
             if (map != null) {
-                map.removeSource('LineString');
-                map.removeLayer('LineString');
-                pinnedCameraMarkers.map(c => {
-                    c.remove();
-                });
-                stepMarkers.map(s => {
-                    s.remove();
-                });
-                setPinnedCameraMarkers([]);
-                setStepMarkers([]);
-                props.updateCameraMarkers([]);
+                clearMap();
             }
         }
     }, [props.navigationRoute]);
 
+    /**
+     * Clear route elements plotted on the map
+     */
+    function clearMap () {
+        map.removeLayer('LineString');
+        map.removeSource('LineString');
+        pinnedCameraMarkers.map(c => {
+            c.remove();
+        });
+        stepMarkers.map(s => {
+            s.remove();
+        });
+        setPinnedCameraMarkers([]);
+        setStepMarkers([]);
+        props.updateCameraMarkers([]);
+    }
+
     return (
         <div>
             {/* Turn by turn instruction banner */}
-            {(props.routeInstruction && props.routeInstruction.length > 0) && (
+            {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
                 <Paper className={classes.paper} elevation={5}>
                     <IconButton className={classes.stepsButton} color="inherit" onClick={() => props.stepNo > 0 ? props.updateSteps(props.stepNo + 1) : props.stepNo}>
                         <ChevronLeft/>

@@ -1,6 +1,6 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
 import { SEARCH_START_LOCATION, SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, SEARCH_END_LOCATION,
-    PLAN_ROUTE, PLAN_ROUTE_SUCCEEDED, MAP_MATCHING, MAP_MATCHING_SUCCEEDED } from '../Constants/actionTypes';
+    PLAN_ROUTE, PLAN_ROUTE_SUCCEEDED, MAP_MATCHING, MAP_MATCHING_SUCCEEDED, REROUTE, REROUTE_SUCCEEDED } from '../Constants/actionTypes';
 import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 
@@ -20,6 +20,7 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY;
     yield takeEvery(SEARCH_START_LOCATION, handleSearchStartLocation);
     yield takeEvery(SEARCH_END_LOCATION, handleSearchEndLocation);
     yield takeEvery(PLAN_ROUTE, handlePlanRoute);
+    yield takeEvery(REROUTE, handleReroute);
     yield takeEvery(MAP_MATCHING, handleMapMatching);
  }
 
@@ -97,6 +98,36 @@ function* handlePlanRoute (action) {
         console.log(error)
     }
 } // end of handlePlanRoute
+
+/**
+  * Calls Mapbox API directions service to get a route object using start and end locations
+  * @param {*} action 
+  */
+ function* handleReroute (action) {
+    try {
+        const payload = yield call(
+           () => (axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${action.payload.userLocation[0].lng},${action.payload.userLocation[0].lat};${action.payload.endLocation[0].lng},${action.payload.endLocation[0].lat}`,{
+                    params: {
+                        access_token: mapboxgl.accessToken,
+                        steps: true,
+                        banner_instructions: true,
+                        voice_instructions: true,
+                        geometries: 'geojson',
+                    }
+                }).then(function (response) {
+                    let routeInstruction = [];
+                    console.log(response);
+                    response.data.routes[0].legs[0].steps.forEach(instruction => {        
+                        routeInstruction.push(instruction)
+                    });
+                    return { route: response, routeInstruction: routeInstruction };
+                })
+            ));
+        yield put({ type: REROUTE_SUCCEEDED, payload})
+    } catch (error) {
+        console.log(error)
+    }
+} // end of handleReroute
 
 /**
  * Calls Mapbox map matching API to perfect geojson to fit linestring better on the roads on the map

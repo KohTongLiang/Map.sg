@@ -14,8 +14,9 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY;
  */
 
  export default function* MapSaga() {
-    yield takeLatest(GET_TRAFFIC_IMAGES, handleGetTrafficImages)
-    yield takeLatest('disabled', handleGetErpData);
+    // yield takeLatest(GET_TRAFFIC_IMAGES, handleGetTrafficImages)
+    // yield takeLatest('disabled', handleGetErpData);
+    yield takeEvery(GET_TRAFFIC_IMAGES, handleGetTrafficImages);
  }
 
  function* handleGetTrafficImages () {
@@ -27,7 +28,6 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY;
            })
         ));
         yield put({ type: GET_TRAFFIC_IMAGES_SUCCEEDED, payload})
-        yield delay(20000);
     } catch (error) {
         console.log(error)
     }

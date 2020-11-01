@@ -22,6 +22,8 @@ export const GET_TRAFFIC_IMAGES_SUCCEEDED = 'GET_TRAFFIC_IMAGES_SUCCEEDED';
 export const GET_ERP_DATA = 'GET_ERP_DATA';
 export const GET_ERP_DATA_SUCCEEDED = 'GET_ERP_DATA_SUCCEEDED';
 export const UPDATE_CAMERA_MARKERS = 'UPDATE_CAMERA_MARKERS';
+export const UPDATE_LINE_STRING = 'UPDATE_LINE_STRING';
+export const UPDATE_NEXT_CAMERA = 'UPDATE_NEXT_CAMERA';
 
 /**
  * Action types for Navigation/Route Planner
@@ -40,6 +42,7 @@ export const MAP_MATCHING = 'MAP_MATCHING';
 export const MAP_MATCHING_SUCCEEDED = 'MAP_MATCHING_SUCCEEDED';
 export const CANCEL_ROUTE = 'CANCEL_ROUTE';
 export const REROUTE = 'REROUTE';
+export const REROUTE_SUCCEEDED = 'REROUTE';
 export const UPDATE_STEPS = 'UPDATE_STEPS';
 
 /**

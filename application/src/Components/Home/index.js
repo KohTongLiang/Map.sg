@@ -97,20 +97,8 @@ function HomeView (props) {
                             <div className={classes.sliderGridList}>
                                 <GridList className={classes.gridList} cols={2.5}>
                                     {props.cameraMarkers.map((camera) => (
-                                    <GridListTile key={camera.image}>
-                                        <img src={camera.image} alt='test' />
-                                        <GridListTileBar
-                                        title='Test'
-                                        classes={{
-                                            root: classes.titleBar,
-                                            title: classes.title,
-                                        }}
-                                        // actionIcon={
-                                            // <IconButton aria-label={`star test`}>
-                                            // <StarBorderIcon className={classes.title} />
-                                            // </IconButton>
-                                        // }
-                                        />
+                                    <GridListTile key={camera.camera.image}>
+                                        <img src={camera.camera.image} alt='test' />
                                     </GridListTile>
                                     ))}
                                 </GridList>

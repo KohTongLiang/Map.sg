@@ -51,6 +51,13 @@ export function planRoute (startLocation, endLocation) {
 }
 
 /**
+ * If user goes off course. May not need to do this here
+ */
+export function reroute (userLocation, endLocation) {
+    return { type: REROUTE, payload: { userLocation, endLocation } }
+}
+
+/**
  * Called when user reaches the last waypoint of the route
  */
 export function tripSummary () {
@@ -86,11 +93,4 @@ export function updateSteps (payload) {
  */
 export function cancelRoute () {
     return { type: CANCEL_ROUTE }
-}
-
-/**
- * If user goes off course. May not need to do this here
- */
-export function reRoute () {
-    return { type: REROUTE }
 }

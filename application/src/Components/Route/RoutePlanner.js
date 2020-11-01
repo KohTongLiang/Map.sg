@@ -80,12 +80,12 @@ function RoutePlannerView (props) {
 
     // handlers to clean up the form after user choose the location they want
     const handleSelectStart = r => {
-        props.processStartLocation(r);
+        props.processStartLocation({lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1]});
         setStartLocationSearch(r.place_name);
     }
 
     const handleSelectEnd = r => {
-        props.processEndLocation(r);
+        props.processEndLocation({lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1]});
         setEndLocationSearch(r.place_name);
     }
 
