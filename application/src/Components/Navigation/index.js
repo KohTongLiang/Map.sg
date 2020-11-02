@@ -7,7 +7,7 @@ import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon, Acc
 import { useHistory } from 'react-router-dom';
 import * as VALUES from '../../Constants/values';
 import * as ROUTES from '../../Constants/routes';
-// import { AuthUserContext } from '../Session';
+import { toggleHistoryView } from '../../Action/HomeActions';
 import SignOutButton from '../Authentication/SignOut';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto',
     },
   }));
+
+function mapDispatchToProps(dispatch) {
+    return {
+        toggleHistoryView: () => dispatch(toggleHistoryView()),
+    }
+}
 
 const mapStateToProps = (state) => {
     const appState = {
@@ -40,12 +46,12 @@ const NavigationView = (props) => {
     const history = useHistory();
     const [value, setValue] = React.useState(0);
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        top: false,
-        left: false,
-        bottom: false,
-        right: false,
-    });
+    // const [state, setState] = React.useState({
+    //     top: false,
+    //     left: false,
+    //     bottom: false,
+    //     right: false,
+    // });
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -67,18 +73,18 @@ const NavigationView = (props) => {
             <Paper square className={classes.root}>
                 <Tabs
                     value={value}
-                    onChange={(e) => setValue(e.target.value)}
+                    // onChange={(e) => setValue(e.target.value)}
                     variant="fullWidth"
                     indicatorColor="primary"
                     textColor="primary"
-                    aria-label="icon tabs example"
                 >
                     <Tab icon={<HomeIcon />} onClick={() => history.push('/')} aria-label="phone" />
-                    <Tab icon={<HistoryIcon />} aria-label="favorite" />
+                    <Tab icon={<HistoryIcon />} onClick={() => props.toggleHistoryView()} color="inherit"/>
                     <Tab icon={<BookmarkIcon />} aria-label="person" />
                     {props.loggedIn && (
                         <div>
                             <Tab
+                                key={3}
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
@@ -107,8 +113,7 @@ const NavigationView = (props) => {
                             </Menu>
                         </div>
                     )}
-                    {!props.loggedIn && <Tab icon={<ExitToAppIcon />} onClick={() => history.push('/SignIn')} aria-label="person" />}
-
+                    {!props.loggedIn && <Tab key={4} icon={<ExitToAppIcon />} onClick={() => history.push('/SignIn')} aria-label="person" />}
                 </Tabs>
             </Paper>
         </div>
@@ -117,6 +122,7 @@ const NavigationView = (props) => {
 
 const Navigation = connect(
     mapStateToProps,
+    mapDispatchToProps,
     )(NavigationView);
 
 export default Navigation;

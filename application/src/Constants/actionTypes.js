@@ -13,6 +13,7 @@ export const GET_USER_LOCATION = 'GET_USER_LOCATION';
 export const TOGGLE_TRAFFIC_IMAGES_VIEW = 'TOGGLE_TRAFFIC_IMAGES_VIEW';
 export const TOGGLE_ROUTE_PLANNER = 'TOGGLE_ROUTE_PLANNER';
 export const GET_USER_LOCATION_SUCCEEDED = 'GET_USER_LOCATION_SUCCEEDED';
+export const HISTORY_VIEW = 'HISTORY_VIEW';
 
 /**
  * Action types for Map Actions
@@ -45,21 +46,12 @@ export const REROUTE = 'REROUTE';
 export const REROUTE_SUCCEEDED = 'REROUTE';
 export const UPDATE_STEPS = 'UPDATE_STEPS';
 export const FILTER_ROUTE_ERP = 'FILTER_ROUTE_ERP';
+export const SAVE_ROUTE_NAME = 'SAVE_ROUTE_NAME';
+export const RUN_HISTORY = 'RUN_HISTORY';
+export const DELETE_HISTORY = 'DELETE_HISTORY';
 
 /**
- * Action types for Settings
- */
-export const SAVE_SETTINGS = 'SAVE_SETTINGS';
-export const LOAD_SETTINGS = 'LOAD_SETTINGS';
-
-/**
- * Action types for History
- */
-export const SAVE_ROUTE = 'SAVE_ROUTE';
-export const LOAD_ROUTE = 'LOAD_ROUTE';
-
-/**
- * Action types for Authentication
+ * Action types for Firebase
  */
 export const SIGN_IN = 'SIGN_UP';
 export const SIGN_UP = 'SIGN_IN';
@@ -71,3 +63,7 @@ export const SIGN_IN_FAILURE = 'SIGN_UP_FAILURE';
 export const SIGN_UP_FAILURE = 'SIGN_IN_FAILURE';
 export const SIGN_OUT_FAILURE = 'SIGN_OUT_FAILURE';
 export const CLEAR_ERROR_MESSAGE = 'CLEAR_ERROR_MESSAGE';
+export const SAVE_HISTORY = 'SAVE_HISTORY';
+export const SAVE_HISTORY_SUCCESS = 'SAVE_HISTORY_SUCCESS';
+export const LOAD_HISTORY = 'LOAD_HISTORY';
+export const LOAD_HISTORY_SUCCESS = 'LOAD_HISTORY_SUCCESS';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state) => {
     const appState = {
             errorMessage: state.FirebaseReducer.errorMessage,
+            signInSuccess: state.FirebaseReducer.signInSuccess,
         };
     return appState;
 };
@@ -44,10 +45,15 @@ const SignInView = (props) => {
     const {register, handleSubmit, errors } = useForm();
     const history = useHistory();
 
+    useEffect(() => {
+        if (props.signInSuccess) {
+            history.push('/');
+        }
+    }, [props.signInSuccess])
+
     const onSubmit = data => {
         props.signIn(data);
         setOpen(true)
-        // history.push('/');
     }
 
     return (

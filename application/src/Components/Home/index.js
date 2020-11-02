@@ -8,6 +8,7 @@ import Navigation from '../Navigation';
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
 import { cancelRoute } from '../../Action/NavigationActions'
 import Map from '../Map';
+import History from '../Map/History';
 import RoutePlanner from '../Route/RoutePlanner';
 
 const useStyles = makeStyles((theme) => ({
@@ -133,6 +134,8 @@ function HomeView (props) {
             
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
             
+            <History />
+
             <Navigation/>
         </div>
     )

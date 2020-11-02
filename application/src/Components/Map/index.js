@@ -13,6 +13,7 @@ import { overrideUserLocation } from '../../Action/HomeActions';
 import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../../Action/MapActions';
 import { tripSummary, mapMatching, updateSteps, reroute, planRoute, cancelRoute,processEndLocation,processStartLocation,
     filterRouteErp } from '../../Action/NavigationActions';
+import { loadHistory, saveHistory } from '../../Action/FirebaseAction';
 import TripSummary from '../Map/TripSummary';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,19 +33,21 @@ const useStyles = makeStyles((theme) => ({
  
 const mapStateToProps = (state) => {
     const appState = {
-            userLocation: state.HomeReducer.userLocation,
-            navigationRoute: state.NavigationReducer.navigationRoute,
-            startLocation: state.NavigationReducer.startLocation,
-            endLocation: state.NavigationReducer.endLocation,
-            mapMatchedRoute: state.NavigationReducer.mapMatchedRoute,
-            cameras: state.MapReducer.cameras,
-            ERP: state.MapReducer.ERP,
-            cameraMarkers: state.MapReducer.cameraMarkers,
-            stepNo: state.NavigationReducer.stepNo,
-            routeInstruction: state.NavigationReducer.routeInstruction,
-            lineString: state.MapReducer.lineString,
-            onRoute: state.NavigationReducer.onRoute,
-        };
+        userLocation: state.HomeReducer.userLocation,
+        navigationRoute: state.NavigationReducer.navigationRoute,
+        startLocation: state.NavigationReducer.startLocation,
+        endLocation: state.NavigationReducer.endLocation,
+        mapMatchedRoute: state.NavigationReducer.mapMatchedRoute,
+        cameras: state.MapReducer.cameras,
+        ERP: state.MapReducer.ERP,
+        cameraMarkers: state.MapReducer.cameraMarkers,
+        stepNo: state.NavigationReducer.stepNo,
+        routeInstruction: state.NavigationReducer.routeInstruction,
+        lineString: state.MapReducer.lineString,
+        onRoute: state.NavigationReducer.onRoute,
+        user: state.FirebaseReducer.user,
+        routeName: state.NavigationReducer.routeName
+    };
     return appState;
 };
 
@@ -65,6 +68,8 @@ function mapDispatchToProps (dispatch) {
         processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
         updateNextCamera: cameraArr => dispatch(updateNextCamera(cameraArr)),
         filterRouteErp: filteredErp => dispatch(filterRouteErp(filteredErp)),
+        saveHistory: route => dispatch(saveHistory(route)),
+        loadHistory: userId => dispatch(loadHistory(userId)),
     }
 }
 
@@ -84,6 +89,7 @@ function MapBoxView (props) {
     const [erpMarkers, setErpMarkers] = useState([]);
     const [pinnedCameraMarkers, setPinnedCameraMarkers] = useState([]);
     const [erpInRoute, setErpInRoute] = useState([]);
+    const [userMarker, setUserMarker] = useState(null)
     const mapContainer = useRef("");
     var marker = new mapboxgl.Marker();
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
@@ -93,6 +99,12 @@ function MapBoxView (props) {
         props.getErpData();
         props.getTrafficImages();
     },[]);
+
+    useEffect(() => {
+        if (props.user !== null){
+            props.loadHistory({userId: props.user.uid});
+        }
+    }, [props.user])
    /* *
     * MAP INIT
     * Create a map object, and load it into the component. Render it.
@@ -216,8 +228,8 @@ function MapBoxView (props) {
                 center: [props.userLocation[0].lng, props.userLocation[0].lat]
             });
 
-            if (marker !== undefined) {
-                marker.remove();
+            if (userMarker !== null) {
+                userMarker.remove();
             }
 
             // detect if user out of route
@@ -267,12 +279,21 @@ function MapBoxView (props) {
                     } else {
                         // User reaches end of the route
                         // map.removeLayer('LineString');
-                        // clearMap();
+                        props.saveHistory({
+                            userId: props.user.uid,
+                            navigationRoute : props.navigationRoute,
+                            routeName: props.routeName,
+                            startLocation: props.startLocation,
+                            endLocation: props.endLocation,
+                        });
+                        
+                        clearMap();
                         props.tripSummary();
                     }
                 }
             } //
             marker.addTo(map);
+            setUserMarker(marker);
         }
     }, [props.userLocation])
 
@@ -325,13 +346,13 @@ function MapBoxView (props) {
                 }
             });
 
-            let startMarker = new mapboxgl.Marker();
-            startMarker.setLngLat(props.startLocation[0]);
-            startMarker.addTo(map);
+            // let startMarker = new mapboxgl.Marker();
+            // startMarker.setLngLat(props.startLocation[0]);
+            // startMarker.addTo(map);
 
-            let destinationMarker = new mapboxgl.Marker();
-            destinationMarker.setLngLat(props.endLocation[0]);
-            destinationMarker.addTo(map);
+            // let destinationMarker = new mapboxgl.Marker();
+            // destinationMarker.setLngLat(props.endLocation[0]);
+            // destinationMarker.addTo(map);
 
             // Detect if there is any traffic cameras on the way
             let cameraArr = [];
@@ -367,7 +388,7 @@ function MapBoxView (props) {
             // store only cameras on the route to destination
             cameraArr.sort(function(a, b) { 
                 return a.dist - b.dist;
-            });            
+            });
             props.updateCameraMarkers(cameraArr);
 
             // process erp data

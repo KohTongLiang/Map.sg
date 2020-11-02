@@ -1,6 +1,6 @@
 import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
     PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED,
-    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP } from '../Constants/actionTypes';
+    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -12,6 +12,7 @@ import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS
 const initialState = {
     startLocation: [],
     endLocation: [],
+    routeName: [],
     startLocationSearchResult: [], // for routeplanner form
     endLocationSearchResult: [], // for routeplanner form
     navigationRoute: [], // geometric data of the route user is taking
@@ -72,6 +73,15 @@ function NavigationReducer (state = initialState, action) {
                 ...initialState,
                 tripSummaryView: !state.tripSummaryView
             });
+        case RUN_HISTORY:
+            return Object.assign({}, state, {
+                navigationRoute: initialState.navigationRoute.concat(action.payload.routeInformation),
+                onRoute: !initialState.onRoute,
+                routeInstruction: initialState.routeInstruction.concat(action.payload.routeInformation.data.routes[0].legs[0].steps),
+                startLocation: initialState.startLocation.concat(action.payload.startLocation),
+                endLocation: initialState.endLocation.concat(action.payload.endLocation),
+                routeName: initialState.routeName.concat(action.payload.routeName),
+            });
         case CANCEL_ROUTE:
             // return initialState;
             return Object.assign({}, state, {
@@ -81,6 +91,10 @@ function NavigationReducer (state = initialState, action) {
         case FILTER_ROUTE_ERP:
             return Object.assign({}, state, {
                 erpFiltered: initialState.erpFiltered.concat(action.payload)
+            });
+        case SAVE_ROUTE_NAME:
+            return Object.assign({}, state, {
+                routeName: initialState.routeName.concat(action.payload)
             });
         case SAVE_TRIP:
             // store navigation route

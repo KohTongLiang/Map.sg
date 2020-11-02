@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state) => {
     const appState = {
             errorMessage: state.FirebaseReducer.errorMessage,
+            signUpSuccess: state.FirebaseReducer.signUpSuccess,
         };
     return appState;
 };
@@ -57,10 +58,16 @@ function SignUpView (props) {
     * @Version 1.0
     * @Since 19/10/2018
     * */
+
+    useEffect(() => {
+        if (props.signUpSuccess) {
+            history.push('/');
+        }
+    }, [props.signUpSuccess])
+
     const onSubmit = data => {
-        props.signUp({email: data.email, password: data.passwordOne});
+        props.signUp({email: data.email, gender: data.gender, username: data.username, password: data.passwordOne });
         setOpen(true)
-        // history.push('/');
     }
     return (
         <Container>

@@ -1,4 +1,4 @@
-import { GET_USER_LOCATION_SUCCEEDED, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
+import { GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
 
 /**
  * Home reducers to update states belonging to Home view
@@ -12,6 +12,7 @@ const initialState = {
     routePlannerView: false,
     trafficImagesView: false,
     userLocation: [],
+    historyView: false,
 }
 
 function HomeReducer (state = initialState, action) {
@@ -26,12 +27,14 @@ function HomeReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 userLocation: initialState.userLocation.concat(action.payload)
             });
-         
         case TOGGLE_ROUTE_PLANNER:
             return Object.assign({}, state, {
                 routePlannerView: !state.routePlannerView
             });
-        
+        case HISTORY_VIEW:        
+            return Object.assign({}, state, {
+                historyView: !state.historyView
+            });
         case TOGGLE_TRAFFIC_IMAGES_VIEW:
             break;
         default:

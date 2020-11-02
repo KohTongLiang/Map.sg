@@ -6,8 +6,7 @@ import { Typography, Container, Input, Slide,
     AppBar, FormLabel } from '@material-ui/core';
 import { Close as CloseIcon, Search as SearchIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute
- } from '../../Action/NavigationActions';
+import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute, saveRouteName } from '../../Action/NavigationActions';
  import { getTrafficImages, getErpData} from '../../Action/MapActions'
 import { getUserLocation } from '../../Action/HomeActions';
 
@@ -65,6 +64,7 @@ function mapDispatchToProps (dispatch) {
         getUserLocation: () => dispatch(getUserLocation()),
         getTrafficImages: () => dispatch(getTrafficImages()),
         getErpData: () => dispatch(getErpData()),
+        saveRouteName: routeName => dispatch(saveRouteName(routeName)),
     };
     return actions;
 }
@@ -98,6 +98,7 @@ function RoutePlannerView (props) {
         props.getTrafficImages();
         props.getErpData();
         props.planRoute(props.startLocation, props.endLocation);
+        props.saveRouteName([startLocationSearch, endLocationSearch]);
         props.toggleRoutePlanner();
         setStartLocationSearch('');
         setEndLocationSearch('');

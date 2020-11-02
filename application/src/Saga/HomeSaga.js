@@ -2,7 +2,7 @@ import { put, takeEvery, call } from 'redux-saga/effects';
 import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED, PROCESS_START_LOCATION } from '../Constants/actionTypes';
 
 /**
- * Hopme saga, used to handle side-effects like AJAX/API calls for Home view.
+ * Home saga, used to handle side-effects like AJAX/API calls for Home view.
  * 
  * @Koh Tong Liang
  * @Version 1

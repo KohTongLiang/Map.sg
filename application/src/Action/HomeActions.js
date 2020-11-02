@@ -1,4 +1,4 @@
-import { GET_USER_LOCATION, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
+import { GET_USER_LOCATION, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW } from '../Constants/actionTypes';
 
 
 /**
@@ -41,4 +41,8 @@ export function toggleTrafficImagesView (payload) {
 
  export function overrideUserLocation (payload) {
      return { type: 'OVERRIDE_USER_LOCATION', payload }
+ }
+
+ export function toggleHistoryView() {
+     return { type: HISTORY_VIEW }
  }

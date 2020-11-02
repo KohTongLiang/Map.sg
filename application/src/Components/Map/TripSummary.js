@@ -86,9 +86,7 @@ function TripSummaryView (props) {
             </AppBar>
             <Container>
                 <form>
-                    <p>Save trip?</p>
-                    <Button onClick={() => saveRouteHandler()}>Ja</Button>
-                    <Button onClick={() => props.tripSummary()}>Nein</Button>
+                    <Button onClick={() => props.tripSummary()}>Yay!</Button>
                 </form>
             </Container>
         </Dialog>
