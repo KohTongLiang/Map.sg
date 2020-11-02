@@ -9,7 +9,7 @@ import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, Typography, Container, Slide, Dialog, Button} from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
-import { overrideUserLocation } from '../../Action/HomeActions';
+import { overrideUserLocation, toggleRoutePlanner,toggleMapPicker, returnMapPickerResult } from '../../Action/HomeActions';
 import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../../Action/MapActions';
 import { tripSummary, mapMatching, updateSteps, reroute, planRoute, cancelRoute, processEndLocation,
     processStartLocation, filterRouteErp } from '../../Action/NavigationActions';
@@ -53,6 +53,7 @@ const mapStateToProps = (state) => {
         user: state.FirebaseReducer.user,
         routeName: state.NavigationReducer.routeName,
         tripSummaryView: state.NavigationReducer.tripSummaryView,
+        mapPickerMode: state.HomeReducer.mapPickerMode,
     };
     return appState;
 };
@@ -77,6 +78,9 @@ function mapDispatchToProps(dispatch) {
         saveHistory: route => dispatch(saveHistory(route)),
         loadHistory: userId => dispatch(loadHistory(userId)),
         tripSummary: () => dispatch(tripSummary()),
+        toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
+        toggleMapPicker: () => dispatch(toggleMapPicker()),
+        returnMapPickerResult: payload => dispatch(returnMapPickerResult(payload)),
     }
 }
 
@@ -112,6 +116,30 @@ function MapBoxView(props) {
             props.loadHistory({ userId: props.user.uid });
         }
     }, [props.user])
+
+    useEffect(() => {
+        if (props.mapPickerMode) {
+            map.on('click', (e) => {
+                props.returnMapPickerResult([{lng: e.lngLat.lng, lat: e.lngLat.lat}]);
+            });
+        } else if (map !== null) {
+            /**
+             * Reset DEBUGGING action listener
+             */
+            map.on('click', (e) => {
+                /*
+                * FOR DEBUGGING and DEMO only
+                * on click set user current location
+                * used as temporary override user location
+                */
+                props.overrideUserLocation({
+                    lng: e.lngLat.lng,
+                    lat: e.lngLat.lat,
+                });
+            });
+        }
+    }, [props.mapPickerMode])
+
     /* *
      * MAP INIT
      * Create a map object, and load it into the component. Render it.
@@ -177,35 +205,35 @@ function MapBoxView(props) {
                         'fill-extrusion-opacity': 0.6
                     }
                 }, labelLayerId);
-                map.addSource("my_data", {
-                    'type': "geojson",
-                    'data': Gantry[0]
-                });
-                map.addLayer({
-                    'id': 'erp',
-                    'type': 'line',
-                    'source': 'my_data',
-                    'layout': {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    'paint': {
-                        'line-color': '#000000',
-                        'line-width': 5
-                    }
-                });
+
+                // map.addSource("my_data", {
+                //     'type': "geojson",
+                //     'data': Gantry[0]
+                // });
+                // map.addLayer({
+                //     'id': 'erp',
+                //     'type': 'line',
+                //     'source': 'my_data',
+                //     'layout': {
+                //         'line-join': 'round',
+                //         'line-cap': 'round'
+                //     },
+                //     'paint': {
+                //         'line-color': '#000000',
+                //         'line-width': 5
+                //     }
+                // });
 
                 setMap(map);
                 map.resize();
-
             });
 
-            /*
-            * FOR DEBUGGING and DEMO only
-            * on click set user current location
-            * used as temporary override user location
-            */
             map.on('click', (e) => {
+                /*
+                * FOR DEBUGGING and DEMO only
+                * on click set user current location
+                * used as temporary override user location
+                */
                 props.overrideUserLocation({
                     lng: e.lngLat.lng,
                     lat: e.lngLat.lat,
@@ -219,16 +247,16 @@ function MapBoxView(props) {
         }
     }, [map]);
 
-    /* *
-       * USER LOCATION CHANGE
-       * When userlocation change, detect if user has reach waypoint, if user has reach the
-       * waypoint, remove the marker on the waypoint and progress to next step in step by step
-       * instruction
-       * 
-       * @Koh Tong Liang
-       * @Version 1.0
-       * @Since 19/10/2020
-       * */
+/* *
+    * USER LOCATION CHANGE
+    * When userlocation change, detect if user has reach waypoint, if user has reach the
+    * waypoint, remove the marker on the waypoint and progress to next step in step by step
+    * instruction
+    * 
+    * @Koh Tong Liang
+    * @Version 1.0
+    * @Since 19/10/2020
+    * */
     useEffect(() => {
         if (map != null && props.userLocation.length > 0) {
             map.flyTo({
@@ -286,13 +314,15 @@ function MapBoxView(props) {
                     } else {
                         // User reaches end of the route
                         // map.removeLayer('LineString');
-                        props.saveHistory({
-                            userId: props.user.uid,
-                            navigationRoute: props.navigationRoute,
-                            routeName: props.routeName,
-                            startLocation: props.startLocation,
-                            endLocation: props.endLocation,
-                        });
+                        if (props.user !== null) {
+                            props.saveHistory({
+                                userId: props.user.uid,
+                                navigationRoute: props.navigationRoute,
+                                routeName: props.routeName,
+                                startLocation: props.startLocation,
+                                endLocation: props.endLocation,
+                            });
+                        }
 
                         clearMap();
                         props.tripSummary();
@@ -304,7 +334,7 @@ function MapBoxView(props) {
         }
     }, [props.userLocation])
 
-    /**
+  /* *
      * ROUTE PLOTTING
      * When a route has been set, run the following code.
      */

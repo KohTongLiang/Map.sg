@@ -83,7 +83,6 @@ function NavigationReducer (state = initialState, action) {
                 routeName: initialState.routeName.concat(action.payload.routeName),
             });
         case CANCEL_ROUTE:
-            // return initialState;
             return Object.assign({}, state, {
                 ...initialState,
                 navigationRoute: initialState.navigationRoute,
@@ -96,9 +95,6 @@ function NavigationReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 routeName: initialState.routeName.concat(action.payload)
             });
-        case SAVE_TRIP:
-            // store navigation route
-            break;
         default:
     } // end of switch case
     return state;

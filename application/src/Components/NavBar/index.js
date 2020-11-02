@@ -1,13 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { Paper, Tabs, Tab, makeStyles, Menu, MenuItem } from '@material-ui/core';
 import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon, AccountCircle, ExitToApp as ExitToAppIcon} from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import * as VALUES from '../../Constants/values';
-import * as ROUTES from '../../Constants/routes';
-import { toggleHistoryView } from '../../Action/HomeActions';
+import { toggleHistoryView, toggleBookmarkView } from '../../Action/HomeActions';
 import SignOutButton from '../Authentication/SignOut';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 function mapDispatchToProps(dispatch) {
     return {
         toggleHistoryView: () => dispatch(toggleHistoryView()),
+        toggleBookmarkView: () => dispatch(toggleBookmarkView()),
     }
 }
 
@@ -67,18 +65,15 @@ const NavbarView = (props) => {
             <Paper square className={classes.root}>
                 <Tabs
                     value={value}
-                    // onChange={(e) => setValue(e.target.value)}
                     variant="fullWidth"
                     indicatorColor="primary"
-                    textColor="primary"
                 >
                     <Tab icon={<HomeIcon />} onClick={() => history.push('/')} aria-label="phone" />
                     <Tab icon={<HistoryIcon />} onClick={() => props.toggleHistoryView()} color="inherit"/>
-                    <Tab icon={<BookmarkIcon />} aria-label="person" />
+                    <Tab icon={<BookmarkIcon />} onClick={() => props.toggleBookmarkView()} aria-label="person" />
                     {props.loggedIn && (
                         <div>
                             <Tab
-                                key={3}
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
@@ -107,7 +102,7 @@ const NavbarView = (props) => {
                             </Menu>
                         </div>
                     )}
-                    {!props.loggedIn && <Tab key={4} icon={<ExitToAppIcon />} onClick={() => history.push('/SignIn')} aria-label="person" />}
+                    {!props.loggedIn && <Tab icon={<ExitToAppIcon />} onClick={() => history.push('/SignIn')} aria-label="person" />}
                 </Tabs>
             </Paper>
         </div>

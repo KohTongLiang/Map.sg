@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import {
-    Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile, Button, Collapse,
-    FormControlLabel, Typography
-} from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
+import { Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile,
+    Button, Collapse, FormControlLabel, Typography, IconButton } from '@material-ui/core';
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon, ExpandLess as ExpandLessIcon,
+    ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
         left: 10,
         width: '80%',
         position: 'fixed',
-        bottom: '5%',
+        bottom: 5,
     },
     collapseContainer: {
         display: 'flex',
@@ -107,7 +106,7 @@ function NavigationView(props) {
             {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
                 <Paper className={classes.turnInstruction} elevation={5}>
                     <Container>
-                        <Typography variant="p" className={classes.instr}>
+                        <Typography variant="body1" className={classes.instr}>
                             {props.routeInstruction[props.stepNo].maneuver.instruction}
                         </Typography>
                     </Container>
@@ -120,10 +119,16 @@ function NavigationView(props) {
                     <div className={classes.collapseContainer}>
                         <Paper className={classes.slidePanel} elevation={5}>
                             <Container>
-                                <FormControlLabel
-                                    control={<Switch checked={showImages} onChange={() => setShowImages(!showImages)} />}
-                                    label=""
-                                />
+                                {showImages === true && (
+                                    <IconButton onClick={() => setShowImages(!showImages)} >
+                                        <ExpandMoreIcon />
+                                    </IconButton>
+                                )}
+                                {showImages === false && (
+                                    <IconButton onClick={() => setShowImages(!showImages)} >
+                                        <ExpandLessIcon />
+                                    </IconButton>
+                                )}
                                 <Collapse in={showImages}>
                                     <div>
                                         <h4>Route in Progress</h4>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 
 import {
@@ -10,7 +10,7 @@ import { Close as CloseIcon, Search as SearchIcon, PinDrop as PinDropIcon } from
 import { makeStyles } from '@material-ui/core/styles';
 import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute, saveRouteName } from '../../Action/NavigationActions';
 import { getTrafficImages, getErpData } from '../../Action/MapActions'
-import { getUserLocation } from '../../Action/HomeActions';
+import { getUserLocation, toggleMapPicker } from '../../Action/HomeActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -60,6 +60,8 @@ const mapStateToProps = (state) => {
         startLocationSearchResult: state.NavigationReducer.startLocationSearchResult,
         endLocationSearchResult: state.NavigationReducer.endLocationSearchResult,
         userLocation: state.HomeReducer.userLocation,
+        mapPickerMode: state.HomeReducer.mapPickerMode,
+        mapPickerResult: state.HomeReducer.mapPickerResult,
     };
     return appState;
 };
@@ -75,6 +77,7 @@ function mapDispatchToProps(dispatch) {
         getTrafficImages: () => dispatch(getTrafficImages()),
         getErpData: () => dispatch(getErpData()),
         saveRouteName: routeName => dispatch(saveRouteName(routeName)),
+        toggleMapPicker: startEnd => dispatch(toggleMapPicker(startEnd)),
     };
     return actions;
 }
@@ -91,7 +94,26 @@ function RoutePlannerView(props) {
     const [startLocationSearch, setStartLocationSearch] = useState('');
     const [endLocationSearch, setEndLocationSearch] = useState('');
     const [usingUserLocation, setUsingUserLocation] = useState(false);
+    const [mapPicker, setMapPicker] = useState(false);
+    const [processStartPicker, setProcessStartPicker] = useState(false);
+    const [processEndPicker, setProcessEndPicker] = useState(false);
     const classes = useStyles();
+
+    useEffect(() => {
+        if (processStartPicker) {
+            props.processStartLocation(props.mapPickerResult);
+            setStartLocationSearch(JSON.stringify(props.mapPickerResult));
+            props.toggleMapPicker();
+            props.toggleRoutePlanner();
+            setProcessStartPicker(false);
+        } else if (processEndPicker) {
+            props.processEndLocation(props.mapPickerResult);
+            setEndLocationSearch(JSON.stringify(props.mapPickerResult));
+            props.toggleMapPicker();
+            props.toggleRoutePlanner();
+            setProcessEndPicker(false);
+        }
+    }, [props.mapPickerResult]);
 
     // handlers to clean up the form after user choose the location they want
     const handleSelectStart = r => {
@@ -122,89 +144,103 @@ function RoutePlannerView(props) {
         setStartLocationSearch('Current Location');
     }
 
+    const pickStartLocationFromMap = () => {
+        props.toggleRoutePlanner();
+        props.toggleMapPicker();
+        setProcessStartPicker(true);
+    }
+
+    const pickEndLocationFromMap = () => {
+        props.toggleRoutePlanner();
+        props.toggleMapPicker();
+        setProcessEndPicker(true);
+    }
+
     return (
-        <Dialog
-            fullScreen
-            open={props.routePlannerView}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={() => props.toggleRoutePlanner()}
-            aria-labelledby="alert-dialog-slide-title"
-            aria-describedby="alert-dialog-slide-description"
-        >
-            <AppBar className={classes.appBar}>
-                <Toolbar>
-                    <IconButton edge="start" color="inherit" onClick={() => props.toggleRoutePlanner()} aria-label="close">
-                        <CloseIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Choose Locations
+        <div>
+            <Dialog
+                fullScreen
+                open={props.routePlannerView}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={() => props.toggleRoutePlanner()}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <AppBar className={classes.appBar}>
+                    <Toolbar>
+                        <IconButton edge="start" color="inherit" onClick={() => props.toggleRoutePlanner()} aria-label="close">
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography variant="h6" className={classes.title}>
+                            Choose Locations
                     </Typography>
-                </Toolbar>
-            </AppBar>
-            <Container>
-                <form>
-                    <FormGroup>
-                        <FormControl>
-                            <Grid container spacing={3}>
-                                <Grid item xs={8}>
-                                    <InputLabel>Start Location</InputLabel>
-                                    <Input fullWidth name="startLocation" value={startLocationSearch} onChange={e => setStartLocationSearch(e.target.value)} />
+                    </Toolbar>
+                </AppBar>
+                <Container>
+                    <form>
+                        <FormGroup>
+                            <FormControl>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={8}>
+                                        <InputLabel>Start Location</InputLabel>
+                                        <Input fullWidth name="startLocation" value={startLocationSearch} onChange={e => setStartLocationSearch(e.target.value)} />
+                                    </Grid>
+                                    <Grid item xs={2} >
+                                        <IconButton color="inherit" onClick={() => props.searchStartLocation(startLocationSearch)} aria-label="Search">
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <IconButton color="inherit" onClick={() => pickStartLocationFromMap()} aria-label="Search">
+                                            <PinDropIcon />
+                                        </IconButton>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={2} >
-                                    <IconButton color="inherit" onClick={() => props.searchStartLocation(startLocationSearch)} aria-label="Search">
-                                        <SearchIcon />
-                                    </IconButton>
+                                <Button color="inherit" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
+                            </FormControl>
+                        </FormGroup>
+                        <FormGroup>
+                            <FormLabel>
+                                {props.startLocationSearchResult && props.startLocationSearchResult.map(r => (
+                                    <Button onClick={() => handleSelectStart(r)}>{r.place_name}</Button>
+                                ))}
+                            </FormLabel>
+                        </FormGroup>
+                        <FormGroup>
+                            <FormControl>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={8}>
+                                        <InputLabel>End Location</InputLabel>
+                                        <Input fullWidth name="endLocation" value={endLocationSearch} onChange={e => setEndLocationSearch(e.target.value)} />
+                                    </Grid>
+                                    <Grid item xs={2} >
+                                        <IconButton color="inherit" onClick={() => props.searchEndLocation(endLocationSearch)} aria-label="Search">
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <IconButton color="inherit" onClick={() => pickEndLocationFromMap()} aria-label="Search">
+                                            <PinDropIcon />
+                                        </IconButton>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <IconButton color="inherit" onClick={() => alert()} aria-label="Search">
-                                        <PinDropIcon />
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
-                            <Button color="inherit" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormLabel>
-                            {props.startLocationSearchResult && props.startLocationSearchResult.map(r => (
-                                <Button onClick={() => handleSelectStart(r)}>{r.place_name}</Button>
-                            ))}
-                        </FormLabel>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormControl>
-                            <Grid container spacing={3}>
-                                <Grid item xs={8}>
-                                    <InputLabel>End Location</InputLabel>
-                                    <Input fullWidth name="endLocation" value={endLocationSearch} onChange={e => setEndLocationSearch(e.target.value)} />
-                                </Grid>
-                                <Grid item xs={2} >
-                                    <IconButton color="inherit" onClick={() => props.searchEndLocation(endLocationSearch)} aria-label="Search">
-                                        <SearchIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <IconButton color="inherit" onClick={() => alert()} aria-label="Search">
-                                        <PinDropIcon />
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormLabel>
-                            {props.endLocationSearchResult && props.endLocationSearchResult.map(r => (
-                                <Button onClick={() => handleSelectEnd(r)}>{r.place_name}</Button>
-                            ))}
-                        </FormLabel>
-                    </FormGroup>
-                    <FormGroup className={classes.planBtn}>
-                        <Button color="inherit" onClick={() => handlePlanRoute()}>Plan</Button>
-                    </FormGroup>
-                </form>
-            </Container>
-        </Dialog>
+                            </FormControl>
+                        </FormGroup>
+                        <FormGroup>
+                            <FormLabel>
+                                {props.endLocationSearchResult && props.endLocationSearchResult.map(r => (
+                                    <Button onClick={() => handleSelectEnd(r)}>{r.place_name}</Button>
+                                ))}
+                            </FormLabel>
+                        </FormGroup>
+                        <FormGroup className={classes.planBtn}>
+                            <Button color="inherit" onClick={() => handlePlanRoute()}>Plan</Button>
+                        </FormGroup>
+                    </form>
+                </Container>
+            </Dialog>
+        </div>
     )
 }
 

@@ -20,7 +20,7 @@ function* handleGetUserLocation () {
                 error => reject(error),
             )
         }));
-        console.log('BOOBS');
+        
         const payload = {lng: result.coords.longitude, lat: result.coords.latitude }
         yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
         yield put({ type: PROCESS_START_LOCATION, payload });

@@ -5,9 +5,8 @@ import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typograph
 import {
     Close as CloseIcon, PlayArrow as PlayArrowIcon, Delete as DeleteIcon,
     BookmarkBorder as BookmarkBorderIcon, Bookmark as BookmarkIcon } from '@material-ui/icons';
-import { toggleHistoryView } from '../../Action/HomeActions';
+import { toggleBookmarkView } from '../../Action/HomeActions';
 import { runHistory, toggleBookmark } from '../../Action/NavigationActions';
-import { deleteHistory } from '../../Action/FirebaseAction';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -74,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
 const mapStateToProps = (state) => {
     const appState = {
-        historyView: state.HomeReducer.historyView,
+        bookmarkView: state.HomeReducer.bookmarkView,
         history: state.FirebaseReducer.history,
         user: state.FirebaseReducer.user,
     };
@@ -83,14 +82,13 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
     return {
-        toggleHistoryView: () => dispatch(toggleHistoryView()),
+        toggleBookmarkView: () => dispatch(toggleBookmarkView()),
         runHistory: routeInformation => dispatch(runHistory(routeInformation)),
-        deleteHistory: historyId => dispatch(deleteHistory(historyId)),
         toggleBookmark: bookmark => dispatch(toggleBookmark(bookmark)),
     }
 }
 
-function HistoryView(props) {
+function BookmarkView(props) {
     const classes = useStyles();
 
     function startFromHistoryHandler(dataRow) {
@@ -104,10 +102,6 @@ function HistoryView(props) {
         props.toggleHistoryView()
     }
 
-    function deleteHistoryHandler(historyId) {
-        props.deleteHistory({ userId: props.user.uid, historyId: historyId });
-    }
-
     function bookmarkHandler (routeId, bookmark) {
         props.toggleBookmark({ userId: props.user.uid, routeId: routeId, bookmark: bookmark });
     }
@@ -115,25 +109,26 @@ function HistoryView(props) {
     return (
         <Dialog
             fullScreen
-            open={props.historyView}
+            open={props.bookmarkView}
             TransitionComponent={Transition}
             keepMounted
-            onClose={() => props.toggleHistoryView()}
+            onClose={() => props.toggleBookmarkView()}
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
         >
             <AppBar className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" onClick={() => props.toggleHistoryView()} aria-label="close">
+                    <IconButton edge="start" color="inherit" onClick={() => props.toggleBookmarkView()} aria-label="close">
                         <CloseIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        History
+                        Bookmarks
                     </Typography>
                 </Toolbar>
             </AppBar>
             <Container>
                 {(props.history && props.history.length > 0) && props.history.map(dataRow => (
+                    (dataRow[1].bookmark === true) && (
                     <Paper key={dataRow[0]} style={{ maxHeight: 200, overflow: 'auto' }}>
                         <List>
                             <Card  className={classes.root}>
@@ -151,26 +146,17 @@ function HistoryView(props) {
                                     </CardContent>
                                 </div>
                                 <div className={classes.controls}>
-                                    {dataRow[1].bookmark == false && (
-                                        <IconButton onClick={() => bookmarkHandler(dataRow[0], true)} aria-label="play/pause">
-                                            <BookmarkBorderIcon />
-                                        </IconButton>
-                                    )}
-                                    {dataRow[1].bookmark == true && (
-                                        <IconButton onClick={() => bookmarkHandler(dataRow[0], false)} aria-label="play/pause">
-                                            <BookmarkIcon />
-                                        </IconButton>
-                                    )}
+                                    <IconButton onClick={() => bookmarkHandler(dataRow[0], false)} aria-label="play/pause">
+                                        <BookmarkIcon />
+                                    </IconButton>
                                     <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
                                         <PlayArrowIcon className={classes.playIcon} />
-                                    </IconButton>
-                                    <IconButton onClick={() => deleteHistoryHandler(dataRow[0])}>
-                                        <DeleteIcon />
                                     </IconButton>
                                 </div>
                             </Card>
                         </List>
                     </Paper>
+                    )
                 ))}
             </Container>
         </Dialog>
@@ -178,10 +164,10 @@ function HistoryView(props) {
 }
 
 
-const History = connect(
+const Bookmark = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(HistoryView);
+)(BookmarkView);
 
 
-export default History;
+export default Bookmark;

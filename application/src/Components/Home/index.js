@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import {
-    Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile, Button, Collapse,
-    FormControlLabel
-} from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
+import { Fab } from '@material-ui/core';
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import NavBar from '../NavBar';
 import Navigation from '../Navigation';
@@ -12,6 +9,7 @@ import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
 import { cancelRoute } from '../../Action/NavigationActions'
 import Map from '../Map';
 import History from '../Navigation/History';
+import Bookmark from '../Navigation/Bookmark';
 import RoutePlanner from '../Route/RoutePlanner';
 
 const useStyles = makeStyles((theme) => ({
@@ -66,6 +64,7 @@ const mapStateToProps = (state) => {
         cameraMarkers: state.MapReducer.cameraMarkers,
         onRoute: state.NavigationReducer.onRoute,
         erpFiltered: state.NavigationReducer.erpFiltered,
+        mapPickerMode: state.HomeReducer.mapPickerMode,
     };
     return appState;
 };
@@ -92,7 +91,6 @@ function HomeView(props) {
     * of the components.
     * */
     const [plannerDialog, setPlannerDialog] = useState(false);
-    const [showImages, setShowImages] = useState(false);
     const classes = useStyles();
 
     // open route planner form page
@@ -103,7 +101,7 @@ function HomeView(props) {
 
     return (
         <div className={classes.root}>
-            {!props.onRoute && (
+            {(!props.onRoute && !props.mapPickerMode) && (
                 <div>
                     <Fab className={classes.navFab} color="primary">
                         <MyLocationIcon onClick={() => props.getUserLocation()} />
@@ -111,13 +109,14 @@ function HomeView(props) {
                     <Fab className={classes.searchFab} color="primary">
                         <DirectionsIcon onClick={() => toggleRoutePlanner()} />
                     </Fab>
+                    <NavBar />
                 </div>
             )}
             <Navigation />
             <Map />
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner} />
             <History />
-            <NavBar />
+            <Bookmark />
         </div>
     )
 }
