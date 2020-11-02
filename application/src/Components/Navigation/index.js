@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import {
     Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile,
-    Button, Collapse, FormControlLabel, Typography, IconButton
+    Button, Collapse, FormControlLabel, Typography, IconButton, Grid
 } from '@material-ui/core';
 import {
     MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon, ExpandLess as ExpandLessIcon,
@@ -100,7 +100,7 @@ function NavigationView(props) {
     * they will be used throughout the program as a way to store global values among some
     * of the components.
     * */
-    const [showImages, setShowImages] = useState(false);
+    const [showImages, setShowImages] = useState(true);
     const classes = useStyles();
 
     return (
@@ -149,7 +149,7 @@ function NavigationView(props) {
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography gutterBottom variant="subtitle3">
-                                                        ERP Charge S$:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}
+                                                        ERP Charge S$:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ChargeAmount)}</span>)}
                                                     </Typography>
                                                 </Grid>
                                             </Grid>

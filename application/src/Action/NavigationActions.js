@@ -1,5 +1,5 @@
 import { SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE, PROCESS_START_LOCATION, PROCESS_END_LOCATION, TRIP_SUMMARY,
-    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY, TOGGLE_BOOKMARK } from '../Constants/actionTypes';
+    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY, TOGGLE_BOOKMARK, GET_NAME_OF_PLACE } from '../Constants/actionTypes';
 
 /**
  * Navigation action definitions.
@@ -109,4 +109,8 @@ export function runHistory (payload) {
 
 export function toggleBookmark (payload) {
     return { type: TOGGLE_BOOKMARK, payload }
+}
+
+export function getNameOfPlace (payload) {
+    return { type: GET_NAME_OF_PLACE, payload }
 }

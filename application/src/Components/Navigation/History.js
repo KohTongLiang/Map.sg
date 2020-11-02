@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typography, Button, IconButton, Paper, List } from '@material-ui/core';
 import {
     Close as CloseIcon, PlayArrow as PlayArrowIcon, Delete as DeleteIcon,
-    BookmarkBorder as BookmarkBorderIcon, Bookmark as BookmarkIcon } from '@material-ui/icons';
+    BookmarkBorder as BookmarkBorderIcon, Bookmark as BookmarkIcon
+} from '@material-ui/icons';
 import { toggleHistoryView } from '../../Action/HomeActions';
 import { runHistory, toggleBookmark } from '../../Action/NavigationActions';
 import { deleteHistory } from '../../Action/FirebaseAction';
@@ -108,7 +109,7 @@ function HistoryView(props) {
         props.deleteHistory({ userId: props.user.uid, historyId: historyId });
     }
 
-    function bookmarkHandler (routeId, bookmark) {
+    function bookmarkHandler(routeId, bookmark) {
         props.toggleBookmark({ userId: props.user.uid, routeId: routeId, bookmark: bookmark });
     }
 
@@ -135,41 +136,39 @@ function HistoryView(props) {
             <Container>
                 {(props.history && props.history.length > 0) && props.history.map(dataRow => (
                     <Paper key={dataRow[0]} style={{ maxHeight: 200, overflow: 'auto' }}>
-                        <List>
-                            <Card  className={classes.root}>
-                                <div className={classes.details}>
-                                    <CardContent className={classes.content}>
-                                        <Typography component="p" variant="body1">
-                                            From: {dataRow[1].route_name[0]}
-                                        </Typography>
-                                        <Typography component="p" variant="body1">
-                                            To: {dataRow[1].route_name[1]}
-                                        </Typography>
-                                        <Typography component="p" variant="body1">
-                                            Date: {dataRow[1].date_added}
-                                        </Typography>
-                                    </CardContent>
-                                </div>
-                                <div className={classes.controls}>
-                                    {dataRow[1].bookmark == false && (
-                                        <IconButton onClick={() => bookmarkHandler(dataRow[0], true)} aria-label="play/pause">
-                                            <BookmarkBorderIcon />
-                                        </IconButton>
-                                    )}
-                                    {dataRow[1].bookmark == true && (
-                                        <IconButton onClick={() => bookmarkHandler(dataRow[0], false)} aria-label="play/pause">
-                                            <BookmarkIcon />
-                                        </IconButton>
-                                    )}
-                                    <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
-                                        <PlayArrowIcon className={classes.playIcon} />
+                        <Card className={classes.root}>
+                            <div className={classes.details}>
+                                <CardContent className={classes.content}>
+                                    <Typography component="p" variant="body1">
+                                        From: {dataRow[1].route_name[0]}
+                                    </Typography>
+                                    <Typography component="p" variant="body1">
+                                        To: {dataRow[1].route_name[1]}
+                                    </Typography>
+                                    <Typography component="p" variant="body1">
+                                        Date: {dataRow[1].date_added}
+                                    </Typography>
+                                </CardContent>
+                            </div>
+                            <div className={classes.controls}>
+                                {dataRow[1].bookmark == false && (
+                                    <IconButton onClick={() => bookmarkHandler(dataRow[0], true)} aria-label="play/pause">
+                                        <BookmarkBorderIcon />
                                     </IconButton>
-                                    <IconButton onClick={() => deleteHistoryHandler(dataRow[0])}>
-                                        <DeleteIcon />
+                                )}
+                                {dataRow[1].bookmark == true && (
+                                    <IconButton onClick={() => bookmarkHandler(dataRow[0], false)} aria-label="play/pause">
+                                        <BookmarkIcon />
                                     </IconButton>
-                                </div>
-                            </Card>
-                        </List>
+                                )}
+                                <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
+                                    <PlayArrowIcon className={classes.playIcon} />
+                                </IconButton>
+                                <IconButton onClick={() => deleteHistoryHandler(dataRow[0])}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </div>
+                        </Card>
                     </Paper>
                 ))}
             </Container>

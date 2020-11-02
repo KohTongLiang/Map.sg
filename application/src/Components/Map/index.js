@@ -206,24 +206,6 @@ function MapBoxView(props) {
                     }
                 }, labelLayerId);
 
-                // map.addSource("my_data", {
-                //     'type': "geojson",
-                //     'data': Gantry[0]
-                // });
-                // map.addLayer({
-                //     'id': 'erp',
-                //     'type': 'line',
-                //     'source': 'my_data',
-                //     'layout': {
-                //         'line-join': 'round',
-                //         'line-cap': 'round'
-                //     },
-                //     'paint': {
-                //         'line-color': '#000000',
-                //         'line-width': 5
-                //     }
-                // });
-
                 setMap(map);
                 map.resize();
             });
@@ -259,10 +241,6 @@ function MapBoxView(props) {
     * */
     useEffect(() => {
         if (map != null && props.userLocation.length > 0) {
-            map.flyTo({
-                center: [props.userLocation[0].lng, props.userLocation[0].lat]
-            });
-
             if (userMarker !== null) {
                 userMarker.remove();
             }
@@ -301,7 +279,17 @@ function MapBoxView(props) {
 
             marker.setLngLat([props.userLocation[0].lng, props.userLocation[0].lat]);
             const stepNo = props.stepNo;
+            
             if (marker !== undefined && stepMarkers[stepNo] !== undefined) {
+                // turn camera to face the next marker
+                var point1 = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
+                var point2 = turf.point([stepMarkers[stepNo].getLngLat().lng, stepMarkers[stepNo].getLngLat().lat]);
+                var bearing = turf.bearing(point1, point2);
+                
+                map.flyTo({
+                    center: [props.userLocation[0].lng, props.userLocation[0].lat],
+                    bearing: bearing,
+                });
                 // detect if user has reached a checkpoint
                 if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= tolerance &&
                     marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng >= -tolerance) &&
@@ -349,7 +337,7 @@ function MapBoxView(props) {
             props.navigationRoute[0].data.routes[0].legs[0].steps.forEach(instruction => {
                 var el = document.createElement('div');
                 el.className = 'marker';
-                el.style.backgroundColor = "black";
+                el.style.backgroundColor = "green";
                 el.style.textAlign = "center";
                 el.textContent = steps;
                 el.style.width = '30px';
@@ -440,10 +428,14 @@ function MapBoxView(props) {
                     var el = document.createElement('div');
                     el.className = 'marker';
                     el.style.backgroundColor = "red";
+                    el.style.color = 'black';
                     el.style.textAlign = "center";
-                    el.textContent = 'Zone: ' + gantry.zoneId + " Charge(SGD): 0";
-                    el.style.width = '120px';
-                    el.style.height = '120px';
+                    el.textContent = 'Zone: ' + gantry.zoneId + " Charge: 0";
+                    el.style.width = '80px';
+                    el.style.height = '80px';
+                    el.style.opacity = '0.8';
+                    el.style.padding = '5';
+                    el.style.borderRadius = '50%';
 
                     const distance = turf.distance(turf.point([pivotLocation.lng, pivotLocation.lat]), turf.point([gantryCoordinates.lng, gantryCoordinates.lat]), { units: 'metres' });
                     let abstract = props.ERP;

@@ -53,6 +53,7 @@ export const SAVE_ROUTE_NAME = 'SAVE_ROUTE_NAME';
 export const RUN_HISTORY = 'RUN_HISTORY';
 export const DELETE_HISTORY = 'DELETE_HISTORY';
 export const TOGGLE_BOOKMARK = 'TOGGLE_BOOKMARK';
+export const GET_NAME_OF_PLACE = 'GET_NAME_OF_PLACE';
 
 /**
  * Action types for Firebase
