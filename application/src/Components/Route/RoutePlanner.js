@@ -11,6 +11,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute, saveRouteName } from '../../Action/NavigationActions';
 import { getTrafficImages, getErpData } from '../../Action/MapActions'
 import { getUserLocation } from '../../Action/HomeActions';
+import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -162,7 +164,7 @@ function RoutePlannerView(props) {
                                     </IconButton>
                                 </Grid>
                             </Grid>
-                            <Button color="inherit" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
+                            <Button  startIcon={<PersonPinIcon />} color="#1F1B24" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
@@ -200,7 +202,8 @@ function RoutePlannerView(props) {
                         </FormLabel>
                     </FormGroup>
                     <FormGroup className={classes.planBtn}>
-                        <Button color="inherit" onClick={() => handlePlanRoute()}>Plan</Button>
+                            <Button startIcon={<DirectionsCarIcon />}variant="contained" color="#1F1B24" onClick={() => handlePlanRoute()}>Plan</Button>
+                                
                     </FormGroup>
                 </form>
             </Container>
