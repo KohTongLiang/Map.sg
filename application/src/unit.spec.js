@@ -39,8 +39,13 @@ describe('MapReducer ', () => {
     })
   })
 */
-import { ExpansionPanelActions } from "@material-ui/core";
 import Store from "./Store";
+
+import SagaTester from "redux-saga-tester";
+import { rootSaga } from "./Saga/index";
+import { combineReducers } from "./Reducer/index";
+
+
 const { searchStartLocation } = require("./Action/NavigationActions");
 const { getTrafficImages } = require("./Action/MapActions");
 
@@ -56,17 +61,19 @@ jest.mock('mapbox-gl/dist/mapbox-gl', () => ({
     NavigationControl: jest.fn(),
   }));
 
-describe("API Unit Testing", () => {
+describe("API Unit Testing (Saga)", () => {
 
     const store = Store;
-    
-    it("valid Start Location", async () => { 
-        //mock map Api files
 
-        const payload = '100055';
-        await store.dispatch(searchStartLocation(payload));
-        console.log(store.getState().NavigationReducer.startLocationSearchResult);
-        expect(store.getState().NavigationReducer.startLocationSearchResult).not.toEqual("");
+    it("Valid Start Location: \"100055\"", async () => { 
+        const sagaTester = sagaTester({ reducers: combineReducers })
+        const delay = (t) => new Promise(res => setTimeout(() => res(), t));
+
+        const payload = "100055";
+        sagaTester.dispatch(searchStartLocation(payload));
+        const state = sagaTester.getState();
+
+        expect(state.NavigationReducer.startLocationResult).toEqual(4);
     })
 
 });
@@ -77,16 +84,16 @@ import { runSaga } from 'redux-saga'
 import { mockSaga } from 'redux-saga-mock'
 import saga from './mysaga'
 
-const MOCK_RESPONSE = {
-  json: () => Promise.resolve({ field: 'some data' })
-}
+
 
 it('sample unit test', () => {
-  const testSaga = mockSaga(saga)
-  
-  testSaga.stubCall(window.fetch, () => Promise.resolve(MOCK_RESPONSE))
-  testSaga.stubCall(someFunction, () => {})
-
+          //mock map Api files
+        const testSaga = mockSaga(saga)
+        const MOCK_RESPONSE = {
+            json: () => Promise.resolve({ field: 'some data' })
+          }
+        testSaga.stubCall(window.fetch, () => Promise.resolve(MOCK_RESPONSE))
+        testSaga.stubCall(someFunction, () => {})
   return runSaga(testSaga(), {}).done
     .then(() => {
       const query = testSaga.query()
@@ -95,3 +102,42 @@ it('sample unit test', () => {
     })
 })
 */
+/*
+
+import SagaTester from "redux-saga-tester";
+import { rootSaga, queuedSagaAction } from "../rootSaga";
+import { rootReducer } from "../rootReducer";
+
+// enable mock api so that test environment goes against fake server
+require('../../mock-api.js');
+
+const delay = (t) => new Promise(res => setTimeout(() => res(), t));
+
+describe("root saga", () => {
+  it("should handle 4 button clicks one after another", async () => {
+    const sagaTester = new SagaTester({
+      reducers: rootReducer
+    });
+
+    sagaTester.start(rootSaga);
+
+    sagaTester.dispatch(queuedSagaAction());
+    sagaTester.dispatch(queuedSagaAction());
+    sagaTester.dispatch(queuedSagaAction());
+    sagaTester.dispatch(queuedSagaAction());
+
+    await delay(5000); // wait for 4 request * max 1sec each
+
+    const state = sagaTester.getState();
+
+    expect(state.exampleReducer.counter).toEqual(4);
+  }, 10000);
+});
+
+
+        const payload = '100055';
+        await store.dispatch(searchStartLocation(payload));
+        console.log(store.getState().NavigationReducer.startLocationSearchResult);
+        expect(store.getState().NavigationReducer.startLocationSearchResult).not.toEqual("");
+ 
+ */
