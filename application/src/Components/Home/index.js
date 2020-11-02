@@ -130,8 +130,8 @@ function HomeView (props) {
             )}
 
             <Map/>
+            
             <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
-
             
             <Navigation/>
         </div>

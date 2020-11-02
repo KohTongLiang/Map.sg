@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import HomeReducer from './HomeReducer';
 import NavigationReducer from './NavigationReducer';
 import MapReducer from './MapReducer';
+import FirebaseReducer from './FirebaseReducer';
 
 /* *
  * This is the root reducers, it uses combineReducers to group multiple reducers together
@@ -12,4 +13,4 @@ import MapReducer from './MapReducer';
  * @Since 30/10/2020
  * */
 
-export default combineReducers({ HomeReducer, NavigationReducer, MapReducer });
+export default combineReducers({ HomeReducer, NavigationReducer, MapReducer, FirebaseReducer });

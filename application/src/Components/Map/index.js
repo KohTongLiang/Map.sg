@@ -267,7 +267,7 @@ function MapBoxView (props) {
                     } else {
                         // User reaches end of the route
                         // map.removeLayer('LineString');
-                        clearMap();
+                        // clearMap();
                         props.tripSummary();
                     }
                 }
