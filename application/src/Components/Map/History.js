@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
-import { Close as CloseIcon,PlayArrow as PlayArrowIcon, Delete as DeleteIcon,
-    Edit as EditIcon } from '@material-ui/icons';
+import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typography, Button, IconButton, Paper, List } from '@material-ui/core';
+import {
+    Close as CloseIcon, PlayArrow as PlayArrowIcon, Delete as DeleteIcon,
+    Edit as EditIcon
+} from '@material-ui/icons';
 import { toggleHistoryView } from '../../Action/HomeActions';
 import { runHistory } from '../../Action/NavigationActions';
 import { deleteHistory } from '../../Action/FirebaseAction';
@@ -39,35 +41,35 @@ const useStyles = makeStyles((theme) => ({
         flex: 1,
     },
     dialogTitle: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
+        marginLeft: theme.spacing(2),
+        flex: 1,
     },
     form: {
-      padding: 20
+        padding: 20
     },
     root: {
-      display: 'flex',
-      margin: 5
+        display: 'flex',
+        margin: 5
     },
     content: {
-      flex: '1 0 auto',
+        flex: '1 0 auto',
     },
     controls: {
-      alignItems: 'right',
-      paddingLeft: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
+        alignItems: 'right',
+        paddingLeft: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
     },
     playIcon: {
-      height: 38,
-      width: 38,
+        height: 38,
+        width: 38,
     },
     details: {
-      display: 'flex',
-      flexDirection: 'row',
-      flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
     },
     centerText: {
-      textAlign: 'center'
+        textAlign: 'center'
     },
 }));
 
@@ -93,17 +95,17 @@ function HistoryView(props) {
 
     function startFromHistoryHandler(dataRow) {
         props.runHistory(
-        {
-            routeInformation: JSON.parse(dataRow.route_information)[0],
-            startLocation: dataRow.start_location[0],
-            endLocation: dataRow.end_location[0],
-            routeName: dataRow.route_name,
-        });
+            {
+                routeInformation: JSON.parse(dataRow.route_information)[0],
+                startLocation: dataRow.start_location[0],
+                endLocation: dataRow.end_location[0],
+                routeName: dataRow.route_name,
+            });
         props.toggleHistoryView()
     }
 
     function deleteHistoryHandler(historyId) {
-        props.deleteHistory({ userId: props.user.uid, historyId: historyId});
+        props.deleteHistory({ userId: props.user.uid, historyId: historyId });
     }
 
     function favourites() {
@@ -131,31 +133,34 @@ function HistoryView(props) {
                 </Toolbar>
             </AppBar>
             <Container>
-                {(props.history && props.history.length > 0) && props.history.map( dataRow => (
-                    
-                    <Card key={dataRow[0]} className={classes.root}>
-                        <div className={classes.details}>
-                            <CardContent className={classes.content}>
-                                <Typography component="p" variant="p">
-                                    From: {dataRow[1].route_name[0]}
-                                </Typography>
-                                <Typography component="p" variant="p">
-                                    To: {dataRow[1].route_name[1]}
-                                </Typography>
-                                <Typography component="p" variant="p">
-                                    Date: {dataRow[1].date_added}
-                                </Typography>
-                            </CardContent>
-                        </div>
-                        <div className={classes.controls}>
-                            <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
-                                <PlayArrowIcon className={classes.playIcon} />
-                            </IconButton>
-                            <IconButton onClick={() => deleteHistoryHandler(dataRow[0])}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </div>
-                    </Card>
+                {(props.history && props.history.length > 0) && props.history.map(dataRow => (
+                    <Paper style={{ maxHeight: 200, overflow: 'auto' }}>
+                        <List>
+                            <Card key={dataRow[0]} className={classes.root}>
+                                <div className={classes.details}>
+                                    <CardContent className={classes.content}>
+                                        <Typography component="p" variant="p">
+                                            From: {dataRow[1].route_name[0]}
+                                        </Typography>
+                                        <Typography component="p" variant="p">
+                                            To: {dataRow[1].route_name[1]}
+                                        </Typography>
+                                        <Typography component="p" variant="p">
+                                            Date: {dataRow[1].date_added}
+                                        </Typography>
+                                    </CardContent>
+                                </div>
+                                <div className={classes.controls}>
+                                    <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
+                                        <PlayArrowIcon className={classes.playIcon} />
+                                    </IconButton>
+                                    <IconButton onClick={() => deleteHistoryHandler(dataRow[0])}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </div>
+                            </Card>
+                        </List>
+                    </Paper>
                 ))}
             </Container>
         </Dialog>

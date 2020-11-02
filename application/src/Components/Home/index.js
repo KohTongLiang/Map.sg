@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Fab, Paper, Container, GridList, GridListTileBar, GridListTile, Button } from '@material-ui/core';
+import {
+    Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile, Button, Collapse,
+    FormControlLabel
+} from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import Navigation from '../Navigation';
@@ -12,6 +15,10 @@ import History from '../Map/History';
 import RoutePlanner from '../Route/RoutePlanner';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        height: 100,
+        width: 100,
+    },
     sliderGridList: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -32,10 +39,13 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
     },
     slidePanel: {
-        width: '80%',
         left: 10,
-        bottom: 50,
+        width: '80%',
         position: 'fixed',
+        bottom: '5%',
+    },
+    collapseContainer: {
+        display: 'flex',
     },
     appBar: {
         position: 'relative',
@@ -45,22 +55,22 @@ const useStyles = makeStyles((theme) => ({
         flex: 1,
     },
     gridList: {
-      flexWrap: 'nowrap',
-      // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-      transform: 'translateZ(0)',
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
     },
 }));
 
 const mapStateToProps = (state) => {
     const appState = {
-            cameraMarkers: state.MapReducer.cameraMarkers,
-            onRoute: state.NavigationReducer.onRoute,
-            erpFiltered: state.NavigationReducer.erpFiltered,
-        };
+        cameraMarkers: state.MapReducer.cameraMarkers,
+        onRoute: state.NavigationReducer.onRoute,
+        erpFiltered: state.NavigationReducer.erpFiltered,
+    };
     return appState;
 };
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
         getUserLocation: () => dispatch(getUserLocation()),
@@ -75,48 +85,60 @@ function mapDispatchToProps (dispatch) {
  * @Version 2
  * @Since 31/10/2020
  * */
-function HomeView (props) {
+function HomeView(props) {
     /* *
     * const [x,setX] = useState() are essentially get and set for a variable/attribute
     * they will be used throughout the program as a way to store global values among some
     * of the components.
     * */
     const [plannerDialog, setPlannerDialog] = useState(false);
+    const [showImages, setShowImages] = useState(false);
     const classes = useStyles();
 
     // open route planner form page
     const toggleRoutePlanner = () => {
         setPlannerDialog(!plannerDialog);
-        props.toggleRoutePlanner({plannerDialog});
+        props.toggleRoutePlanner({ plannerDialog });
     }
 
     return (
-        <div>
+        <div className={classes.root}>
             {props.onRoute && (
                 <div>
-                    <Paper className={classes.slidePanel} elevation={5}>
-                        <Container>
-                            <h4>Route in Progress</h4>
-                            <ul>
-                                <li>Next ERP zone: {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{props.erpFiltered[0][0][0].ZoneID}</span>)}</li>
-                                <li>Price (SGD): {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{props.erpFiltered[0][0][0].ChargeAmount}</span>)}</li>
-                            </ul>
-                            <div className={classes.sliderGridList}>
-                                <GridList className={classes.gridList} cols={2.5}>
-                                    {props.cameraMarkers.map((camera) => (
-                                    <GridListTile key={camera.camera.image}>
-                                        <img src={camera.camera.image} alt='test' />
-                                    </GridListTile>
-                                    ))}
-                                </GridList>
-                            </div>
-                        </Container>
-                    </Paper>
+                    <div className={classes.collapseContainer}>
+
+                        <Paper className={classes.slidePanel} elevation={5}>
+                            <Container>
+                                <FormControlLabel
+                                    control={<Switch checked={showImages} onChange={() => setShowImages(!showImages)} />}
+                                    label=""
+                                />
+                                <Collapse in={showImages}>
+                                    <div>
+                                        <h4>Route in Progress</h4>
+                                        <ul>
+                                            <li>Next ERP zone: {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
+                                            <li>Price (SGD): {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
+                                        </ul>
+                                        <div className={classes.sliderGridList}>
+                                            <GridList className={classes.gridList} cols={1}>
+                                                {props.cameraMarkers.map((camera) => (
+                                                    <GridListTile key={camera.camera.image}>
+                                                        <img width='100%' src={camera.camera.image} alt='test' />
+                                                    </GridListTile>
+                                                ))}
+                                            </GridList>
+                                        </div>
+                                    </div>
+                                </ Collapse>
+                            </Container>
+                        </Paper>
+                    </div>
 
                     <Fab className={classes.searchFab} color="secondary">
-                        <StopIcon onClick={() => props.cancelRoute()}/>
+                        <StopIcon onClick={() => props.cancelRoute()} />
                     </Fab>
-                </div>
+                </div >
             )}
 
             <Fab className={classes.navFab} color="primary">
@@ -125,18 +147,18 @@ function HomeView (props) {
             {!props.onRoute && (
                 <div>
                     <Fab className={classes.searchFab} color="primary">
-                        <DirectionsIcon onClick={() => toggleRoutePlanner()}/>
+                        <DirectionsIcon onClick={() => toggleRoutePlanner()} />
                     </Fab>
                 </div>
             )}
 
-            <Map/>
-            
-            <RoutePlanner toggleRoutePlanner={toggleRoutePlanner}/>
-            
+            <Map />
+
+            <RoutePlanner toggleRoutePlanner={toggleRoutePlanner} />
+
             <History />
 
-            <Navigation/>
+            <Navigation />
         </div>
     )
 }
@@ -144,6 +166,6 @@ function HomeView (props) {
 const Home = connect(
     mapStateToProps,
     mapDispatchToProps,
-    )(HomeView);
+)(HomeView);
 
 export default Home;

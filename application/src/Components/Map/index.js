@@ -7,7 +7,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, IconButton, Typography } from '@material-ui/core';
+import { Paper, IconButton, Typography, Container } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import { overrideUserLocation } from '../../Action/HomeActions';
 import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../../Action/MapActions';
@@ -17,11 +17,13 @@ import { loadHistory, saveHistory } from '../../Action/FirebaseAction';
 import TripSummary from '../Map/TripSummary';
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
+    turnInstruction: {
         position: 'fixed',
         width: "100%",
         zIndex: '5',
         flexGrow: 1,
+        textAlign: 'center',
+        padding: 5,
     },
     instr: {
         flexGrow: 1,
@@ -395,43 +397,43 @@ function MapBoxView (props) {
             // take id and location of GantryCoordinates and plot stuff
             // GantryCoordinates {id,coordinates}
             // props.ERP {}
-            // let routeErps = [];
-            // var d = new Date();
-            // var currentDayType = '';
-            // if (d.getDay() === 0 || d.getDay() === 6 ) {
-            //     currentDayType = 'Weekdays';
-            // } else {
-            //     currentDayType = 'Weekends';
-            // }
-            // GantryCoordinates.map(gantry => {
-            //     const gantryCoordinates = {lng: gantry.coordinates[0], lat: gantry.coordinates[1]};
-            //     var points = turf.lineIntersect(turf.lineString(coordinates.coordinates), turf.polygon([[[gantryCoordinates.lng+0.0005, gantryCoordinates.lat],
-            //         [gantryCoordinates.lng, gantryCoordinates.lat+0.0005],[gantryCoordinates.lng-0.0005, gantryCoordinates.lat], [gantryCoordinates.lng, gantryCoordinates.lat-0.0005],[gantryCoordinates.lng+0.0005, gantryCoordinates.lat]]]));
-            //     if (points.features.length > 0) {
-            //         var el = document.createElement('div');
-            //         el.className = 'marker';
-            //         el.style.backgroundColor = "black";
-            //         el.style.textAlign = "center";
-            //         el.textContent = 'Zone: ' + gantry.zoneId;
-            //         el.style.width = '60px';
-            //         el.style.height = '60px';
+            let routeErps = [];
+            var d = new Date();
+            var currentDayType = '';
+            if (d.getDay() === 0 || d.getDay() === 6 ) {
+                currentDayType = 'Weekdays';
+            } else {
+                currentDayType = 'Weekends';
+            }
+            GantryCoordinates.map(gantry => {
+                const gantryCoordinates = {lng: gantry.coordinates[0], lat: gantry.coordinates[1]};
+                var points = turf.lineIntersect(turf.lineString(coordinates.coordinates), turf.polygon([[[gantryCoordinates.lng+0.0005, gantryCoordinates.lat],
+                    [gantryCoordinates.lng, gantryCoordinates.lat+0.0005],[gantryCoordinates.lng-0.0005, gantryCoordinates.lat], [gantryCoordinates.lng, gantryCoordinates.lat-0.0005],[gantryCoordinates.lng+0.0005, gantryCoordinates.lat]]]));
+                if (points.features.length > 0) {
+                    var el = document.createElement('div');
+                    el.className = 'marker';
+                    el.style.backgroundColor = "black";
+                    el.style.textAlign = "center";
+                    el.textContent = 'Zone: ' + gantry.zoneId + " Charge(SGD): 0";
+                    el.style.width = '120px';
+                    el.style.height = '120px';
 
-            //         const distance = turf.distance(turf.point([pivotLocation.lng, pivotLocation.lat]),turf.point([gantryCoordinates.lng, gantryCoordinates.lat]), { units: 'metres' });
-            //         let abstract = props.ERP;
-            //         routeErps.push([abstract.filter(e => e.ZoneID === gantry.zoneId), distance]);
+                    const distance = turf.distance(turf.point([pivotLocation.lng, pivotLocation.lat]),turf.point([gantryCoordinates.lng, gantryCoordinates.lat]), { units: 'metres' });
+                    let abstract = props.ERP;
+                    routeErps.push([abstract.filter(e => e.ZoneID === gantry.zoneId), distance]);
 
-            //         let erp = new mapboxgl.Marker(el);
-            //         erp.setLngLat(gantryCoordinates);
-            //         erp.addTo(map);
-            //         setErpMarkers(erpMarkers => [...erpMarkers, erp]);
-            //     }
-            // });
+                    let erp = new mapboxgl.Marker(el);
+                    erp.setLngLat(gantryCoordinates);
+                    erp.addTo(map);
+                    setErpMarkers(erpMarkers => [...erpMarkers, erp]);
+                }
+            });
 
-            // routeErps.sort(function(a, b) { 
-            //     return a[1] - b[1];
-            // });
+            routeErps.sort(function(a, b) { 
+                return a[1] - b[1];
+            });
+            props.filterRouteErp(routeErps);
 
-            // props.filterRouteErp(routeErps);
         } else {
             if (map != null) {
                 // end of route, clear everything
@@ -456,22 +458,25 @@ function MapBoxView (props) {
         setStepMarkers([]);
         setErpMarkers([]);
         props.updateCameraMarkers([]);
+        props.filterRouteErp([]);
     }
 
     return (
         <div>
             {/* Turn by turn instruction banner */}
             {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
-                <Paper className={classes.paper} elevation={5}>
-                    <IconButton className={classes.stepsButton} color="inherit" onClick={() => props.stepNo > 0 ? props.updateSteps(props.stepNo + 1) : props.stepNo}>
+                <Paper className={classes.turnInstruction} elevation={5}>
+                    <Container>
+                    {/* <IconButton className={classes.stepsButton} color="inherit" onClick={() => props.stepNo > 0 ? props.updateSteps(props.stepNo + 1) : props.stepNo}>
                         <ChevronLeft/>
-                    </IconButton>
+                    </IconButton> */}
                     <Typography variant="p" className={classes.instr}>
                         {props.routeInstruction[props.stepNo].maneuver.instruction}
                     </Typography>
-                    <IconButton className={classes.stepsButton} color="inherit" onClick={() => props.stepNo < props.routeInstruction.length - 1 ? props.updateSteps(props.stepNo + 1) : props.stepNo}>
+                    {/* <IconButton className={classes.stepsButton} color="inherit" onClick={() => props.stepNo < props.routeInstruction.length - 1 ? props.updateSteps(props.stepNo + 1) : props.stepNo}>
                         <ChevronRight/>
-                    </IconButton>
+                    </IconButton> */}
+                    </Container>
                 </Paper>
             )}
 
