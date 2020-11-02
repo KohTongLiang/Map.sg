@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapReducer  should handle GET_TRAFFIC_IMAGES_SUCCEEDED 1`] = `
+Object {
+  "ERP": Array [],
+  "cameraMarkers": Array [],
+  "cameras": Array [
+    undefined,
+  ],
+  "lineString": Array [],
+}
+`;
+
+exports[`MapReducer  should handle UPDATE_CAMERA_MARKERS 1`] = `
+Object {
+  "ERP": Array [],
+  "cameraMarkers": Array [
+    undefined,
+  ],
+  "cameras": Array [],
+  "lineString": Array [],
+}
+`;
+
+exports[`MapReducer  should handle UPDATE_NEXT_CAMERA 1`] = `
+Object {
+  "ERP": Array [],
+  "cameraMarkers": Array [
+    undefined,
+  ],
+  "cameras": Array [],
+  "lineString": Array [],
+}
+`;
+
+exports[`MapReducer  should return the initial state 1`] = `
+Object {
+  "ERP": Array [],
+  "cameraMarkers": Array [],
+  "cameras": Array [],
+  "lineString": Array [],
+}
+`;

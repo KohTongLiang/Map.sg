@@ -1,0 +1,243 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationReducer  should handle CANCEL_ROUTE 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle FILTER_ROUTE_ERP 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [
+    undefined,
+  ],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle MAP_MATCHING_SUCCEEDED 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [
+    undefined,
+  ],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle PROCESS_END_LOCATION 1`] = `
+Object {
+  "endLocation": Array [
+    undefined,
+  ],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle PROCESS_START_LOCATION 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [
+    undefined,
+  ],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle REROUTE_SUCCEEDED 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle SAVE_ROUTE_NAME 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [
+    undefined,
+  ],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle SEARCH_END_LOCATION_SUCCEEDED 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [
+    undefined,
+  ],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle SEARCH_START_LOCATION_SUCCEEDED 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [
+    undefined,
+  ],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should handle TRIP_SUMMARY 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": true,
+}
+`;
+
+exports[`NavigationReducer  should handle UPDATE_STEPS 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": NaN,
+  "tripSummaryView": false,
+}
+`;
+
+exports[`NavigationReducer  should return the initial state 1`] = `
+Object {
+  "endLocation": Array [],
+  "endLocationSearchResult": Array [],
+  "erpCharge": Array [],
+  "erpFiltered": Array [],
+  "erpTotalCharge": Array [],
+  "mapMatchedRoute": Array [],
+  "navigationRoute": Array [],
+  "onRoute": false,
+  "routeInstruction": Array [],
+  "routeName": Array [],
+  "startLocation": Array [],
+  "startLocationSearchResult": Array [],
+  "stepNo": 0,
+  "tripSummaryView": false,
+}
+`;

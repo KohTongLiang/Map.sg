@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FirebaseReducer  should handle CLEAR_ERROR_MESSAGE 1`] = `
+Object {
+  "errorMessage": "",
+  "history": Array [],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
+
+exports[`FirebaseReducer  should handle LOAD_HISTORY_SUCCESS 1`] = `
+Object {
+  "errorMessage": "",
+  "history": Array [
+    undefined,
+  ],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
+
+exports[`FirebaseReducer  should handle SIGN_IN_FAILURE 1`] = `
+Object {
+  "errorMessage": "undefined",
+  "history": Array [],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
+
+exports[`FirebaseReducer  should handle SIGN_IN_SUCCESS 1`] = `
+Object {
+  "errorMessage": "",
+  "history": Array [],
+  "loggedIn": true,
+  "signInSuccess": false,
+  "signUpSuccess": true,
+  "user": undefined,
+}
+`;
+
+exports[`FirebaseReducer  should handle SIGN_OUT_FAILURE 1`] = `
+Object {
+  "errorMessage": "undefined",
+  "history": Array [],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
+
+exports[`FirebaseReducer  should handle SIGN_OUT_SUCCESS 1`] = `
+Object {
+  "errorMessage": "",
+  "history": Array [],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
+
+exports[`FirebaseReducer  should handle SIGN_UP_FAILURE 1`] = `
+Object {
+  "errorMessage": "undefined",
+  "history": Array [],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
+
+exports[`FirebaseReducer  should handle SIGN_UP_SUCCESS 1`] = `
+Object {
+  "errorMessage": "",
+  "history": Array [],
+  "loggedIn": true,
+  "signInSuccess": true,
+  "signUpSuccess": false,
+  "user": undefined,
+}
+`;
+
+exports[`FirebaseReducer  should return the initial state 1`] = `
+Object {
+  "errorMessage": "",
+  "history": Array [],
+  "loggedIn": false,
+  "signInSuccess": false,
+  "signUpSuccess": false,
+  "user": null,
+}
+`;
