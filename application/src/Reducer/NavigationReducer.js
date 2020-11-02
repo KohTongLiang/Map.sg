@@ -35,11 +35,11 @@ function NavigationReducer (state = initialState, action) {
             });
         case SEARCH_START_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
-                startLocationSearchResult: state.startLocationSearchResult.concat(action.payload)
+                startLocationSearchResult: initialState.startLocationSearchResult.concat(action.payload)
             });
         case SEARCH_END_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
-                endLocationSearchResult: state.endLocationSearchResult.concat(action.payload)
+                endLocationSearchResult: initialState.endLocationSearchResult.concat(action.payload)
             });
         case PROCESS_START_LOCATION:
             return Object.assign({}, state, {

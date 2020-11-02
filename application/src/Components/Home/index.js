@@ -6,12 +6,12 @@ import {
 } from '@material-ui/core';
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import NavBar from '../NavBar';
 import Navigation from '../Navigation';
-
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
 import { cancelRoute } from '../../Action/NavigationActions'
 import Map from '../Map';
-import History from '../Map/History';
+import History from '../Navigation/History';
 import RoutePlanner from '../Route/RoutePlanner';
 
 const useStyles = makeStyles((theme) => ({
@@ -103,62 +103,21 @@ function HomeView(props) {
 
     return (
         <div className={classes.root}>
-            {props.onRoute && (
-                <div>
-                    <div className={classes.collapseContainer}>
-
-                        <Paper className={classes.slidePanel} elevation={5}>
-                            <Container>
-                                <FormControlLabel
-                                    control={<Switch checked={showImages} onChange={() => setShowImages(!showImages)} />}
-                                    label=""
-                                />
-                                <Collapse in={showImages}>
-                                    <div>
-                                        <h4>Route in Progress</h4>
-                                        <ul>
-                                            <li>Next ERP zone: {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
-                                            <li>Price (SGD): {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
-                                        </ul>
-                                        <div className={classes.sliderGridList}>
-                                            <GridList className={classes.gridList} cols={1}>
-                                                {props.cameraMarkers.map((camera) => (
-                                                    <GridListTile key={camera.camera.image}>
-                                                        <img width='100%' src={camera.camera.image} alt='test' />
-                                                    </GridListTile>
-                                                ))}
-                                            </GridList>
-                                        </div>
-                                    </div>
-                                </ Collapse>
-                            </Container>
-                        </Paper>
-                    </div>
-
-                    <Fab className={classes.searchFab} color="secondary">
-                        <StopIcon onClick={() => props.cancelRoute()} />
-                    </Fab>
-                </div >
-            )}
-
-            <Fab className={classes.navFab} color="primary">
-                <MyLocationIcon onClick={() => props.getUserLocation()} />
-            </Fab>
             {!props.onRoute && (
                 <div>
+                    <Fab className={classes.navFab} color="primary">
+                        <MyLocationIcon onClick={() => props.getUserLocation()} />
+                    </Fab>
                     <Fab className={classes.searchFab} color="primary">
                         <DirectionsIcon onClick={() => toggleRoutePlanner()} />
                     </Fab>
                 </div>
             )}
-
-            <Map />
-
-            <RoutePlanner toggleRoutePlanner={toggleRoutePlanner} />
-
-            <History />
-
             <Navigation />
+            <Map />
+            <RoutePlanner toggleRoutePlanner={toggleRoutePlanner} />
+            <History />
+            <NavBar />
         </div>
     )
 }

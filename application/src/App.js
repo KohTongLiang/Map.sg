@@ -9,13 +9,12 @@ import * as ROUTES from './Constants/routes';
 
 
 /* *
- * 
- * Main entry point of the applications.
- * 
- * @Koh Tong Liang
- * @Version 1.0
- * @Since 19/10/2020
- * */
+   * Main entry point of the applications.
+   * 
+   * @Koh Tong Liang
+   * @Version 1.0
+   * @Since 19/10/2020
+   * */
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = React.useMemo(

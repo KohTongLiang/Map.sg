@@ -8,7 +8,6 @@ import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED, PROCESS_START_LOCATION 
  * @Version 1
  * @Since 31/10/2020
  */
-
 export default function* HomeSaga() {
     yield takeEvery(GET_USER_LOCATION, handleGetUserLocation);
 }
@@ -21,6 +20,7 @@ function* handleGetUserLocation () {
                 error => reject(error),
             )
         }));
+        console.log('BOOBS');
         const payload = {lng: result.coords.longitude, lat: result.coords.latitude }
         yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
         yield put({ type: PROCESS_START_LOCATION, payload });

@@ -43,11 +43,11 @@ const useStyles = makeStyles((theme) => ({
         flex: 1,
     },
     planBtn: {
-        position: 'fixed',
+        position: 'absolute',
         width: "100%",
         flexGrow: 1,
         textAlign: 'center',
-        padding: 5,
+        // padding: 5,
         bottom: 0,
     }
 }));
@@ -113,7 +113,6 @@ function RoutePlannerView(props) {
         setStartLocationSearch('');
         setEndLocationSearch('');
     }
-
 
     const handleGetUserLocation = () => {
         props.getUserLocation();

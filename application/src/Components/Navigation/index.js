@@ -1,128 +1,162 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {
+    Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile, Button, Collapse,
+    FormControlLabel, Typography
+} from '@material-ui/core';
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { Paper, Tabs, Tab, makeStyles, Menu, MenuItem } from '@material-ui/core';
-import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon, AccountCircle, ExitToApp as ExitToAppIcon} from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
-import * as VALUES from '../../Constants/values';
-import * as ROUTES from '../../Constants/routes';
-import { toggleHistoryView } from '../../Action/HomeActions';
-import SignOutButton from '../Authentication/SignOut';
+import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
+import { cancelRoute } from '../../Action/NavigationActions'
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        flexGorw: 1,
-        top: 'auto',
-        bottom: 0,
-        width: '100%',
-        position: 'fixed',
-        zIndex: '2',
-        margin: 'auto',
+        height: 100,
+        width: 100,
     },
-  }));
-
-function mapDispatchToProps(dispatch) {
-    return {
-        toggleHistoryView: () => dispatch(toggleHistoryView()),
-    }
-}
+    turnInstruction: {
+        position: 'fixed',
+        width: "100%",
+        zIndex: '5',
+        flexGrow: 1,
+        textAlign: 'center',
+        padding: 5,
+    },
+    sliderGridList: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
+    navFab: {
+        top: 'auto',
+        right: 35,
+        bottom: 150,
+        position: 'fixed',
+    },
+    searchFab: {
+        top: 'auto',
+        right: 35,
+        bottom: 80,
+        position: 'fixed',
+    },
+    slidePanel: {
+        left: 10,
+        width: '80%',
+        position: 'fixed',
+        bottom: '5%',
+    },
+    collapseContainer: {
+        display: 'flex',
+    },
+    appBar: {
+        position: 'relative',
+    },
+    title: {
+        marginLeft: theme.spacing(2),
+        flex: 1,
+    },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
+}));
 
 const mapStateToProps = (state) => {
     const appState = {
-            loggedIn: state.FirebaseReducer.loggedIn,
-        };
+        cameraMarkers: state.MapReducer.cameraMarkers,
+        onRoute: state.NavigationReducer.onRoute,
+        erpFiltered: state.NavigationReducer.erpFiltered,
+        routeInstruction: state.NavigationReducer.routeInstruction,
+        stepNo: state.NavigationReducer.stepNo,
+    };
     return appState;
 };
-  /* *
-    * 
-    * Handle navigation bar events located at the bottom of the application
-    * 
-    * @Koh Tong Liang
-    * @Version 1.0
-    * @Since 19/10/2018
+
+function mapDispatchToProps(dispatch) {
+    return {
+        toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
+        getUserLocation: () => dispatch(getUserLocation()),
+        cancelRoute: () => dispatch(cancelRoute()),
+    }
+};
+
+/* *
+ * Home page is where all subcomponents will be loaded into.
+ 
+ * @Koh Tong Liang
+ * @Version 2
+ * @Since 31/10/2020
+ * */
+function NavigationView(props) {
+    /* *
+    * const [x,setX] = useState() are essentially get and set for a variable/attribute
+    * they will be used throughout the program as a way to store global values among some
+    * of the components.
     * */
-const NavigationView = (props) => { 
-    const history = useHistory();
-    const [value, setValue] = React.useState(0);
+    const [showImages, setShowImages] = useState(false);
     const classes = useStyles();
-    // const [state, setState] = React.useState({
-    //     top: false,
-    //     left: false,
-    //     bottom: false,
-    //     right: false,
-    // });
-    const [auth, setAuth] = React.useState(true);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-
-    const handleChange = (event) => {
-        setAuth(event.target.checked);
-    };
-
-    const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
 
     return (
-        <div>
-            <Paper square className={classes.root}>
-                <Tabs
-                    value={value}
-                    // onChange={(e) => setValue(e.target.value)}
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                >
-                    <Tab icon={<HomeIcon />} onClick={() => history.push('/')} aria-label="phone" />
-                    <Tab icon={<HistoryIcon />} onClick={() => props.toggleHistoryView()} color="inherit"/>
-                    <Tab icon={<BookmarkIcon />} aria-label="person" />
-                    {props.loggedIn && (
-                        <div>
-                            <Tab
-                                key={3}
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleMenu}
-                                color="inherit"
-                                icon={<AccountCircle />}
-                            />
-                            <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={open}
-                            onClose={handleClose}
-                            >
-                                <MenuItem>
-                                    <SignOutButton/>
-                                </MenuItem>
-                            </Menu>
-                        </div>
-                    )}
-                    {!props.loggedIn && <Tab key={4} icon={<ExitToAppIcon />} onClick={() => history.push('/SignIn')} aria-label="person" />}
-                </Tabs>
-            </Paper>
+        <div className={classes.root}>
+
+            {/* Show step by step instruction given by Mapbox API */}
+            {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
+                <Paper className={classes.turnInstruction} elevation={5}>
+                    <Container>
+                        <Typography variant="p" className={classes.instr}>
+                            {props.routeInstruction[props.stepNo].maneuver.instruction}
+                        </Typography>
+                    </Container>
+                </Paper>
+            )}
+
+            {/* Show Traffic images */}
+            {props.onRoute && (
+                <div>
+                    <div className={classes.collapseContainer}>
+                        <Paper className={classes.slidePanel} elevation={5}>
+                            <Container>
+                                <FormControlLabel
+                                    control={<Switch checked={showImages} onChange={() => setShowImages(!showImages)} />}
+                                    label=""
+                                />
+                                <Collapse in={showImages}>
+                                    <div>
+                                        <h4>Route in Progress</h4>
+                                        <ul>
+                                            <li>Next ERP zone: {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
+                                            <li>Price (SGD): {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
+                                        </ul>
+                                        <div className={classes.sliderGridList}>
+                                            <GridList className={classes.gridList} cols={1}>
+                                                {props.cameraMarkers.map((camera) => (
+                                                    <GridListTile key={camera.camera.image}>
+                                                        <img width='100%' src={camera.camera.image} alt='test' />
+                                                    </GridListTile>
+                                                ))}
+                                            </GridList>
+                                        </div>
+                                    </div>
+                                </ Collapse>
+                            </Container>
+                        </Paper>
+                    </div>
+                    <Fab className={classes.searchFab} color="secondary">
+                        <StopIcon onClick={() => props.cancelRoute()} />
+                    </Fab>
+                </div >
+            )}
         </div>
-    );
+    )
 }
 
 const Navigation = connect(
     mapStateToProps,
     mapDispatchToProps,
-    )(NavigationView);
+)(NavigationView);
 
 export default Navigation;
