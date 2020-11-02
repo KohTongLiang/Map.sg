@@ -353,7 +353,7 @@ function MapBoxView(props) {
                 el.style.textAlign = "center";
                 el.textContent = steps;
                 el.style.width = '30px';
-                el.style.height = '30px';
+                el.style.height = '50px';
 
                 let step = new mapboxgl.Marker(el);
                 step.setLngLat(instruction.maneuver.location);
@@ -439,7 +439,7 @@ function MapBoxView(props) {
                 if (points.features.length > 0) {
                     var el = document.createElement('div');
                     el.className = 'marker';
-                    el.style.backgroundColor = "black";
+                    el.style.backgroundColor = "red";
                     el.style.textAlign = "center";
                     el.textContent = 'Zone: ' + gantry.zoneId + " Charge(SGD): 0";
                     el.style.width = '120px';

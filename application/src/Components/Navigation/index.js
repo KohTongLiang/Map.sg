@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile,
-    Button, Collapse, FormControlLabel, Typography, IconButton } from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon, ExpandLess as ExpandLessIcon,
-    ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import {
+    Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile,
+    Button, Collapse, FormControlLabel, Typography, IconButton
+} from '@material-ui/core';
+import {
+    MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon, ExpandLess as ExpandLessIcon,
+    ExpandMore as ExpandMoreIcon
+} from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
@@ -130,17 +134,34 @@ function NavigationView(props) {
                                     </IconButton>
                                 )}
                                 <Collapse in={showImages}>
-                                    <div>
-                                        <h4>Route in Progress</h4>
-                                        <ul>
-                                            <li>Next ERP zone: {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
-                                            <li>Price (SGD): {(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}</li>
-                                        </ul>
+                                    <div >
+                                        <Typography style={{ textAlign: 'center' }} gutterBottom variant="subtitle1">
+                                            Navigating
+                                        </Typography>
+                                        <Paper style={{ padding: 10 }} theme="light" elevation={13} className={classes.paper}>
+                                            <Grid container spacing={1}>
+                                                <Grid item xs={13} sm container>
+                                                    <Grid item xs>
+                                                        <Typography gutterBottom variant="subtitle3">
+                                                            Next ERP zone:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography gutterBottom variant="subtitle3">
+                                                        ERP Charge S$:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </Paper>
                                         <div className={classes.sliderGridList}>
                                             <GridList className={classes.gridList} cols={1}>
                                                 {props.cameraMarkers.map((camera) => (
                                                     <GridListTile key={camera.camera.image}>
                                                         <img width='100%' src={camera.camera.image} alt='test' />
+                                                        <GridListTileBar
+                                                            title="Nearest Traffic Camera"
+                                                        />
                                                     </GridListTile>
                                                 ))}
                                             </GridList>
