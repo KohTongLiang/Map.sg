@@ -3,6 +3,7 @@ import { all } from "redux-saga/effects"
 import NavigationSaga from './NavigationSaga';
 import HomeSaga from './HomeSaga';
 import MapSaga from './MapSaga';
+import FirebaseSaga from './FirebaseSaga';
 
 /**
  * Root saga, compiles all saga into 1 saga and export together
@@ -16,5 +17,6 @@ export default function* rootSaga() {
         NavigationSaga(),
         HomeSaga(),
         MapSaga(),
+        FirebaseSaga(),
     ])
 }

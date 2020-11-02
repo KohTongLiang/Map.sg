@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { withFirebase } from '../Firebase';
 import { Container, FormGroup, makeStyles, FormControl, Button,
-     Input, InputLabel, FormHelperText, Snackbar, Box } from '@material-ui/core';
+     Input, InputLabel, FormHelperText, Snackbar, Box, IconButton } from '@material-ui/core';
+import { Close as CloseIcon } from '@material-ui/icons';
+
+import { signIn, clearErrorMessage } from '../../Action/FirebaseAction'
 
 import * as ROUTES from '../../Constants/routes';
 
@@ -13,6 +16,18 @@ const useStyles = makeStyles((theme) => ({
         },
     })
 );
+const mapStateToProps = (state) => {
+    const appState = {
+            errorMessage: state.FirebaseReducer.errorMessage,
+        };
+    return appState;
+};
+function mapDispatchToProps (dispatch) {
+    return {
+        signIn: data => dispatch(signIn(data)),
+        clearErrorMessage: () => dispatch(clearErrorMessage()),
+    }
+}
 
 /* *
  * 
@@ -22,24 +37,25 @@ const useStyles = makeStyles((theme) => ({
  * @Version 1.0
  * @Since 19/10/2018
  * */
-const SignInPage = (props) => {
+const SignInView = (props) => {
     const classes = useStyles();
     const [error, setError] = useState('');
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const {register, handleSubmit, errors } = useForm();
+    const history = useHistory();
 
     const onSubmit = data => {
-        props.firebase.doSignInWithEmailAndPassword(data.email, data.password).then(() => {
-            props.history.push(ROUTES.HOME);
-        }).catch(error => {
-            setError(error.message);
-            setOpen(true);
-        });
+        props.signIn(data);
+        setOpen(true)
+        // history.push('/');
     }
 
     return (
         <Container>
             <Box>
+                <IconButton edge="start" color="inherit" onClick={() => history.push('/')}  aria-label="close">
+                    <CloseIcon />
+                </IconButton>
                 <h4>Sign In</h4>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FormGroup>
@@ -65,16 +81,23 @@ const SignInPage = (props) => {
                     </FormGroup>
                 </form>
 
-                <Snackbar
-                    open={open} color='red' autoHideDuration={600} message={error} action={
-                        <Button color="inherit" size="small" onClick={() => setOpen(false)}>
-                            X
-                        </Button>
-                    }
-                />
+                {props.errorMessage && (
+                    <Snackbar
+                        open={open} color='red' autoHideDuration={600} message={props.errorMessage} action={
+                            <Button color="inherit" size="small" onClick={() => props.clearErrorMessage()}>
+                                X
+                            </Button>
+                        }
+                    />
+                )}
             </Box>
         </Container>
     )
 }
 
-export default withRouter(withFirebase(SignInPage));
+const SignInPage = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    )(SignInView);
+
+export default SignInPage;

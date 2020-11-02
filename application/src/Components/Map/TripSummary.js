@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Slide, Dialog, AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
+import { Container, Slide, Dialog, AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { Close as CloseIcon } from '@material-ui/icons';
-import { tripSummary } from '../../Action/NavigationActions';
+import { tripSummary, cancelRoute } from '../../Action/NavigationActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
 const useStyles = makeStyles((theme) => ({
     navFab: {
         top: 'auto',
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state) => {
     const appState = {
             tripSummaryView: state.NavigationReducer.tripSummaryView,
+            navigationRoute: state.NavigationReducer.navigationRoute,
         };
     return appState;
 };
@@ -46,6 +48,7 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps (dispatch) {
     return {
         tripSummary: () => dispatch(tripSummary()),
+        cancelRoute: () => dispatch(cancelRoute()),
     }
 }
 
@@ -57,6 +60,10 @@ function mapDispatchToProps (dispatch) {
  * */
 function TripSummaryView (props) {
     const classes = useStyles();
+
+    function saveRouteHandler() {
+        props.cancelRoute();
+    }
 
     return(
         <Dialog
@@ -80,7 +87,7 @@ function TripSummaryView (props) {
             <Container>
                 <form>
                     <p>Save trip?</p>
-                    <Button>Ja</Button>
+                    <Button onClick={() => saveRouteHandler()}>Ja</Button>
                     <Button onClick={() => props.tripSummary()}>Nein</Button>
                 </form>
             </Container>
@@ -94,3 +101,5 @@ const TripSummary = connect(
     )(TripSummaryView);
 
 export default TripSummary;
+// const condition = authUser => !!authUser;
+// export default withAuthorization(condition)(TripSummary);

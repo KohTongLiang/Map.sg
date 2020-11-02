@@ -8,11 +8,11 @@ import { Provider } from "react-redux";
 import store from "./Store";
 
 ReactDOM.render(
-  <FirebaseContext.Provider value={new Firebase()}>
+  // <FirebaseContext.Provider value={new Firebase()}>
     <Provider store={store}>
       <App />
-    </Provider>
-  </FirebaseContext.Provider>,
+    </Provider>,
+  // </FirebaseContext.Provider>,
   document.getElementById('root')
 );
 

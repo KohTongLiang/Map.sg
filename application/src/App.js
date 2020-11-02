@@ -1,6 +1,7 @@
 import React from 'react';
 
 import HomePage from './Components/Home';
+import Navigation from './Components/Navigation';
 import SignInPage from './Components/Authentication/SignIn';
 import SignUpPage from './Components/Authentication/SignUp';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -53,4 +54,5 @@ function App() {
   );
 }
 
-export default withAuthentication(App);
+// export default withAuthentication(App);
+export default App;

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { withFirebase } from '..//Firebase';
+import { connect } from 'react-redux';
+import { useHistory, Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import { Container, Box, FormGroup, FormControl, Button,
     Input, InputLabel, FormHelperText, Snackbar, makeStyles,
-    Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress  } from '@material-ui/core';
+    Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress,IconButton  } from '@material-ui/core';
+    import { Close as CloseIcon } from '@material-ui/icons';
 import * as ROUTES from '../../Constants/routes';
+import { signUp, clearErrorMessage } from '../../Action/FirebaseAction'
 
 const useStyles = makeStyles((theme) => ({
         errorText: {
@@ -13,6 +16,19 @@ const useStyles = makeStyles((theme) => ({
         },
     })
 );
+
+const mapStateToProps = (state) => {
+    const appState = {
+            errorMessage: state.FirebaseReducer.errorMessage,
+        };
+    return appState;
+};
+function mapDispatchToProps (dispatch) {
+    return {
+        signUp: data => dispatch(signUp(data)),
+        clearErrorMessage: () => dispatch(clearErrorMessage()),
+    }
+}
 
 /* *
  * 
@@ -23,14 +39,14 @@ const useStyles = makeStyles((theme) => ({
  * @Version 1.0
  * @Since 19/10/2018
  * */
-function SignUpPage (props) {
+function SignUpView (props) {
     const {register, handleSubmit, control, errors } = useForm();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [authError, setAuthError] = useState('');
     const classes = useStyles();
-    const dbRef = props.firebase.getFirestore().collection('users');
     const [passwordStrength, setPasswordStrength] = useState(0);
     const passwordStrengthIndicator = ['very weak', 'weak', 'weak', 'medium', 'strong'];
+    const history = useHistory();
 
 
  /* *
@@ -42,21 +58,15 @@ function SignUpPage (props) {
     * @Since 19/10/2018
     * */
     const onSubmit = data => {
-        if (data.passwordOne === data.passwordTwo) {
-            props.firebase.doCreateUserWithEmailAndPassword(data.email, data.passwordOne).then(authUser => {
-                dbRef.doc(authUser.user.uid).set(data);
-                props.history.push(ROUTES.HOME);
-            }).catch(error => {
-                setAuthError(error.message);
-                setOpen(true);
-            });
-        } else {
-            setAuthError('Please ensure password matches.');
-            setOpen(true);
-        }
+        props.signUp({email: data.email, password: data.passwordOne});
+        setOpen(true)
+        // history.push('/');
     }
     return (
         <Container>
+            <IconButton edge="start" color="inherit" onClick={() => history.push('/')}  aria-label="close">
+                <CloseIcon />
+            </IconButton>
             <h4>Sign Up</h4>
             <Box>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -106,21 +116,31 @@ function SignUpPage (props) {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
+                        <p>Already have an account? Sign in <Link to={ROUTES.SIGN_IN}>here</Link></p>
+                    </FormGroup>
+                    <FormGroup>
                         <Button type="submit">
                             Sign Up
                         </Button>
                     </FormGroup>
                 </form>
-                <Snackbar
-                    open={open} color='red' autoHideDuration={600} message={authError} action={
-                        <Button color="inherit" size="small" onClick={() => setOpen(false)}>
-                            X
-                        </Button>
-                    }
-                />
+                {props.errorMessage && (
+                    <Snackbar
+                        open={open} color='red' autoHideDuration={600} message={props.errorMessage} action={
+                            <Button color="inherit" size="small" onClick={() => props.clearErrorMessage()}>
+                                X
+                            </Button>
+                        }
+                    />
+                )}
             </Box>
         </Container>
     )
 }
 
-export default withFirebase(SignUpPage);
+const SignUpPage = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    )(SignUpView);
+
+export default SignUpPage;
