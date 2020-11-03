@@ -73,7 +73,7 @@ function mapDispatchToProps(dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
         cancelRoute: () => dispatch(cancelRoute()),
-        getUserLocation: coords => dispatch(getUserLocation(coords)),
+        getUserLocation: () => dispatch(getUserLocation()),
     }
 }
 
@@ -100,15 +100,16 @@ function HomeView(props) {
     }
 
     const handleGetUserLocation = () => {
-        const watchID = navigator.geolocation.watchPosition((position) => {
-            // doSomething(position.coords.latitude, position.coords.longitude);
-            const payload = {lng: position.coords.longitude, lat: position.coords.latitude }
-            // const payload = [position.coords.longitude, position.coords.latitude]
-            console.log(payload)
-            props.getUserLocation(payload);
-            // yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
-            // yield put({ type: PROCESS_START_LOCATION, payload });
-          });
+        props.getUserLocation();
+        // const watchID = navigator.geolocation.watchPosition((position) => {
+        //     // doSomething(position.coords.latitude, position.coords.longitude);
+        //     const payload = {lng: position.coords.longitude, lat: position.coords.latitude }
+        //     // const payload = [position.coords.longitude, position.coords.latitude]
+        //     console.log(payload)
+        //     props.getUserLocation(payload);
+        //     // yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
+        //     // yield put({ type: PROCESS_START_LOCATION, payload });
+        //   });
     }
 
     return (

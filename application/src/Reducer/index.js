@@ -13,4 +13,9 @@ import FirebaseReducer from './FirebaseReducer';
  * @Since 30/10/2020
  * */
 
-export default combineReducers({ HomeReducer, NavigationReducer, MapReducer, FirebaseReducer });
+export default combineReducers({ 
+    HomeReducer,
+    NavigationReducer,
+    MapReducer,
+    FirebaseReducer,
+});

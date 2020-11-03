@@ -1,7 +1,6 @@
 import { GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER,
     TOGGLE_TRAFFIC_IMAGES_VIEW, TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT,
     BOOKMARK_VIEW } from '../Constants/actionTypes';
-
 /**
  * Home reducers to update states belonging to Home view
  * 
@@ -25,9 +24,10 @@ function HomeReducer (state = initialState, action) {
     switch (action.type) {
         case 'OVERRIDE_USER_LOCATION':
             return Object.assign({}, state, {
-                userLocation: initialState.userLocation.concat( { lng: action.payload.lng, lat: action.payload.lat } )
+                userLocation: initialState.userLocation.concat({lng: action.payload.lng, lat: action.payload.lat})
             });
         case GET_USER_LOCATION_SUCCEEDED:
+            console.log(action.payload)
             return Object.assign({}, state, {
                 userLocation: initialState.userLocation.concat(action.payload)
             });
