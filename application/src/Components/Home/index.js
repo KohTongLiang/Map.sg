@@ -72,8 +72,8 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
-        getUserLocation: () => dispatch(getUserLocation()),
         cancelRoute: () => dispatch(cancelRoute()),
+        getUserLocation: coords => dispatch(getUserLocation(coords)),
     }
 }
 
@@ -99,12 +99,24 @@ function HomeView(props) {
         props.toggleRoutePlanner({ plannerDialog });
     }
 
+    const handleGetUserLocation = () => {
+        const watchID = navigator.geolocation.watchPosition((position) => {
+            // doSomething(position.coords.latitude, position.coords.longitude);
+            const payload = {lng: position.coords.longitude, lat: position.coords.latitude }
+            // const payload = [position.coords.longitude, position.coords.latitude]
+            console.log(payload)
+            props.getUserLocation(payload);
+            // yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
+            // yield put({ type: PROCESS_START_LOCATION, payload });
+          });
+    }
+
     return (
         <div className={classes.root}>
             {(!props.onRoute && !props.mapPickerMode) && (
                 <div>
                     <Fab className={classes.navFab} color="primary">
-                        <MyLocationIcon onClick={() => props.getUserLocation()} />
+                        <MyLocationIcon onClick={() => handleGetUserLocation()} />
                     </Fab>
                     <Fab className={classes.searchFab} color="primary">
                         <DirectionsIcon onClick={() => toggleRoutePlanner()} />

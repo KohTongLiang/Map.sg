@@ -16,8 +16,8 @@ import { GET_USER_LOCATION, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER,
  * Call on browser location service to provide location of user's device
  * MAYBE TRANSFER TO MAP ACTIONS
  */
-export function getUserLocation() {
-    return { type: GET_USER_LOCATION };
+export function getUserLocation(payload) {
+    return { type: GET_USER_LOCATION, payload };
 }
 
 /**
