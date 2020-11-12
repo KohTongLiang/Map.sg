@@ -1,12 +1,10 @@
-import { GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED, UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA } from '../Constants/actionTypes';
-/**
- * Map Reducer serves to update the state as certain actions are
- * 
- * @Koh Tong Liang
- * @Version 1
- * @Since 30/10/2020
-*/
+// import action types
+import {
+    GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED,
+    UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA
+} from '../Constants/actionTypes';
 
+// Initialise initial values for state
 const initialState = {
     cameras: [],
     cameraMarkers: [],
@@ -14,7 +12,13 @@ const initialState = {
     lineString: [],
 }
 
-export default function MapReducer (state = initialState, action) {
+/**
+ * Map Reducer serves to update the states pertaining to the map view. Such as camera and erp positions and list
+ * @Koh Tong Liang
+ * @Version 1
+ * @Since 30/10/2020
+*/
+export default function MapReducer(state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
         case UPDATE_CAMERA_MARKERS:

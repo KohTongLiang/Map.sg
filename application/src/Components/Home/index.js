@@ -1,64 +1,31 @@
+// import node modules
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Fab } from '@material-ui/core';
-import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
-import NavBar from '../NavBar';
-import Navigation from '../Navigation';
+
+// import redux components
 import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
 import { cancelRoute } from '../../Action/NavigationActions'
+
+// import material-ui modules
+import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
+
+// import view components
 import Map from '../Map';
+import NavBar from '../NavBar';
+import Navigation from '../Navigation';
 import History from '../Navigation/History';
 import Bookmark from '../Navigation/Bookmark';
 import RoutePlanner from '../Route/RoutePlanner';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        height: 100,
-        width: 100,
-    },
-    sliderGridList: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper,
-    },
-    navFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 150,
-        position: 'fixed',
-    },
-    searchFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 80,
-        position: 'fixed',
-    },
-    slidePanel: {
-        left: 10,
-        width: '80%',
-        position: 'fixed',
-        bottom: '5%',
-    },
-    collapseContainer: {
-        display: 'flex',
-    },
-    appBar: {
-        position: 'relative',
-    },
-    title: {
-        marginLeft: theme.spacing(2),
-        flex: 1,
-    },
-    gridList: {
-        flexWrap: 'nowrap',
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-        transform: 'translateZ(0)',
-    },
-}));
+// import constants
+import * as STYLES from '../../Constants/styles';
 
+// instantiate predefined styles into a constant variable
+const useStyles = makeStyles((theme) => (STYLES.style));
+
+// allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
         cameraMarkers: state.MapReducer.cameraMarkers,
@@ -69,6 +36,7 @@ const mapStateToProps = (state) => {
     return appState;
 };
 
+// allows view to call redux actions to perform a particular task
 function mapDispatchToProps(dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
@@ -78,9 +46,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 /* *
- * Home page is where all subcomponents will be loaded into.
- 
- * @Koh Tong Liang
+ * Home page serves as a parent component for the multiple different subcomponents to be mounted on. UI reflected on the
+ * application are divided into subcomponents and pieced together here.
+ * @author Koh Tong Liang
  * @Version 2
  * @Since 31/10/2020
  * */
@@ -121,6 +89,7 @@ function HomeView(props) {
     )
 }
 
+// bridge the view to redux actions and store
 const Home = connect(
     mapStateToProps,
     mapDispatchToProps,

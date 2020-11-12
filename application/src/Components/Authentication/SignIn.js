@@ -1,29 +1,37 @@
+// import node modules
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Container, FormGroup, makeStyles, FormControl, Button,
-     Input, InputLabel, FormHelperText, Snackbar, Box, IconButton } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
 
+// import redux components
 import { signIn, clearErrorMessage } from '../../Action/FirebaseAction'
 
+// import material-ui modules
+import {
+    Container, FormGroup, makeStyles, FormControl, Button,
+    Input, InputLabel, FormHelperText, Snackbar, Box, IconButton
+} from '@material-ui/core';
+import { Close as CloseIcon } from '@material-ui/icons';
+
+// import constants
+import * as STYLES from '../../Constants/styles';
 import * as ROUTES from '../../Constants/routes';
 
-const useStyles = makeStyles((theme) => ({
-        errorText: {
-            color: 'red'
-        },
-    })
-);
+// instantiate predefined styles into a constant variable
+const useStyles = makeStyles((theme) => (STYLES.style));
+
+// allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
-            errorMessage: state.FirebaseReducer.errorMessage,
-            signInSuccess: state.FirebaseReducer.signInSuccess,
-        };
+        errorMessage: state.FirebaseReducer.errorMessage,
+        signInSuccess: state.FirebaseReducer.signInSuccess,
+    };
     return appState;
 };
-function mapDispatchToProps (dispatch) {
+
+// allows view to call redux actions to perform a particular task
+function mapDispatchToProps(dispatch) {
     return {
         signIn: data => dispatch(signIn(data)),
         clearErrorMessage: () => dispatch(clearErrorMessage()),
@@ -31,9 +39,7 @@ function mapDispatchToProps (dispatch) {
 }
 
 /* *
- * 
- * Sign in page to take in user inputs and authenticate user inputs
- * 
+ * Sign in page to allow user input to perform user authentication features.
  * @Koh Tong Liang
  * @Version 1.0
  * @Since 19/10/2018
@@ -42,41 +48,41 @@ const SignInView = (props) => {
     const classes = useStyles();
     const [error, setError] = useState('');
     const [open, setOpen] = useState(true);
-    const {register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors } = useForm();
     const history = useHistory();
 
     useEffect(() => {
         if (props.signInSuccess) {
             history.push('/');
         }
-    }, [props.signInSuccess])
+    }, [props.signInSuccess]);
 
     const onSubmit = data => {
         props.signIn(data);
-        setOpen(true)
+        setOpen(true);
     }
 
     return (
         <Container>
             <Box>
-                <IconButton edge="start" color="inherit" onClick={() => history.push('/')}  aria-label="close">
+                <IconButton edge="start" color="inherit" onClick={() => history.push('/')} aria-label="close">
                     <CloseIcon />
                 </IconButton>
                 <h4>Sign In</h4>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FormGroup>
                         <FormControl>
-                        <InputLabel>Email</InputLabel>
-                        <Input name="email" inputRef={register({ required: true })}/>
-                        <FormHelperText>Enter the email you used for registration</FormHelperText>
-                        <FormHelperText>{errors.email && <span className={classes.errorText}>Email is required</span>}</FormHelperText>
+                            <InputLabel>Email</InputLabel>
+                            <Input name="email" inputRef={register({ required: true })} />
+                            <FormHelperText>Enter the email you used for registration</FormHelperText>
+                            <FormHelperText>{errors.email && <span className={classes.errorText}>Email is required</span>}</FormHelperText>
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
                         <FormControl>
-                        <InputLabel>Password</InputLabel>
-                        <Input type="password" name="password" inputRef={register({ required: true })}/>
-                        <FormHelperText>{errors.password && <span className={classes.errorText}>Password is required</span>}</FormHelperText>
+                            <InputLabel>Password</InputLabel>
+                            <Input type="password" name="password" inputRef={register({ required: true })} />
+                            <FormHelperText>{errors.password && <span className={classes.errorText}>Password is required</span>}</FormHelperText>
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
@@ -101,9 +107,10 @@ const SignInView = (props) => {
     )
 }
 
+// bridge the view to redux actions and store
 const SignInPage = connect(
     mapStateToProps,
     mapDispatchToProps,
-    )(SignInView);
+)(SignInView);
 
 export default SignInPage;

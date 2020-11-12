@@ -1,77 +1,32 @@
-import React, { useEffect, useState, useRef } from 'react';
+// import node modules
+import React from 'react';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typography, Button, IconButton, Paper, List } from '@material-ui/core';
-import {
-    Close as CloseIcon, PlayArrow as PlayArrowIcon, Delete as DeleteIcon,
-    BookmarkBorder as BookmarkBorderIcon, Bookmark as BookmarkIcon
-} from '@material-ui/icons';
+
+// import redux components
 import { toggleBookmarkView } from '../../Action/HomeActions';
 import { runHistory, toggleBookmark } from '../../Action/NavigationActions';
+
+// import material-ui modules
+import { makeStyles } from '@material-ui/core/styles';
+import {
+    Container, Card, CardContent, Slide, Dialog, AppBar,
+    Toolbar, Typography, IconButton, Paper, List
+} from '@material-ui/core';
+import {
+    Close as CloseIcon, PlayArrow as PlayArrowIcon, Bookmark as BookmarkIcon
+} from '@material-ui/icons';
+
+// import constants
+import * as STYLES from '../../Constants/styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const useStyles = makeStyles((theme) => ({
-    navFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 150,
-        position: 'fixed',
-    },
-    searchFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 80,
-        position: 'fixed',
-    },
-    slidePanel: {
-        width: '50%',
-        left: 10,
-        bottom: 45,
-        position: 'fixed',
-    },
-    appBar: {
-        position: 'relative',
-    },
-    title: {
-        marginLeft: theme.spacing(2),
-        flex: 1,
-    },
-    dialogTitle: {
-        marginLeft: theme.spacing(2),
-        flex: 1,
-    },
-    form: {
-        padding: 20
-    },
-    root: {
-        display: 'flex',
-        margin: 5
-    },
-    content: {
-        flex: '1 0 auto',
-    },
-    controls: {
-        alignItems: 'right',
-        paddingLeft: theme.spacing(1),
-        paddingBottom: theme.spacing(1),
-    },
-    playIcon: {
-        height: 38,
-        width: 38,
-    },
-    details: {
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
-    },
-    centerText: {
-        textAlign: 'center'
-    },
-}));
+// instantiate predefined styles into a constant variable
+const useStyles = makeStyles((theme) => (STYLES.style));
 
+// allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
         bookmarkView: state.HomeReducer.bookmarkView,
@@ -81,6 +36,7 @@ const mapStateToProps = (state) => {
     return appState;
 };
 
+// allows view to call redux actions to perform a particular task
 function mapDispatchToProps(dispatch) {
     return {
         toggleBookmarkView: () => dispatch(toggleBookmarkView()),
@@ -89,6 +45,13 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
+/**
+ * Bookmark view loads bookmarked routes taken by the user and load them into the view.
+ * User can start specific route from here as well.
+ * @author Koh Tong Liang
+ * @version 1
+ * @since 01/11/2020
+ */
 function BookmarkView(props) {
     const classes = useStyles();
 
@@ -164,11 +127,10 @@ function BookmarkView(props) {
     )
 }
 
-
+// bridge the view to redux actions and store
 const Bookmark = connect(
     mapStateToProps,
     mapDispatchToProps,
 )(BookmarkView);
-
 
 export default Bookmark;

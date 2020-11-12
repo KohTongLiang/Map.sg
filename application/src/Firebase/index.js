@@ -2,6 +2,10 @@ import firebase from 'firebase'
 import '@firebase/firestore' // 👈 If you're using firestore
 import ReduxSagaFirebase from 'redux-saga-firebase'
 
+/**
+ * Initialise firebase context to allow the application to communicate with firebase services
+ * (firestore in particular, to store user preference data and user account information)
+ */
 const myFirebaseApp = firebase.initializeApp({
         apiKey: process.env.REACT_APP_API_KEY,
         authDomain: process.env.REACT_APP_AUTH_DOMAIN,

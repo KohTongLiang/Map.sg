@@ -1,14 +1,10 @@
-import { SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
-    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, SAVE_TRIP, MAP_MATCHING_SUCCEEDED,
-    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY } from '../Constants/actionTypes';
+import {
+    SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
+    PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, MAP_MATCHING_SUCCEEDED,
+    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY
+} from '../Constants/actionTypes';
 
-/**
- * Home reducers to update states belonging to Home view
- * @Koh Tong Liang
- * @Version 1
- * @Since 31/10/2020
-*/
-
+// Initialise initial values for state
 const initialState = {
     startLocation: [],
     endLocation: [],
@@ -26,7 +22,13 @@ const initialState = {
     erpFiltered: [],
 }
 
-function NavigationReducer (state = initialState, action) {
+/**
+ * Navigation reducers to update states pertaining to navigation such as route information, start/end locations
+ * @Koh Tong Liang
+ * @Version 1
+ * @Since 31/10/2020
+*/
+function NavigationReducer(state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
         case UPDATE_STEPS:

@@ -1,23 +1,28 @@
+// import redux-saga components
 import { put, takeEvery, call } from 'redux-saga/effects';
+
+// import action types
 import {
     SEARCH_START_LOCATION, SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, SEARCH_END_LOCATION,
     PLAN_ROUTE, PLAN_ROUTE_SUCCEEDED, MAP_MATCHING, MAP_MATCHING_SUCCEEDED, REROUTE, REROUTE_SUCCEEDED, GET_NAME_OF_PLACE
 } from '../Constants/actionTypes';
-import axios from 'axios';
-import mapboxgl from 'mapbox-gl';
 
+// import axios module
+import axios from 'axios';
+
+// import mapbox modules and retrieve mapbox API access token
+import mapboxgl from 'mapbox-gl';
 const accessToken = process.env.REACT_APP_MAPBOX_KEY;
+
 /**
  * Navigation saga, used to handle side-effects like AJAX/API calls for navigation view
- * 
- * @Koh Tong Liang
- * @Version 1
- * @Since 31/10/2020
+ * @author Koh Tong Liang
+ * @version 1
+ * @since 31/10/2020
  */
-/**
- * Executes relavant functions when certain actions are detected. Saga remains idle and listening when no action is detected
- * @param {*} action 
- */
+
+// define the actions that the saga needs to listen for and attach a function handler
+// to define the function to execute once action has been performed
 export default function* NavigationSaga() {
     yield takeEvery(SEARCH_START_LOCATION, handleSearchStartLocation);
     yield takeEvery(SEARCH_END_LOCATION, handleSearchEndLocation);
@@ -27,10 +32,11 @@ export default function* NavigationSaga() {
     yield takeEvery(GET_NAME_OF_PLACE, handleGetNameOfPlace);
 }
 
+// Handler to call mapbox places API
 function* handleGetNameOfPlace(action) {
     try {
-        const coord = [action.payload.lng,action.payload.lat]
-        const payload = yield call(
+        const coord = [action.payload.lng, action.payload.lat]
+        yield call(
             () => (axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places-permanent/${coord}.json`, {
                 params: {
                     access_token: accessToken,
@@ -41,18 +47,13 @@ function* handleGetNameOfPlace(action) {
                 console.log(response)
                 return result;
             })
-            ));
-            
-        // yield put({ type: SEARCH_START_LOCATION_SUCCEEDED, payload })
+        ));
     } catch (error) {
         console.log(error)
     }
 }
 
-/**
- * Calls Mapbox API for possible location based on user search term
- * @param {*} action 
- */
+// Handler that calls Mapbox API for possible location based on user search term
 function* handleSearchStartLocation(action) {
     try {
         const payload = yield call(
@@ -70,12 +71,9 @@ function* handleSearchStartLocation(action) {
     } catch (error) {
         console.log(error)
     }
-} // end of handleSearchStartLocation
+}
 
-/**
- * Calls Mapbox API for possible location based on user search term
- * @param {*} action 
- */
+// Handler that calls Mapbox API for possible location based on user search term
 function* handleSearchEndLocation(action) {
     try {
         const payload = yield call(
@@ -93,12 +91,9 @@ function* handleSearchEndLocation(action) {
     } catch (error) {
         console.log(error)
     }
-} // end of handleSearchEndLocation
+}
 
-/**
-  * Calls Mapbox API directions service to get a route object using start and end locations
-  * @param {*} action 
-  */
+// Handler that calls Mapbox API directions service to get a route object using start and end locations
 function* handlePlanRoute(action) {
     try {
         const payload = yield call(
@@ -122,12 +117,9 @@ function* handlePlanRoute(action) {
     } catch (error) {
         console.log(error)
     }
-} // end of handlePlanRoute
+}
 
-/**
-  * Calls Mapbox API directions service to get a route object using start and end locations
-  * @param {*} action 
-  */
+// Handler that calls Mapbox API directions service to get a route object using start and end locations
 function* handleReroute(action) {
     try {
         const payload = yield call(
@@ -152,12 +144,9 @@ function* handleReroute(action) {
     } catch (error) {
         console.log(error)
     }
-} // end of handleReroute
+}
 
-/**
- * Calls Mapbox map matching API to perfect geojson to fit linestring better on the roads on the map
- * @param {*} action 
- */
+// Handler that calls Mapbox map matching API to perfect geojson to fit linestring better on the roads on the map
 function* handleMapMatching(action) {
     try {
         var coordinates = action.payload.splice(0, action.payload.length - 1).join(';');

@@ -1,13 +1,10 @@
-import { SIGN_OUT_SUCCESS, SIGN_IN_SUCCESS, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, SIGN_IN_FAILURE, SIGN_OUT_FAILURE, CLEAR_ERROR_MESSAGE, SAVE_HISTORY_SUCCESS, LOAD_HISTORY_SUCCESS } from '../Constants/actionTypes';
+// import action types
+import {
+    SIGN_OUT_SUCCESS, SIGN_IN_SUCCESS, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, SIGN_IN_FAILURE,
+    SIGN_OUT_FAILURE, CLEAR_ERROR_MESSAGE, SAVE_HISTORY_SUCCESS, LOAD_HISTORY_SUCCESS
+} from '../Constants/actionTypes';
 
-/**
- * Home reducers to update states belonging to Home view
- * 
- * @Koh Tong Liang
- * @Version 1
- * @Since 31/10/2020
-*/
-
+// Initialise initial values for state
 const initialState = {
     loggedIn: false,
     user: null,
@@ -17,7 +14,13 @@ const initialState = {
     history: [],
 }
 
-function FirebaseReducer (state = initialState, action) {
+/**
+ * Firebase reducers to update states pertaining to states related to user accounts and data storage
+ * @author Koh Tong Liang
+ * @version 1
+ * @since 31/10/2020
+*/
+function FirebaseReducer(state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
         case SAVE_HISTORY_SUCCESS:

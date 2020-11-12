@@ -1,6 +1,5 @@
 /**
  * Action types constants use to define an action type.
- * 
  * @Koh Tong Liang
  * @Version 1
  * @Since 30/10/2020

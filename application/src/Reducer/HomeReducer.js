@@ -1,15 +1,11 @@
-import { GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER,
+// import action types
+import {
+    GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER,
     TOGGLE_TRAFFIC_IMAGES_VIEW, TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT,
-    BOOKMARK_VIEW } from '../Constants/actionTypes';
+    BOOKMARK_VIEW
+} from '../Constants/actionTypes';
 
-/**
- * Home reducers to update states belonging to Home view
- * 
- * @Koh Tong Liang
- * @Version 1
- * @Since 31/10/2020
-*/
-
+// Initialise initial values for state
 const initialState = {
     routePlannerView: false,
     trafficImagesView: false,
@@ -20,12 +16,18 @@ const initialState = {
     mapPickerResult: [],
 }
 
-function HomeReducer (state = initialState, action) {
+/**
+ * Home reducers to update states belonging to Home view
+ * @author Koh Tong Liang
+ * @version 1
+ * @since 31/10/2020
+*/
+function HomeReducer(state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
         case 'OVERRIDE_USER_LOCATION':
             return Object.assign({}, state, {
-                userLocation: initialState.userLocation.concat( { lng: action.payload.lng, lat: action.payload.lat } )
+                userLocation: initialState.userLocation.concat({ lng: action.payload.lng, lat: action.payload.lat })
             });
         case GET_USER_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
@@ -39,7 +41,7 @@ function HomeReducer (state = initialState, action) {
             return Object.assign({}, state, {
                 mapPickerMode: !state.mapPickerMode
             });
-        case HISTORY_VIEW:        
+        case HISTORY_VIEW:
             return Object.assign({}, state, {
                 historyView: !state.historyView
             });

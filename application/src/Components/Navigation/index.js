@@ -1,73 +1,30 @@
+// import node modules
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+
+// import redux components
+import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
+import { cancelRoute } from '../../Action/NavigationActions'
+
+// import material-ui modules
 import {
-    Fab, Paper, Container, GridList, Switch, GridListTileBar, GridListTile,
-    Button, Collapse, FormControlLabel, Typography, IconButton, Grid
+    Fab, Paper, Container, GridList, GridListTileBar, GridListTile,
+    Collapse, Typography, IconButton, Grid
 } from '@material-ui/core';
 import {
-    MyLocation as MyLocationIcon, Directions as DirectionsIcon, Stop as StopIcon, ExpandLess as ExpandLessIcon,
+    Stop as StopIcon, ExpandLess as ExpandLessIcon, 
     ExpandMore as ExpandMoreIcon
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
-import { cancelRoute } from '../../Action/NavigationActions'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        height: 100,
-        width: 100,
-    },
-    turnInstruction: {
-        position: 'fixed',
-        width: "100%",
-        zIndex: '5',
-        flexGrow: 1,
-        textAlign: 'center',
-        padding: 5,
-    },
-    sliderGridList: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper,
-    },
-    navFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 150,
-        position: 'fixed',
-    },
-    searchFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 80,
-        position: 'fixed',
-    },
-    slidePanel: {
-        left: 10,
-        width: '80%',
-        position: 'fixed',
-        bottom: 5,
-    },
-    collapseContainer: {
-        display: 'flex',
-    },
-    appBar: {
-        position: 'relative',
-    },
-    title: {
-        marginLeft: theme.spacing(2),
-        flex: 1,
-    },
-    gridList: {
-        flexWrap: 'nowrap',
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-        transform: 'translateZ(0)',
-    },
-}));
+// import constants
+import * as STYLES from '../../Constants/styles';
 
+// instantiate predefined styles into a constant variable
+const useStyles = makeStyles((theme) => (STYLES.style));
+
+// allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
         cameraMarkers: state.MapReducer.cameraMarkers,
@@ -79,6 +36,7 @@ const mapStateToProps = (state) => {
     return appState;
 };
 
+// allows view to call redux actions to perform a particular task
 function mapDispatchToProps(dispatch) {
     return {
         toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
@@ -88,25 +46,18 @@ function mapDispatchToProps(dispatch) {
 };
 
 /* *
- * Home page is where all subcomponents will be loaded into.
- 
- * @Koh Tong Liang
- * @Version 2
- * @Since 31/10/2020
+ * Navigation view contains views pertaining route planning and displaying on route data
+ * @author Koh Tong Liang
+ * @version 2
+ * @since 31/10/2020
  * */
 function NavigationView(props) {
-    /* *
-    * const [x,setX] = useState() are essentially get and set for a variable/attribute
-    * they will be used throughout the program as a way to store global values among some
-    * of the components.
-    * */
     const [showImages, setShowImages] = useState(true);
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-
-            {/* Show step by step instruction given by Mapbox API */}
+            {/* Show step by step instruction given by Mapbox API if any */}
             {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
                 <Paper className={classes.turnInstruction} elevation={5}>
                     <Container>
@@ -116,8 +67,7 @@ function NavigationView(props) {
                     </Container>
                 </Paper>
             )}
-
-            {/* Show Traffic images */}
+            {/* Show Traffic images if any */}
             {props.onRoute && (
                 <div>
                     <div className={classes.collapseContainer}>
@@ -180,6 +130,7 @@ function NavigationView(props) {
     )
 }
 
+// bridge the view to redux actions and store
 const Navigation = connect(
     mapStateToProps,
     mapDispatchToProps,
