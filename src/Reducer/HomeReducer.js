@@ -30,6 +30,7 @@ function HomeReducer(state = initialState, action) {
                 userLocation: initialState.userLocation.concat({ lng: action.payload.lng, lat: action.payload.lat })
             });
         case GET_USER_LOCATION_SUCCEEDED:
+            console.log(action.payload)
             return Object.assign({}, state, {
                 userLocation: initialState.userLocation.concat(action.payload)
             });

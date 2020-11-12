@@ -5,6 +5,7 @@ import HomeSaga from './HomeSaga';
 import MapSaga from './MapSaga';
 import FirebaseSaga from './FirebaseSaga';
 
+
 /**
  * Root saga, compiles all saga into 1 saga and export together
  * @author Koh Tong Liang

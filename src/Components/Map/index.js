@@ -278,17 +278,21 @@ function MapBoxView(props) {
 
             marker.setLngLat([props.userLocation[0].lng, props.userLocation[0].lat]);
             const stepNo = props.stepNo;
+
+            map.flyTo({
+                center: [props.userLocation[0].lng, props.userLocation[0].lat],
+            });
             
             if (marker !== undefined && stepMarkers[stepNo] !== undefined) {
                 // turn camera to face the next marker
                 var point1 = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
                 var point2 = turf.point([stepMarkers[stepNo].getLngLat().lng, stepMarkers[stepNo].getLngLat().lat]);
                 var bearing = turf.bearing(point1, point2);
-                
                 map.flyTo({
                     center: [props.userLocation[0].lng, props.userLocation[0].lat],
                     bearing: bearing,
                 });
+                
                 // detect if user has reached a checkpoint
                 if ((marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng <= tolerance &&
                     marker.getLngLat().lng - stepMarkers[stepNo].getLngLat().lng >= -tolerance) &&
