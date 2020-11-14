@@ -1,10 +1,5 @@
 // import node modules
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-
-// import redux components
-import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
-import { cancelRoute } from '../../Action/NavigationActions'
 
 // import material-ui modules
 import {
@@ -24,34 +19,13 @@ import * as STYLES from '../../Constants/styles';
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        cameraMarkers: state.MapReducer.cameraMarkers,
-        onRoute: state.NavigationReducer.onRoute,
-        erpFiltered: state.NavigationReducer.erpFiltered,
-        routeInstruction: state.NavigationReducer.routeInstruction,
-        stepNo: state.NavigationReducer.stepNo,
-    };
-    return appState;
-};
-
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    return {
-        toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
-        getUserLocation: () => dispatch(getUserLocation()),
-        cancelRoute: () => dispatch(cancelRoute()),
-    }
-};
-
 /* *
  * Navigation view contains views pertaining route planning and displaying on route data
  * @author Koh Tong Liang
  * @version 2
  * @since 31/10/2020
  * */
-function NavigationView(props) {
+function Navigation(props) {
     const [showImages, setShowImages] = useState(true);
     const classes = useStyles();
 
@@ -129,11 +103,5 @@ function NavigationView(props) {
         </div>
     )
 }
-
-// bridge the view to redux actions and store
-const Navigation = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(NavigationView);
 
 export default Navigation;

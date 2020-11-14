@@ -1,14 +1,8 @@
 // import node modules
 import React, { useEffect, useState, useRef } from 'react';
-import { connect } from "react-redux";
 
 // import map context
 import MapContext from '../../Context';
-
-
-// import redux components
-import { overrideUserLocation } from '../../Action/HomeActions';
-import { tripSummary } from '../../Action/NavigationActions';
 
 // import material-ui modules
 import { Container, Slide, Dialog, Button} from '@material-ui/core';
@@ -21,31 +15,10 @@ import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 // import custom functional components
 import MapFunctions from '../../Custom/MapFunctions';
 
-
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        userLocation: state.HomeReducer.userLocation,
-        tripSummaryView: state.NavigationReducer.tripSummaryView,
-    };
-    return appState;
-};
-
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    return {
-        overrideUserLocation: newCoords => dispatch(overrideUserLocation(newCoords)),
-        tripSummary: () => dispatch(tripSummary()),
-    }
-}
-
-
 // transition element used for animating components
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-
 
 
 /* *
@@ -56,13 +29,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
    * @version 1.0
    * @since 19/10/2018
    * */
-function MapBoxView(props) {
+function MapBox(props) {
     // we create a map object and store its properties in a hook so that it can be accessed/modified
     const [map, setMap] = useState(null);
     const mapContainer = useRef("");
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
-    /* *
+  /* *
      * On componenent mount/First render
      * Create a map object and render it on a div when Map component is mounted on home view.
      * 
@@ -179,11 +152,5 @@ function MapBoxView(props) {
         </div>
     )
 }
-
-// bridge the view to redux actions and store
-const MapBox = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(MapBoxView)
 
 export default MapBox;

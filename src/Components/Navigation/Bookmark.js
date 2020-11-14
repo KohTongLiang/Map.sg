@@ -1,10 +1,5 @@
 // import node modules
 import React from 'react';
-import { connect } from 'react-redux';
-
-// import redux components
-import { toggleBookmarkView } from '../../Action/HomeActions';
-import { runHistory, toggleBookmark } from '../../Action/NavigationActions';
 
 // import material-ui modules
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,25 +21,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        bookmarkView: state.HomeReducer.bookmarkView,
-        history: state.FirebaseReducer.history,
-        user: state.FirebaseReducer.user,
-    };
-    return appState;
-};
-
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    return {
-        toggleBookmarkView: () => dispatch(toggleBookmarkView()),
-        runHistory: routeInformation => dispatch(runHistory(routeInformation)),
-        toggleBookmark: bookmark => dispatch(toggleBookmark(bookmark)),
-    }
-}
-
 /**
  * Bookmark view loads bookmarked routes taken by the user and load them into the view.
  * User can start specific route from here as well.
@@ -52,24 +28,8 @@ function mapDispatchToProps(dispatch) {
  * @version 1
  * @since 01/11/2020
  */
-function BookmarkView(props) {
+function Bookmark(props) {
     const classes = useStyles();
-
-    function startFromHistoryHandler(dataRow) {
-        props.runHistory(
-            {
-                routeInformation: JSON.parse(dataRow.route_information)[0],
-                startLocation: dataRow.start_location[0],
-                endLocation: dataRow.end_location[0],
-                routeName: dataRow.route_name,
-            });
-        props.toggleBookmarkView()
-    }
-
-    function bookmarkHandler(routeId, bookmark) {
-        props.toggleBookmark({ userId: props.user.uid, routeId: routeId, bookmark: bookmark });
-    }
-
     return (
         <Dialog
             fullScreen
@@ -95,7 +55,7 @@ function BookmarkView(props) {
                     (dataRow[1].bookmark === true) && (
                         <Paper key={dataRow[0]} style={{ maxHeight: 200, overflow: 'auto' }}>
                             <List>
-                                <Card className={classes.root}>
+                                <Card className={classes.cardRoot}>
                                     <div className={classes.details}>
                                         <CardContent className={classes.content}>
                                             <Typography component="p" variant="body1">
@@ -110,10 +70,10 @@ function BookmarkView(props) {
                                         </CardContent>
                                     </div>
                                     <div className={classes.controls}>
-                                        <IconButton onClick={() => bookmarkHandler(dataRow[0], false)} aria-label="play/pause">
+                                        <IconButton onClick={() => props.toggleBookmark({ userId: props.user.uid, routeId: dataRow[0], bookmark: false })} aria-label="play/pause">
                                             <BookmarkIcon />
                                         </IconButton>
-                                        <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
+                                        <IconButton onClick={() => props.runBookmark(dataRow[1])} aria-label="play/pause">
                                             <PlayArrowIcon className={classes.playIcon} />
                                         </IconButton>
                                     </div>
@@ -126,11 +86,5 @@ function BookmarkView(props) {
         </Dialog>
     )
 }
-
-// bridge the view to redux actions and store
-const Bookmark = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(BookmarkView);
 
 export default Bookmark;

@@ -64,7 +64,6 @@ function mapDispatchToProps(dispatch) {
         filterRouteErp: filteredErp => dispatch(filterRouteErp(filteredErp)),
         saveHistory: route => dispatch(saveHistory(route)),
         loadHistory: userId => dispatch(loadHistory(userId)),
-        tripSummary: () => dispatch(tripSummary()),
         toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
         toggleMapPicker: () => dispatch(toggleMapPicker()),
         returnMapPickerResult: payload => dispatch(returnMapPickerResult(payload)),
@@ -221,7 +220,7 @@ function MapFunctions(props) {
             marker.addTo(map);
             setUserMarker(marker);
         }
-    }, [props.userLocation])
+    }, [props.userLocation]);
 
   /* *
      * ROUTE PLOTTING

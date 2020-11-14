@@ -6,6 +6,10 @@ export const style = {
         height: 100,
         width: 100,
     },
+    cardRoot: {
+        display: 'flex',
+        margin: 5
+    },
     sliderGridList: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -64,41 +68,16 @@ export const style = {
         zIndex: '2',
         margin: 'auto',
     },
-    
-    navFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 150,
-        position: 'fixed',
-    },
-    searchFab: {
-        top: 'auto',
-        right: 35,
-        bottom: 80,
-        position: 'fixed',
-    },
-    slidePanel: {
-        width: '50%',
-        left: 10,
-        bottom: 45,
-        position: 'fixed',
-    },
-    appBar: {
-        position: 'relative',
-    },
-    title: {
-        flex: 1,
-    },
     dialogTitle: {
         flex: 1,
     },
     form: {
         padding: 20
     },
-    root: {
-        display: 'flex',
-        margin: 5
-    },
+    // root: {
+    //     display: 'flex',
+    //     margin: 5
+    // },
     content: {
         flex: '1 0 auto',
     },

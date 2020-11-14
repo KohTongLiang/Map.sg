@@ -1,14 +1,5 @@
 // import node modules
 import React from 'react';
-import { connect } from "react-redux";
-
-// import redux components
-import {
-    searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute, saveRouteName,
-    setStartLocationSearch, setEndLocationSearch
-} from '../../Action/NavigationActions';
-import { getTrafficImages, getErpData } from '../../Action/MapActions'
-import { getUserLocation, toggleMapPicker, toggleRoutePlanner } from '../../Action/HomeActions';
 
 // import material-ui modules
 import {
@@ -25,6 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 // import constants
 import * as STYLES from '../../Constants/styles';
 
+// Transition element
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -33,63 +25,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const useStyles = makeStyles((theme) => (STYLES.style));
 
 
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        routePlannerView: state.NavigationReducer.routePlannerView,
-        startLocation: state.NavigationReducer.startLocation,
-        endLocation: state.NavigationReducer.endLocation,
-        startLocationSearchResult: state.NavigationReducer.startLocationSearchResult,
-        endLocationSearchResult: state.NavigationReducer.endLocationSearchResult,
-        userLocation: state.HomeReducer.userLocation,
-        mapPickerMode: state.NavigationReducer.mapPickerMode,
-        mapPickerResult: state.HomeReducer.mapPickerResult,
-        startLocationSearch: state.NavigationReducer.startLocationSearch,
-        endLocationSearch: state.NavigationReducer.endLocationSearch,
-    };
-    return appState;
-};
-
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    const actions = {
-        searchStartLocation: startLocationSearch => dispatch(searchStartLocation(startLocationSearch)),
-        searchEndLocation: endLocationSearch => dispatch(searchEndLocation(endLocationSearch)),
-        toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
-        handlePlanRoute: (startLocationSearch, endLocationSearch, startLocation, endLocation) => {
-            dispatch(getTrafficImages());
-            dispatch(getErpData());
-            dispatch(planRoute(startLocation, endLocation));
-            dispatch(saveRouteName([startLocationSearch, endLocationSearch]));
-            dispatch(toggleRoutePlanner());
-        },
-        handleSelectStart: r => {
-            dispatch(processStartLocation({ lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1] }));
-            dispatch(setStartLocationSearch(r.place_name));
-        },
-        handleSelectEnd: r => {
-            dispatch(processEndLocation({ lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1] }));
-            dispatch(setEndLocationSearch(r.place_name));
-        },
-        pickStartLocationFromMap: () => {
-            dispatch(toggleMapPicker(1));
-        },
-        pickEndLocationFromMap: () => {
-            dispatch(toggleMapPicker(2));
-        },
-        setStartLocationSearch: r => dispatch(setStartLocationSearch(r.place_name)),
-        setEndLocationSearch: r => dispatch(setEndLocationSearch(r.place_name)),
-        handleGetUserLocation: userLocation => {
-            dispatch(getUserLocation());
-            if (userLocation.length > 0) {
-                dispatch(processStartLocation({ lng: userLocation[0].lng, lat: userLocation[0].lat }));
-            }
-            dispatch(setStartLocationSearch('User Location'));
-        },
-    };
-    return actions;
-}
-
 /* *
 * Routeplanner component that handle planning of route. User searches start and endlocation
 * and the data is stored in hooks and returned to the main component
@@ -97,9 +32,8 @@ function mapDispatchToProps(dispatch) {
 * @version 2
 * @since 31/10/2020
 * */
-function RoutePlannerView(props) {
+function RoutePlanner(props) {
     const classes = useStyles();
-
     return (
         <div>
             <Dialog
@@ -211,11 +145,5 @@ function RoutePlannerView(props) {
         </div>
     )
 }
-
-// bridge the view to redux actions and store
-const RoutePlanner = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(RoutePlannerView)
 
 export default RoutePlanner;

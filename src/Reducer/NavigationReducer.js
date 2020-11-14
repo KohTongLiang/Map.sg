@@ -62,7 +62,7 @@ function NavigationReducer(state = initialState, action) {
                 endLocationSearch: initialState.endLocationSearch.concat(action.payload),
             });
         case RETURN_MAP_PICKER_RESULT:
-            if (state.mapPickerMode == 1) {
+            if (state.mapPickerMode === 1) {
                 return Object.assign({}, state, {
                     mapPickerResult: initialState.mapPickerResult.concat(action.payload),
                     startLocation: initialState.startLocation.concat(action.payload),
@@ -70,7 +70,7 @@ function NavigationReducer(state = initialState, action) {
                     mapPickerMode: initialState.mapPickerMode,
                     routePlannerView: !state.routePlannerView,
                 });
-            } else if (state.mapPickerMode == 2) {
+            } else if (state.mapPickerMode === 2) {
                 return Object.assign({}, state, {
                     mapPickerResult: initialState.mapPickerResult.concat(action.payload),
                     endLocation: initialState.endLocation.concat(action.payload),
@@ -79,6 +79,7 @@ function NavigationReducer(state = initialState, action) {
                     routePlannerView: !state.routePlannerView,
                 });
             }
+            break;
         case SEARCH_START_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
                 startLocationSearchResult: initialState.startLocationSearchResult.concat(action.payload)

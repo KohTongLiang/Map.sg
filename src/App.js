@@ -1,7 +1,7 @@
 // import node modules
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { useMediaQuery, createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 
 // import components
 import HomePage from './Components/Home';

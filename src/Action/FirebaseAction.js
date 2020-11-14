@@ -1,5 +1,5 @@
 // import action types
-import { SIGN_UP, SIGN_IN, SIGN_OUT, CLEAR_ERROR_MESSAGE, SAVE_HISTORY, LOAD_HISTORY, DELETE_HISTORY } from '../Constants/actionTypes';
+import { SIGN_UP, SIGN_IN, SIGN_OUT, SAVE_HISTORY, LOAD_HISTORY, DELETE_HISTORY } from '../Constants/actionTypes';
 
 /**
  * Action definitions. Defines action input, types and payload that will be delivered to the reducers.

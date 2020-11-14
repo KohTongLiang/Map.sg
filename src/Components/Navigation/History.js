@@ -1,15 +1,9 @@
 // import node modules
 import React from 'react';
-import { connect } from 'react-redux';
-
-// import redux components
-import { toggleHistoryView } from '../../Action/HomeActions';
-import { runHistory, toggleBookmark } from '../../Action/NavigationActions';
-import { deleteHistory } from '../../Action/FirebaseAction';
 
 // import material-ui modules
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typography, Button, IconButton, Paper, List } from '@material-ui/core';
+import { Container, Card, CardContent, Slide, Dialog, AppBar, Toolbar, Typography, IconButton, Paper } from '@material-ui/core';
 import {
     Close as CloseIcon, PlayArrow as PlayArrowIcon, Delete as DeleteIcon,
     BookmarkBorder as BookmarkBorderIcon, Bookmark as BookmarkIcon
@@ -25,25 +19,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        historyView: state.HomeReducer.historyView,
-        history: state.FirebaseReducer.history,
-        user: state.FirebaseReducer.user,
-    };
-    return appState;
-};
-
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    return {
-        toggleHistoryView: () => dispatch(toggleHistoryView()),
-        runHistory: routeInformation => dispatch(runHistory(routeInformation)),
-        deleteHistory: historyId => dispatch(deleteHistory(historyId)),
-        toggleBookmark: bookmark => dispatch(toggleBookmark(bookmark)),
-    }
-}
 
 /**
  * History view loads past routes taken by the user and load them into the view.
@@ -52,28 +27,8 @@ function mapDispatchToProps(dispatch) {
  * @version 1
  * @since 01/11/2020
  */
-function HistoryView(props) {
+function History(props) {
     const classes = useStyles();
-
-    function startFromHistoryHandler(dataRow) {
-        props.runHistory(
-            {
-                routeInformation: JSON.parse(dataRow.route_information)[0],
-                startLocation: dataRow.start_location[0],
-                endLocation: dataRow.end_location[0],
-                routeName: dataRow.route_name,
-            });
-        props.toggleHistoryView()
-    }
-
-    function deleteHistoryHandler(historyId) {
-        props.deleteHistory({ userId: props.user.uid, historyId: historyId });
-    }
-
-    function bookmarkHandler(routeId, bookmark) {
-        props.toggleBookmark({ userId: props.user.uid, routeId: routeId, bookmark: bookmark });
-    }
-
     return (
         <Dialog
             fullScreen
@@ -97,7 +52,7 @@ function HistoryView(props) {
             <Container>
                 {(props.history && props.history.length > 0) && props.history.map(dataRow => (
                     <Paper key={dataRow[0]} style={{ maxHeight: 200, overflow: 'auto' }}>
-                        <Card className={classes.root}>
+                        <Card className={classes.cardRoot}>
                             <div className={classes.details}>
                                 <CardContent className={classes.content}>
                                     <Typography component="p" variant="body1">
@@ -112,20 +67,21 @@ function HistoryView(props) {
                                 </CardContent>
                             </div>
                             <div className={classes.controls}>
-                                {dataRow[1].bookmark == false && (
-                                    <IconButton onClick={() => bookmarkHandler(dataRow[0], true)} aria-label="play/pause">
+                                {dataRow[1].bookmark === false && (
+                                    <IconButton onClick={() => 
+                                        props.toggleBookmark({ userId: props.user.uid, routeId: dataRow[0], bookmark: true })} aria-label="play/pause">
                                         <BookmarkBorderIcon />
                                     </IconButton>
                                 )}
-                                {dataRow[1].bookmark == true && (
-                                    <IconButton onClick={() => bookmarkHandler(dataRow[0], false)} aria-label="play/pause">
+                                {dataRow[1].bookmark === true && (
+                                    <IconButton onClick={() => props.toggleBookmark({ userId: props.user.uid, routeId: dataRow[0], bookmark: false })} aria-label="play/pause">
                                         <BookmarkIcon />
                                     </IconButton>
                                 )}
-                                <IconButton onClick={() => startFromHistoryHandler(dataRow[1])} aria-label="play/pause">
+                                <IconButton onClick={() => props.runHistory(dataRow[1])} aria-label="play/pause">
                                     <PlayArrowIcon className={classes.playIcon} />
                                 </IconButton>
-                                <IconButton onClick={() => deleteHistoryHandler(dataRow[0])}>
+                                <IconButton onClick={() => props.deleteHistory({ userId: props.user.uid, historyId: dataRow[0] })}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>
@@ -136,11 +92,5 @@ function HistoryView(props) {
         </Dialog>
     )
 }
-
-// bridge the view to redux actions and store
-const History = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(HistoryView);
 
 export default History;
