@@ -1,7 +1,3 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
-import withRouter from '../Components/Authentication/SignIn';
-
 import NavigationReducer from '../Reducer/NavigationReducer'
 import {NavigationState} from '../Reducer/NavigationReducer'
 

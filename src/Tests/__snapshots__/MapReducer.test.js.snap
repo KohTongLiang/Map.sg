@@ -7,7 +7,12 @@ Object {
   "cameras": Array [
     undefined,
   ],
+  "erpMarkers": Array [],
   "lineString": Array [],
+  "map": Array [],
+  "pinnedCameraMarkers": Array [],
+  "stepMarkers": Array [],
+  "userMarker": Array [],
 }
 `;
 
@@ -18,7 +23,12 @@ Object {
     undefined,
   ],
   "cameras": Array [],
+  "erpMarkers": Array [],
   "lineString": Array [],
+  "map": Array [],
+  "pinnedCameraMarkers": Array [],
+  "stepMarkers": Array [],
+  "userMarker": Array [],
 }
 `;
 
@@ -29,7 +39,12 @@ Object {
     undefined,
   ],
   "cameras": Array [],
+  "erpMarkers": Array [],
   "lineString": Array [],
+  "map": Array [],
+  "pinnedCameraMarkers": Array [],
+  "stepMarkers": Array [],
+  "userMarker": Array [],
 }
 `;
 
@@ -38,6 +53,11 @@ Object {
   "ERP": Array [],
   "cameraMarkers": Array [],
   "cameras": Array [],
+  "erpMarkers": Array [],
   "lineString": Array [],
+  "map": Array [],
+  "pinnedCameraMarkers": Array [],
+  "stepMarkers": Array [],
+  "userMarker": Array [],
 }
 `;

@@ -2,8 +2,9 @@
 
 exports[`HomeReducer  should handle GET_USER_LOCATION_SUCCEEDED 1`] = `
 Object {
+  "bookmarkView": false,
+  "errorMessage": "",
   "historyView": false,
-  "routePlannerView": false,
   "trafficImagesView": false,
   "userLocation": Array [
     undefined,
@@ -13,8 +14,9 @@ Object {
 
 exports[`HomeReducer  should handle HISTORY_VIEW 1`] = `
 Object {
+  "bookmarkView": false,
+  "errorMessage": "",
   "historyView": true,
-  "routePlannerView": false,
   "trafficImagesView": false,
   "userLocation": Array [],
 }
@@ -22,8 +24,9 @@ Object {
 
 exports[`HomeReducer  should handle TOGGLE_ROUTE_PLANNER 1`] = `
 Object {
+  "bookmarkView": false,
+  "errorMessage": "",
   "historyView": false,
-  "routePlannerView": true,
   "trafficImagesView": false,
   "userLocation": Array [],
 }
@@ -31,8 +34,9 @@ Object {
 
 exports[`HomeReducer  should handle TOGGLE_TRAFFIC_IMAGES_VIEW 1`] = `
 Object {
+  "bookmarkView": false,
+  "errorMessage": "",
   "historyView": false,
-  "routePlannerView": false,
   "trafficImagesView": false,
   "userLocation": Array [],
 }
@@ -40,8 +44,9 @@ Object {
 
 exports[`HomeReducer  should return the initial state 1`] = `
 Object {
+  "bookmarkView": false,
+  "errorMessage": "",
   "historyView": false,
-  "routePlannerView": false,
   "trafficImagesView": false,
   "userLocation": Array [],
 }

@@ -1,6 +1,4 @@
 
-import React from "react";
-import { shallow, mount } from "enzyme";
 import FirebaseReducer from '../Reducer/FirebaseReducer'
 import {FirebaseState} from '../Reducer/FirebaseReducer'
 

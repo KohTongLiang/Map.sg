@@ -1,6 +1,3 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
-
 import HomeReducer from '../Reducer/HomeReducer'
 import {HomeReducerState} from '../Reducer/HomeReducer'
 

@@ -1,6 +1,3 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
-
 import MapReducer from '../Reducer/MapReducer'
 import {MapState} from '../Reducer/MapReducer'
 
