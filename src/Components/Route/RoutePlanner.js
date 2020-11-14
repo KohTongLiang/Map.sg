@@ -140,11 +140,11 @@ function RoutePlanner(props) {
                                 ))}
                             </FormLabel>
                         </FormGroup>
-                        <FormGroup className={classes.planBtn}>
-                            <Button startIcon={<DirectionsCarIcon />} variant="contained" color="#1F1B24" onClick={() => props.handlePlanRoute(props.startLocationSearch, props.endLocationSearch, props.startLocation, props.endLocation)}>Plan</Button>
-                        </FormGroup>
                     </form>
                 </Container>
+                <FormGroup className={classes.planBtn}>
+                    <Button startIcon={<DirectionsCarIcon />} variant="contained" color="#1F1B24" onClick={() => props.handlePlanRoute(props.startLocationSearch, props.endLocationSearch, props.startLocation, props.endLocation)}>Plan</Button>
+                </FormGroup>
             </Dialog>
         </div>
     )

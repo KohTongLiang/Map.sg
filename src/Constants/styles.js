@@ -92,7 +92,6 @@ export const style = {
     centerText: {
         textAlign: 'center'
     },
-    //inline style corrections
     centeringText: {
         textAlign: 'center'
     },
@@ -102,5 +101,10 @@ export const style = {
     historyStyling: {
         maxHeight: 200, 
         overflow: 'auto'
-    }
+    },
+    planBtn: {
+        position: 'fixed',
+        width: '100%',
+        bottom: 0,
+    },
 }

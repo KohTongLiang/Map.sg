@@ -124,7 +124,7 @@ function* handleSignIn(action) {
 function* handleSignOut() {
   try {
     yield call(firebaseApp.auth.signOut);
-    yield put({ SIGN_OUT_SUCCESS });
+    yield put({ type: SIGN_OUT_SUCCESS });
   }
   catch (error) {
     yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
