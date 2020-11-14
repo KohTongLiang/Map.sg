@@ -59,10 +59,10 @@ function Navigation(props) {
                                 )}
                                 <Collapse in={showImages}>
                                     <div >
-                                        <Typography style={{ textAlign: 'center' }} gutterBottom variant="subtitle1">
+                                        <Typography className={classes.centeringText} gutterBottom variant="subtitle1">
                                             Navigating
                                         </Typography>
-                                        <Paper style={{ padding: 10 }} theme="light" elevation={13} className={classes.paper}>
+                                        <Paper className={classes.paddingTypograph} theme="light" elevation={13} >
                                             <Grid container spacing={1}>
                                                 <Grid item xs={13} sm container>
                                                     <Grid item xs>
