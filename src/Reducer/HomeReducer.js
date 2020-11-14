@@ -1,19 +1,15 @@
 // import action types
 import {
-    GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER,
-    TOGGLE_TRAFFIC_IMAGES_VIEW, TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT,
-    BOOKMARK_VIEW, CLEAR_ERROR_MESSAGE, SET_FAILURE_MESSAGE, OVERRIDE_USER_LOCATION
+    GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, 
+    TOGGLE_TRAFFIC_IMAGES_VIEW, BOOKMARK_VIEW, CLEAR_ERROR_MESSAGE, SET_FAILURE_MESSAGE, OVERRIDE_USER_LOCATION
 } from '../Constants/actionTypes';
 
 // Initialise initial values for state
 const initialState = {
-    routePlannerView: false,
     trafficImagesView: false,
     userLocation: [],
     historyView: false,
     bookmarkView: false,
-    mapPickerMode: false,
-    mapPickerResult: [],
     errorMessage: '',
 }
 
@@ -34,14 +30,6 @@ function HomeReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 userLocation: initialState.userLocation.concat(action.payload)
             });
-        case TOGGLE_ROUTE_PLANNER:
-            return Object.assign({}, state, {
-                routePlannerView: !state.routePlannerView
-            });
-        case TOGGLE_MAP_PICKER:
-            return Object.assign({}, state, {
-                mapPickerMode: !state.mapPickerMode
-            });
         case HISTORY_VIEW:
             return Object.assign({}, state, {
                 historyView: !state.historyView
@@ -49,10 +37,6 @@ function HomeReducer(state = initialState, action) {
         case BOOKMARK_VIEW:
             return Object.assign({}, state, {
                 bookmarkView: !state.bookmarkView
-            });
-        case RETURN_MAP_PICKER_RESULT:
-            return Object.assign({}, state, {
-                mapPickerResult: initialState.mapPickerResult.concat(action.payload),
             });
         case TOGGLE_TRAFFIC_IMAGES_VIEW:
             break;

@@ -1,11 +1,14 @@
 import {
     SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, PROCESS_START_LOCATION,
     PROCESS_END_LOCATION, PLAN_ROUTE_SUCCEEDED, TRIP_SUMMARY, MAP_MATCHING_SUCCEEDED,
-    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY
+    CANCEL_ROUTE, UPDATE_STEPS, REROUTE_SUCCEEDED, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME,
+    RUN_HISTORY, SET_START_LOCATION_SEARCH, SET_END_LOCATION_SEARCH,TOGGLE_ROUTE_PLANNER,
+    TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT
 } from '../Constants/actionTypes';
 
 // Initialise initial values for state
 const initialState = {
+    routePlannerView: false,
     startLocation: [],
     endLocation: [],
     routeName: [],
@@ -20,6 +23,10 @@ const initialState = {
     erpCharge: [], // store erp charges along the
     erpTotalCharge: [], // store total erp charges incurred
     erpFiltered: [],
+    startLocationSearch: '',
+    endLocationSearch: '',
+    mapPickerMode: 0,
+    mapPickerResult: [],
 }
 
 /**
@@ -35,6 +42,43 @@ function NavigationReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 stepNo: initialState.stepNo + action.payload,
             });
+        case TOGGLE_MAP_PICKER:
+            return Object.assign({}, state, {
+                mapPickerMode: initialState.mapPickerMode + action.payload,
+                routePlannerView: !state.routePlannerView,
+            });
+        case TOGGLE_ROUTE_PLANNER:
+            return Object.assign({}, state, {
+                startLocationSearch: initialState.startLocationSearch,
+                endLocationSearch: initialState.endLocationSearch,
+                routePlannerView: !state.routePlannerView,
+            });
+        case SET_START_LOCATION_SEARCH:
+            return Object.assign({}, state, {
+                startLocationSearch: initialState.startLocationSearch.concat(action.payload),
+            });
+        case SET_END_LOCATION_SEARCH:
+            return Object.assign({}, state, {
+                endLocationSearch: initialState.endLocationSearch.concat(action.payload),
+            });
+        case RETURN_MAP_PICKER_RESULT:
+            if (state.mapPickerMode == 1) {
+                return Object.assign({}, state, {
+                    mapPickerResult: initialState.mapPickerResult.concat(action.payload),
+                    startLocation: initialState.startLocation.concat(action.payload),
+                    startLocationSearch: initialState.startLocationSearch.concat('Pinned location'),
+                    mapPickerMode: initialState.mapPickerMode,
+                    routePlannerView: !state.routePlannerView,
+                });
+            } else if (state.mapPickerMode == 2) {
+                return Object.assign({}, state, {
+                    mapPickerResult: initialState.mapPickerResult.concat(action.payload),
+                    endLocation: initialState.endLocation.concat(action.payload),
+                    endLocationSearch: initialState.endLocationSearch.concat('Pinned location'),
+                    mapPickerMode: initialState.mapPickerMode,
+                    routePlannerView: !state.routePlannerView,
+                });
+            }
         case SEARCH_START_LOCATION_SUCCEEDED:
             return Object.assign({}, state, {
                 startLocationSearchResult: initialState.startLocationSearchResult.concat(action.payload)

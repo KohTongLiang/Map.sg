@@ -65,8 +65,8 @@ export function clearErrorMessage () {
 /**
  * Switch to map picker mode
  */
-export function toggleMapPicker() {
-    return { type: TOGGLE_MAP_PICKER }
+export function toggleMapPicker(payload) {
+    return { type: TOGGLE_MAP_PICKER, payload }
 }
 
 /**

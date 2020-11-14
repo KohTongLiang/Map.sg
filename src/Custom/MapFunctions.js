@@ -39,7 +39,7 @@ const mapStateToProps = (state) => {
         user: state.FirebaseReducer.user,
         routeName: state.NavigationReducer.routeName,
         tripSummaryView: state.NavigationReducer.tripSummaryView,
-        mapPickerMode: state.HomeReducer.mapPickerMode,
+        mapPickerMode: state.NavigationReducer.mapPickerMode,
     };
     return appState;
 };
@@ -104,7 +104,7 @@ function MapFunctions(props) {
     }, [props.user])
 
     useEffect(() => {
-        if (props.mapPickerMode) {
+        if (props.mapPickerMode > 0) {
             map.on('click', (e) => {
                 props.returnMapPickerResult([{lng: e.lngLat.lng, lat: e.lngLat.lat}]);
             });

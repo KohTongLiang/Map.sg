@@ -1,11 +1,11 @@
 // import node modules
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
 
 // import redux components
 import {
     searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute, saveRouteName,
-    getNameOfPlace
+    setStartLocationSearch, setEndLocationSearch
 } from '../../Action/NavigationActions';
 import { getTrafficImages, getErpData } from '../../Action/MapActions'
 import { getUserLocation, toggleMapPicker, toggleRoutePlanner } from '../../Action/HomeActions';
@@ -32,17 +32,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
+
 // allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
-        routePlannerView: state.HomeReducer.routePlannerView,
+        routePlannerView: state.NavigationReducer.routePlannerView,
         startLocation: state.NavigationReducer.startLocation,
         endLocation: state.NavigationReducer.endLocation,
         startLocationSearchResult: state.NavigationReducer.startLocationSearchResult,
         endLocationSearchResult: state.NavigationReducer.endLocationSearchResult,
         userLocation: state.HomeReducer.userLocation,
-        mapPickerMode: state.HomeReducer.mapPickerMode,
+        mapPickerMode: state.NavigationReducer.mapPickerMode,
         mapPickerResult: state.HomeReducer.mapPickerResult,
+        startLocationSearch: state.NavigationReducer.startLocationSearch,
+        endLocationSearch: state.NavigationReducer.endLocationSearch,
     };
     return appState;
 };
@@ -52,17 +55,37 @@ function mapDispatchToProps(dispatch) {
     const actions = {
         searchStartLocation: startLocationSearch => dispatch(searchStartLocation(startLocationSearch)),
         searchEndLocation: endLocationSearch => dispatch(searchEndLocation(endLocationSearch)),
-        processStartLocation: startLocation => dispatch(processStartLocation(startLocation)),
-        processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
-        planRoute: (startLocation, endLocation) => dispatch(planRoute(startLocation, endLocation)),
-        getUserLocation: () => dispatch(getUserLocation()),
-        getTrafficImages: () => dispatch(getTrafficImages()),
-        getErpData: () => dispatch(getErpData()),
-        saveRouteName: routeName => dispatch(saveRouteName(routeName)),
-        toggleMapPicker: startEnd => dispatch(toggleMapPicker(startEnd)),
-        getNameOfPlace: nop => dispatch(getNameOfPlace(nop)),
         toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
-
+        handlePlanRoute: (startLocationSearch, endLocationSearch, startLocation, endLocation) => {
+            dispatch(getTrafficImages());
+            dispatch(getErpData());
+            dispatch(planRoute(startLocation, endLocation));
+            dispatch(saveRouteName([startLocationSearch, endLocationSearch]));
+            dispatch(toggleRoutePlanner());
+        },
+        handleSelectStart: r => {
+            dispatch(processStartLocation({ lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1] }));
+            dispatch(setStartLocationSearch(r.place_name));
+        },
+        handleSelectEnd: r => {
+            dispatch(processEndLocation({ lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1] }));
+            dispatch(setEndLocationSearch(r.place_name));
+        },
+        pickStartLocationFromMap: () => {
+            dispatch(toggleMapPicker(1));
+        },
+        pickEndLocationFromMap: () => {
+            dispatch(toggleMapPicker(2));
+        },
+        setStartLocationSearch: r => dispatch(setStartLocationSearch(r.place_name)),
+        setEndLocationSearch: r => dispatch(setEndLocationSearch(r.place_name)),
+        handleGetUserLocation: userLocation => {
+            dispatch(getUserLocation());
+            if (userLocation.length > 0) {
+                dispatch(processStartLocation({ lng: userLocation[0].lng, lat: userLocation[0].lat }));
+            }
+            dispatch(setStartLocationSearch('User Location'));
+        },
     };
     return actions;
 }
@@ -75,75 +98,7 @@ function mapDispatchToProps(dispatch) {
 * @since 31/10/2020
 * */
 function RoutePlannerView(props) {
-    // define local variables/hooks
-    const [startLocationSearch, setStartLocationSearch] = useState('');
-    const [endLocationSearch, setEndLocationSearch] = useState('');
-    const [processStartPicker, setProcessStartPicker] = useState(false);
-    const [processEndPicker, setProcessEndPicker] = useState(false);
-
     const classes = useStyles();
-
-    useEffect(() => {
-        if (processStartPicker) {
-            props.processStartLocation(props.mapPickerResult);
-            setStartLocationSearch(JSON.stringify('Pinned location'));
-            setNameOfPlace(props.mapPickerResult);
-            props.toggleMapPicker();
-            props.toggleRoutePlanner();
-            setProcessStartPicker(false);
-        } else if (processEndPicker) {
-            props.processEndLocation(props.mapPickerResult);
-            setEndLocationSearch(JSON.stringify('Pinned location'));
-            props.toggleMapPicker();
-            props.toggleRoutePlanner();
-            setProcessEndPicker(false);
-        }
-    }, [props.mapPickerResult]);
-
-    // handlers to clean up the form after user choose the location they want
-    const handleSelectStart = r => {
-        props.processStartLocation({ lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1] });
-        setStartLocationSearch(r.place_name);
-    }
-
-    const handleSelectEnd = r => {
-        props.processEndLocation({ lng: r.geometry.coordinates[0], lat: r.geometry.coordinates[1] });
-        setEndLocationSearch(r.place_name);
-    }
-
-    const handlePlanRoute = () => {
-        props.getTrafficImages();
-        props.getErpData();
-        props.planRoute(props.startLocation, props.endLocation);
-        props.saveRouteName([startLocationSearch, endLocationSearch]);
-        props.toggleRoutePlanner();
-        setStartLocationSearch('');
-        setEndLocationSearch('');
-    }
-
-    const handleGetUserLocation = () => {
-        props.getUserLocation();
-        if (props.userLocation.length > 0) {
-            props.processStartLocation({ lng: props.userLocation[0].lng, lat: props.userLocation[0].lat });
-        }
-        setStartLocationSearch('Current Location');
-    }
-
-    const pickStartLocationFromMap = () => {
-        props.toggleRoutePlanner();
-        props.toggleMapPicker();
-        setProcessStartPicker(true);
-    }
-
-    const pickEndLocationFromMap = () => {
-        props.toggleRoutePlanner();
-        props.toggleMapPicker();
-        setProcessEndPicker(true);
-    }
-
-    const setNameOfPlace = (coords) => {
-        props.getNameOfPlace(coords);
-    }
 
     return (
         <div>
@@ -173,20 +128,20 @@ function RoutePlannerView(props) {
                                 <Grid container spacing={3}>
                                     <Grid item xs={8}>
                                         <InputLabel>Start Location</InputLabel>
-                                        <Input fullWidth name="startLocation" value={startLocationSearch} onChange={e => setStartLocationSearch(e.target.value)} />
+                                        <Input fullWidth name="startLocation" value={props.startLocationSearch} onChange={e => props.setStartLocationSearch({place_name: e.target.value})} />
                                     </Grid>
                                     <Grid item xs={2} >
-                                        <IconButton color="inherit" onClick={() => props.searchStartLocation(startLocationSearch)} aria-label="Search">
+                                        <IconButton color="inherit" onClick={() => props.searchStartLocation(props.startLocationSearch)} aria-label="Search">
                                             <SearchIcon />
                                         </IconButton>
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <IconButton color="inherit" onClick={() => pickStartLocationFromMap()} aria-label="Search">
+                                        <IconButton color="inherit" onClick={() => props.pickStartLocationFromMap()} aria-label="Search">
                                             <PinDropIcon />
                                         </IconButton>
                                     </Grid>
                                 </Grid>
-                                <Button startIcon={<PersonPinIcon />} color="#1F1B24" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
+                                <Button startIcon={<PersonPinIcon />} color="#1F1B24" onClick={() => props.handleGetUserLocation(props.userLocation)}>Use Current Location</Button>
                             </FormControl>
                         </FormGroup>
                         <FormGroup>
@@ -194,15 +149,15 @@ function RoutePlannerView(props) {
                                 <Grid container spacing={3}>
                                     <Grid item xs={8}>
                                         <InputLabel>End Location</InputLabel>
-                                        <Input fullWidth name="endLocation" value={endLocationSearch} onChange={e => setEndLocationSearch(e.target.value)} />
+                                        <Input fullWidth name="endLocation" value={props.endLocationSearch} onChange={e => props.setEndLocationSearch({place_name: e.target.value})} />
                                     </Grid>
                                     <Grid item xs={2} >
-                                        <IconButton color="inherit" onClick={() => props.searchEndLocation(endLocationSearch)} aria-label="Search">
+                                        <IconButton color="inherit" onClick={() => props.searchEndLocation(props.endLocationSearch)} aria-label="Search">
                                             <SearchIcon />
                                         </IconButton>
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <IconButton color="inherit" onClick={() => pickEndLocationFromMap()} aria-label="Search">
+                                        <IconButton color="inherit" onClick={() => props.pickEndLocationFromMap()} aria-label="Search">
                                             <PinDropIcon />
                                         </IconButton>
                                     </Grid>
@@ -221,7 +176,7 @@ function RoutePlannerView(props) {
                                             </CardContent>
                                         </div>
                                         <div className={classes.controls}>
-                                            <IconButton onClick={() => handleSelectStart(r)} aria-label="play/pause">
+                                            <IconButton onClick={() => props.handleSelectStart(r)} aria-label="play/pause">
                                                 <AddLocationIcon />
                                             </IconButton>
                                         </div>
@@ -239,7 +194,7 @@ function RoutePlannerView(props) {
                                             </CardContent>
                                         </div>
                                         <div className={classes.controls}>
-                                            <IconButton onClick={() => handleSelectEnd(r)} aria-label="play/pause">
+                                            <IconButton onClick={() => props.handleSelectEnd(r)} aria-label="play/pause">
                                                 <AddLocationIcon />
                                             </IconButton>
                                         </div>
@@ -248,7 +203,7 @@ function RoutePlannerView(props) {
                             </FormLabel>
                         </FormGroup>
                         <FormGroup className={classes.planBtn}>
-                            <Button startIcon={<DirectionsCarIcon />} variant="contained" color="#1F1B24" onClick={() => handlePlanRoute()}>Plan</Button>
+                            <Button startIcon={<DirectionsCarIcon />} variant="contained" color="#1F1B24" onClick={() => props.handlePlanRoute(props.startLocationSearch, props.endLocationSearch, props.startLocation, props.endLocation)}>Plan</Button>
                         </FormGroup>
                     </form>
                 </Container>

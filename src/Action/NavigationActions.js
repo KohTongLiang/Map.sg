@@ -1,7 +1,8 @@
 // import actiont types
 import {
     SEARCH_START_LOCATION, SEARCH_END_LOCATION, PLAN_ROUTE, PROCESS_START_LOCATION, PROCESS_END_LOCATION, TRIP_SUMMARY,
-    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY, TOGGLE_BOOKMARK, GET_NAME_OF_PLACE
+    SAVE_TRIP, MAP_MATCHING, CANCEL_ROUTE, REROUTE, UPDATE_STEPS, FILTER_ROUTE_ERP, SAVE_ROUTE_NAME, RUN_HISTORY,
+    TOGGLE_BOOKMARK, GET_NAME_OF_PLACE, TOGGLE_ROUTE_PLANNER, SET_START_LOCATION_SEARCH,SET_END_LOCATION_SEARCH
 } from '../Constants/actionTypes';
 
 /**
@@ -120,4 +121,12 @@ export function toggleBookmark(payload) {
 
 export function getNameOfPlace(payload) {
     return { type: GET_NAME_OF_PLACE, payload }
+}
+
+export function setStartLocationSearch(payload) {
+    return { type: SET_START_LOCATION_SEARCH, payload }
+}
+
+export function setEndLocationSearch(payload) {
+    return { type: SET_END_LOCATION_SEARCH, payload }
 }

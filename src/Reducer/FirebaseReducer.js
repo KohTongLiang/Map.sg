@@ -24,10 +24,7 @@ function FirebaseReducer(state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
         case SAVE_HISTORY_SUCCESS:
-            // return Object.assign({}, state, {
-            //     history: state.history.concat(action.doc)
-            // });
-            return;
+            return state;
         case LOAD_HISTORY_SUCCESS:
             return Object.assign({}, state, {
                 history: initialState.history.concat(action.payload),

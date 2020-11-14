@@ -59,6 +59,8 @@ export const RUN_HISTORY = 'RUN_HISTORY';
 export const DELETE_HISTORY = 'DELETE_HISTORY';
 export const TOGGLE_BOOKMARK = 'TOGGLE_BOOKMARK';
 export const GET_NAME_OF_PLACE = 'GET_NAME_OF_PLACE';
+export const SET_START_LOCATION_SEARCH = 'SET_START_LOCATION_SEARCH';
+export const SET_END_LOCATION_SEARCH = 'SET_END_LOCATION_SEARCH';
 
 /**
  * Action types for Firebase
