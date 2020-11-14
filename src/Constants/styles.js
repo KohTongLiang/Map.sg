@@ -11,7 +11,6 @@ export const style = {
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',
-        // backgroundColor: theme.palette.background.paper,
     },
     navFab: {
         top: 'auto',
@@ -38,7 +37,6 @@ export const style = {
         position: 'relative',
     },
     title: {
-        // marginLeft: theme.spacing(2),
         flex: 1,
     },
     gridList: {
@@ -56,9 +54,6 @@ export const style = {
     },
     instr: {
         flexGrow: 1,
-    },
-    stepsButton: {
-        // marginRight: theme.spacing(2),
     },
     navBarRoot: {
         flexGorw: 1,
@@ -92,11 +87,9 @@ export const style = {
         position: 'relative',
     },
     title: {
-        // marginLeft: theme.spacing(2),
         flex: 1,
     },
     dialogTitle: {
-        // marginLeft: theme.spacing(2),
         flex: 1,
     },
     form: {
@@ -111,8 +104,6 @@ export const style = {
     },
     controls: {
         alignItems: 'right',
-        // paddingLeft: theme.spacing(1),
-        // paddingBottom: theme.spacing(1),
     },
     playIcon: {
         height: 38,

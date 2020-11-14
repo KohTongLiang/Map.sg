@@ -6,7 +6,8 @@ import { useForm, Controller } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 
 // import redux components
-import { signUp, clearErrorMessage } from '../../Action/FirebaseAction'
+import { signUp } from '../../Action/FirebaseAction'
+import { clearErrorMessage } from '../../Action/HomeActions'
 
 // import material-ui modules
 import {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => (STYLES.style));
 // allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
-        errorMessage: state.FirebaseReducer.errorMessage,
+        errorMessage: state.HomeReducer.errorMessage,
         signUpSuccess: state.FirebaseReducer.signUpSuccess,
     };
     return appState;

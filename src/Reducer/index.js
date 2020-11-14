@@ -1,4 +1,7 @@
+// import redux modules
 import { combineReducers } from 'redux';
+
+// import redux components
 import HomeReducer from './HomeReducer';
 import NavigationReducer from './NavigationReducer';
 import MapReducer from './MapReducer';
@@ -11,7 +14,6 @@ import FirebaseReducer from './FirebaseReducer';
  * @version 1.0
  * @since 30/10/2020
  * */
-
 export default combineReducers({ 
     HomeReducer,
     NavigationReducer,

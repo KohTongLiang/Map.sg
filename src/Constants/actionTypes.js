@@ -1,8 +1,8 @@
 /**
  * Action types constants use to define an action type.
- * @Koh Tong Liang
- * @Version 1
- * @Since 30/10/2020
+ * @author Koh Tong Liang
+ * @version 1
+ * @since 30/10/2020
  */
 
 /**
@@ -16,6 +16,7 @@ export const GET_USER_LOCATION_SUCCEEDED = 'GET_USER_LOCATION_SUCCEEDED';
 export const HISTORY_VIEW = 'HISTORY_VIEW';
 export const BOOKMARK_VIEW = 'BOOKMARK_VIEW';
 export const RETURN_MAP_PICKER_RESULT = 'RETURN_MAP_PICKER_RESULT';
+export const SET_FAILURE_MESSAGE = 'SET_FAILURE_MESSAGE';
 
 /**
  * Action types for Map Actions
@@ -27,6 +28,11 @@ export const GET_ERP_DATA_SUCCEEDED = 'GET_ERP_DATA_SUCCEEDED';
 export const UPDATE_CAMERA_MARKERS = 'UPDATE_CAMERA_MARKERS';
 export const UPDATE_LINE_STRING = 'UPDATE_LINE_STRING';
 export const UPDATE_NEXT_CAMERA = 'UPDATE_NEXT_CAMERA';
+export const SET_USER_MARKER = 'SET_USER_MARKER';
+export const SET_PINNED_CAMERA_MARKERS = 'SET_PINNED_CAMERA_MARKERS';
+export const SET_ERP_MARKERS = 'SET_ERP_MARKERS';
+export const SET_STEP_MARKERS = 'SET_STEP_MARKERS';
+export const SET_MAP = 'SET_MAP';
 
 /**
  * Action types for Navigation/Route Planner
@@ -71,3 +77,8 @@ export const SAVE_HISTORY = 'SAVE_HISTORY';
 export const SAVE_HISTORY_SUCCESS = 'SAVE_HISTORY_SUCCESS';
 export const LOAD_HISTORY = 'LOAD_HISTORY';
 export const LOAD_HISTORY_SUCCESS = 'LOAD_HISTORY_SUCCESS';
+
+/**
+ * Action types defined for demo and debugging purposes.
+ */
+export const OVERRIDE_USER_LOCATION = 'OVERRIDE_USER_LOCATION';

@@ -5,7 +5,8 @@ import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 // import redux components
-import { signIn, clearErrorMessage } from '../../Action/FirebaseAction'
+import { signIn } from '../../Action/FirebaseAction'
+import { clearErrorMessage } from '../../Action/HomeActions'
 
 // import material-ui modules
 import {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => (STYLES.style));
 // allows states stored in redux store to be mapped to components
 const mapStateToProps = (state) => {
     const appState = {
-        errorMessage: state.FirebaseReducer.errorMessage,
+        errorMessage: state.HomeReducer.errorMessage,
         signInSuccess: state.FirebaseReducer.signInSuccess,
     };
     return appState;
@@ -40,9 +41,9 @@ function mapDispatchToProps(dispatch) {
 
 /* *
  * Sign in page to allow user input to perform user authentication features.
- * @Koh Tong Liang
- * @Version 1.0
- * @Since 19/10/2018
+ * @author Koh Tong Liang
+ * @version 1.0
+ * @since 19/10/2018
  * */
 const SignInView = (props) => {
     const classes = useStyles();

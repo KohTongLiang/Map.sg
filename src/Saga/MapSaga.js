@@ -2,7 +2,7 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
 
 // import action types
-import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED } from '../Constants/actionTypes';
+import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED, SET_FAILURE_MESSAGE } from '../Constants/actionTypes';
 
 // import axios module
 import axios from 'axios';
@@ -37,7 +37,7 @@ function* handleGetTrafficImages() {
             ));
         yield put({ type: GET_TRAFFIC_IMAGES_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }
 
@@ -58,6 +58,6 @@ function* handleGetErpData() {
             ));
         yield put({ type: GET_ERP_DATA_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }

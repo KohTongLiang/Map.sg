@@ -4,7 +4,8 @@ import { put, takeEvery, call } from 'redux-saga/effects';
 // import action types
 import {
     SEARCH_START_LOCATION, SEARCH_START_LOCATION_SUCCEEDED, SEARCH_END_LOCATION_SUCCEEDED, SEARCH_END_LOCATION,
-    PLAN_ROUTE, PLAN_ROUTE_SUCCEEDED, MAP_MATCHING, MAP_MATCHING_SUCCEEDED, REROUTE, REROUTE_SUCCEEDED, GET_NAME_OF_PLACE
+    PLAN_ROUTE, PLAN_ROUTE_SUCCEEDED, MAP_MATCHING, MAP_MATCHING_SUCCEEDED, REROUTE, REROUTE_SUCCEEDED, GET_NAME_OF_PLACE,
+    SET_FAILURE_MESSAGE,
 } from '../Constants/actionTypes';
 
 // import axios module
@@ -44,12 +45,11 @@ function* handleGetNameOfPlace(action) {
                 }
             }).then(function (response) {
                 var result = response.data.features;
-                console.log(response)
                 return result;
             })
         ));
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }
 
@@ -69,7 +69,7 @@ function* handleSearchStartLocation(action) {
             ));
         yield put({ type: SEARCH_START_LOCATION_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }
 
@@ -89,7 +89,7 @@ function* handleSearchEndLocation(action) {
             ));
         yield put({ type: SEARCH_END_LOCATION_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }
 
@@ -115,7 +115,7 @@ function* handlePlanRoute(action) {
             ));
         yield put({ type: PLAN_ROUTE_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }
 
@@ -142,7 +142,7 @@ function* handleReroute(action) {
             ));
         yield put({ type: REROUTE_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }
 
@@ -163,6 +163,6 @@ function* handleMapMatching(action) {
             ));
         yield put({ type: MAP_MATCHING_SUCCEEDED, payload })
     } catch (error) {
-        console.log(error)
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }

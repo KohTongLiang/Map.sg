@@ -8,7 +8,7 @@ import {
     getNameOfPlace
 } from '../../Action/NavigationActions';
 import { getTrafficImages, getErpData } from '../../Action/MapActions'
-import { getUserLocation, toggleMapPicker } from '../../Action/HomeActions';
+import { getUserLocation, toggleMapPicker, toggleRoutePlanner } from '../../Action/HomeActions';
 
 // import material-ui modules
 import {
@@ -61,6 +61,8 @@ function mapDispatchToProps(dispatch) {
         saveRouteName: routeName => dispatch(saveRouteName(routeName)),
         toggleMapPicker: startEnd => dispatch(toggleMapPicker(startEnd)),
         getNameOfPlace: nop => dispatch(getNameOfPlace(nop)),
+        toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
+
     };
     return actions;
 }
@@ -73,10 +75,12 @@ function mapDispatchToProps(dispatch) {
 * @since 31/10/2020
 * */
 function RoutePlannerView(props) {
+    // define local variables/hooks
     const [startLocationSearch, setStartLocationSearch] = useState('');
     const [endLocationSearch, setEndLocationSearch] = useState('');
     const [processStartPicker, setProcessStartPicker] = useState(false);
     const [processEndPicker, setProcessEndPicker] = useState(false);
+
     const classes = useStyles();
 
     useEffect(() => {
@@ -184,8 +188,6 @@ function RoutePlannerView(props) {
                                 </Grid>
                                 <Button startIcon={<PersonPinIcon />} color="#1F1B24" onClick={() => handleGetUserLocation()}>Use Current Location</Button>
                             </FormControl>
-                        </FormGroup>
-                        <FormGroup>
                         </FormGroup>
                         <FormGroup>
                             <FormControl>

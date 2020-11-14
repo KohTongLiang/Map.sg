@@ -2,7 +2,7 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
 
 // import action types
-import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED, PROCESS_START_LOCATION } from '../Constants/actionTypes';
+import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED, PROCESS_START_LOCATION, SET_FAILURE_MESSAGE } from '../Constants/actionTypes';
 
 /**
  * Home saga, used to handle side-effects like AJAX/API calls for Home view.
@@ -31,6 +31,6 @@ function* handleGetUserLocation () {
         yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
         yield put({ type: PROCESS_START_LOCATION, payload });
     } catch (error) {
-        console.log(error);
+        yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
     }
 }

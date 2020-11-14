@@ -58,10 +58,6 @@ function FirebaseReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 errorMessage: initialState.errorMessage.concat(action.payload)
             });
-        case CLEAR_ERROR_MESSAGE:
-            return Object.assign({}, state, {
-                errorMessage: initialState.errorMessage
-            });
         default:
     } // end of switch case
 

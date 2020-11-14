@@ -2,7 +2,7 @@
 import {
     GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER,
     TOGGLE_TRAFFIC_IMAGES_VIEW, TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT,
-    BOOKMARK_VIEW
+    BOOKMARK_VIEW, CLEAR_ERROR_MESSAGE, SET_FAILURE_MESSAGE, OVERRIDE_USER_LOCATION
 } from '../Constants/actionTypes';
 
 // Initialise initial values for state
@@ -14,6 +14,7 @@ const initialState = {
     bookmarkView: false,
     mapPickerMode: false,
     mapPickerResult: [],
+    errorMessage: '',
 }
 
 /**
@@ -25,12 +26,11 @@ const initialState = {
 function HomeReducer(state = initialState, action) {
     // determine what action to perform and which state to update
     switch (action.type) {
-        case 'OVERRIDE_USER_LOCATION':
+        case OVERRIDE_USER_LOCATION:
             return Object.assign({}, state, {
                 userLocation: initialState.userLocation.concat({ lng: action.payload.lng, lat: action.payload.lat })
             });
         case GET_USER_LOCATION_SUCCEEDED:
-            console.log(action.payload)
             return Object.assign({}, state, {
                 userLocation: initialState.userLocation.concat(action.payload)
             });
@@ -56,6 +56,14 @@ function HomeReducer(state = initialState, action) {
             });
         case TOGGLE_TRAFFIC_IMAGES_VIEW:
             break;
+        case SET_FAILURE_MESSAGE:
+            return Object.assign({}, state, {
+                errorMessage: initialState.errorMessage.concat(action.payload)
+            });
+        case CLEAR_ERROR_MESSAGE:
+            return Object.assign({}, state, {
+                errorMessage: initialState.errorMessage
+            });
         default:
     } // end of switch case
 

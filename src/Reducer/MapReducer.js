@@ -1,7 +1,7 @@
 // import action types
 import {
     GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP_DATA_SUCCEEDED,
-    UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA
+    UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA, SET_USER_MARKER, SET_PINNED_CAMERA_MARKERS, SET_ERP_MARKERS, SET_STEP_MARKERS, SET_MAP
 } from '../Constants/actionTypes';
 
 // Initialise initial values for state
@@ -10,6 +10,11 @@ const initialState = {
     cameraMarkers: [],
     ERP: [],
     lineString: [],
+    userMarker: [],
+    pinnedCameraMarkers: [],
+    erpMarkers: [],
+    stepMarkers: [],
+    map: [],
 }
 
 /**
@@ -40,6 +45,26 @@ export default function MapReducer(state = initialState, action) {
         case UPDATE_NEXT_CAMERA:
             return Object.assign({}, state, {
                 cameraMarkers: initialState.cameraMarkers.concat(action.payload)
+            });
+        case SET_USER_MARKER:
+            return Object.assign({}, state, {
+                userMarker: initialState.userMarker.concat(action.payload)
+            });
+        case SET_PINNED_CAMERA_MARKERS:
+            return Object.assign({}, state, {
+                pinnedCameraMarkers: initialState.pinnedCameraMarkers.concat(action.payload)
+            });
+        case SET_ERP_MARKERS:
+            return Object.assign({}, state, {
+                erpMarkers: initialState.erpMarkers.concat(action.payload)
+            });
+        case SET_STEP_MARKERS:
+            return Object.assign({}, state, {
+                stepMarkers: initialState.stepMarkers.concat(action.payload)
+            });
+        case SET_MAP:
+            return Object.assign({}, state, {
+                map: initialState.map.concat(action.payload)
             });
         default:
     }

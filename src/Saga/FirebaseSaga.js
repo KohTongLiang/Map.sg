@@ -7,7 +7,7 @@ import firebaseApp from '../Firebase';
 // import action types
 import {
   SIGN_UP, SIGN_IN, SIGN_OUT, SIGN_IN_SUCCESS, SIGN_UP_SUCCESS, SIGN_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_IN_FAILURE, SIGN_OUT_FAILURE,
-  SAVE_HISTORY, LOAD_HISTORY, SAVE_HISTORY_SUCCESS, LOAD_HISTORY_SUCCESS, DELETE_HISTORY, TOGGLE_BOOKMARK
+  SAVE_HISTORY, LOAD_HISTORY, SAVE_HISTORY_SUCCESS, LOAD_HISTORY_SUCCESS, DELETE_HISTORY, TOGGLE_BOOKMARK, SET_FAILURE_MESSAGE
 } from '../Constants/actionTypes';
 
 /**
@@ -38,14 +38,14 @@ function* handleToggleBookmark(action) {
     }, { merge: true });
     yield put({ type: LOAD_HISTORY, payload: action.payload });
   } catch (error) {
-    console.log(error);
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 
 // save route and its relevant information to firestore
 function* handleSaveHistory(action) {
   try {
-    const doc = yield call(firebaseApp.firestore.addDocument, 'users/' + action.payload.userId + '/saved_route', {
+    yield call(firebaseApp.firestore.addDocument, 'users/' + action.payload.userId + '/saved_route', {
       route_information: JSON.stringify(action.payload.navigationRoute),
       route_name: action.payload.routeName,
       start_location: action.payload.startLocation,
@@ -56,7 +56,7 @@ function* handleSaveHistory(action) {
     yield put({ type: LOAD_HISTORY, payload: action.payload })
     yield put({ type: SAVE_HISTORY_SUCCESS })
   } catch (error) {
-    console.log(error);
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 
@@ -70,7 +70,7 @@ function* handleLoadHistory(action) {
     });
     yield put({ type: LOAD_HISTORY_SUCCESS, payload: routes });
   } catch (error) {
-    console.log(error);
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 
@@ -80,7 +80,7 @@ function* handleDeleteHistory(action) {
     yield call(firebaseApp.firestore.deleteDocument, 'users/' + action.payload.userId + '/saved_route/' + action.payload.historyId);
     yield put({ type: LOAD_HISTORY, payload: action.payload })
   } catch (error) {
-    console.log(error);
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 
@@ -98,11 +98,11 @@ function* handleSignUp(action) {
     if (doc) {
       yield put({ type: SIGN_UP_SUCCESS, data });
     } else {
-      yield put({ type: SIGN_UP_FAILURE, payload: 'Failed to create user' })
+      yield put({ type: SET_FAILURE_MESSAGE, payload: 'Failed to create user account.' });
     }
   }
   catch (error) {
-    yield put({ type: SIGN_IN_FAILURE, payload: error.message });
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 
@@ -113,7 +113,7 @@ function* handleSignIn(action) {
     yield put({ type: SIGN_IN_SUCCESS, data })
   }
   catch (error) {
-    yield put({ type: SIGN_IN_FAILURE, payload: error.message });
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 
@@ -124,7 +124,7 @@ function* handleSignOut() {
     yield put({ SIGN_OUT_SUCCESS });
   }
   catch (error) {
-    yield put({ type: SIGN_OUT_FAILURE, payload: error.message });
+    yield put({ type: SET_FAILURE_MESSAGE, payload: error.message });
   }
 }
 

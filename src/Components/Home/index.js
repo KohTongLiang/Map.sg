@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import { Fab } from '@material-ui/core';
 
 // import redux components
-import { getUserLocation, toggleRoutePlanner } from '../../Action/HomeActions';
+import { getUserLocation, toggleRoutePlanner, clearErrorMessage } from '../../Action/HomeActions';
 import { cancelRoute } from '../../Action/NavigationActions'
 
 // import material-ui modules
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import { Button, Snackbar } from '@material-ui/core';
 
 // import view components
 import Map from '../Map';
@@ -32,6 +33,7 @@ const mapStateToProps = (state) => {
         onRoute: state.NavigationReducer.onRoute,
         erpFiltered: state.NavigationReducer.erpFiltered,
         mapPickerMode: state.HomeReducer.mapPickerMode,
+        errorMessage: state.HomeReducer.errorMessage,
     };
     return appState;
 };
@@ -39,9 +41,10 @@ const mapStateToProps = (state) => {
 // allows view to call redux actions to perform a particular task
 function mapDispatchToProps(dispatch) {
     return {
-        toggleRoutePlanner: routePlannerView => dispatch(toggleRoutePlanner(routePlannerView)),
+        toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
         cancelRoute: () => dispatch(cancelRoute()),
         getUserLocation: () => dispatch(getUserLocation()),
+        clearErrorMessage: () => dispatch(clearErrorMessage()),
     }
 }
 
@@ -54,50 +57,40 @@ function mapDispatchToProps(dispatch) {
  * */
 function HomeView(props) {
     /* *
-    * const [x,setX] = useState() are essentially get and set for a variable/attribute
-    * they will be used throughout the program as a way to store global values among some
-    * of the components.
-    * */
-    const [plannerDialog, setPlannerDialog] = useState(false);
+       * const [x,setX] = useState() are essentially get and set for a variable/attribute
+       * they will be used throughout the program as a way to store global values among some
+       * of the components.
+       * */
+    const [open, setOpen] = useState(true);
     const classes = useStyles();
-
-    // open route planner form page
-    const toggleRoutePlanner = () => {
-        setPlannerDialog(!plannerDialog);
-        props.toggleRoutePlanner({ plannerDialog });
-    }
-
-    const handleGetUserLocation = () => {
-        props.getUserLocation();
-        // const watchID = navigator.geolocation.watchPosition((position) => {
-        //     // doSomething(position.coords.latitude, position.coords.longitude);
-        //     const payload = {lng: position.coords.longitude, lat: position.coords.latitude }
-        //     // const payload = [position.coords.longitude, position.coords.latitude]
-        //     console.log(payload)
-        //     props.getUserLocation(payload);
-        //     // yield put({ type: GET_USER_LOCATION_SUCCEEDED, payload});
-        //     // yield put({ type: PROCESS_START_LOCATION, payload });
-        //   });
-    }
 
     return (
         <div className={classes.root}>
             {(!props.onRoute && !props.mapPickerMode) && (
                 <div>
                     <Fab className={classes.navFab} color="primary">
-                        <MyLocationIcon onClick={() => handleGetUserLocation()} />
+                        <MyLocationIcon onClick={() => props.getUserLocation()} />
                     </Fab>
                     <Fab className={classes.searchFab} color="primary">
-                        <DirectionsIcon onClick={() => toggleRoutePlanner()} />
+                        <DirectionsIcon onClick={() => props.toggleRoutePlanner()} />
                     </Fab>
                     <NavBar />
                 </div>
             )}
             <Navigation />
             <Map />
-            <RoutePlanner toggleRoutePlanner={toggleRoutePlanner} />
+            <RoutePlanner />
             <History />
             <Bookmark />
+            {props.errorMessage && (
+                <Snackbar
+                    open={open} color='red' autoHideDuration={600} message={props.errorMessage} action={
+                    <Button color="inherit" size="small" onClick={() => props.clearErrorMessage()}>
+                        X
+                    </Button>
+                    }
+                />
+            )}
         </div>
     )
 }

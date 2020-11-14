@@ -1,12 +1,13 @@
-import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA } from '../Constants/actionTypes';
+// import action types
+import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, UPDATE_CAMERA_MARKERS, UPDATE_LINE_STRING, UPDATE_NEXT_CAMERA, SET_USER_MARKER, SET_PINNED_CAMERA_MARKERS, SET_ERP_MARKERS, SET_STEP_MARKERS, SET_MAP } from '../Constants/actionTypes';
 
 /**
  * Action definitions. Defines action input, types and payload that will be delivered to the reducers
  * 
- * @Koh Tong Liang
- * @Version 1
- * @Since 30/10/2020
-*/
+ * @author Koh Tong Liang
+ * @version 1
+ * @since 30/10/2020
+ */
 
 export function getTrafficImages () {
     return { type: GET_TRAFFIC_IMAGES }
@@ -38,4 +39,44 @@ export function updateNextCamera (payload) {
  */
 export function updateCameraMarkers (payload) {
     return { type: UPDATE_CAMERA_MARKERS, payload }
+}
+
+/**
+ * Takes in marker object created when user location is found and store in it store
+ * @param {object}
+ */
+export function setUserMarker (payload) {
+    return { type: SET_USER_MARKER, payload }
+}
+
+/**
+ * Takes in array of marker object pf cameras along the route created to pin on the map and store in it store
+ * @param {array[object]}
+ */
+export function setPinnedCameraMarkers (payload) {
+    return { type: SET_PINNED_CAMERA_MARKERS, payload }
+}
+
+/**
+ * Takes in array of marker object created to pin on the map and store in it store
+ * @param {array[object]}
+ */
+export function setErpMarkers (payload) {
+    return { type: SET_ERP_MARKERS, payload }
+}
+
+/**
+ * Takes in array of waypoints created to guide user along the route and store in it store
+ * @param {array[object]}
+ */
+export function setStepMarkers (payload) {
+    return { type: SET_STEP_MARKERS, payload }
+}
+
+/**
+ * Takes in marker object created when map is instantiated and store in it store
+ * @param {object}
+ */
+export function setMap (payload) {
+    return { type: SET_MAP, payload }
 }
