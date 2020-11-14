@@ -54,7 +54,7 @@ function History(props) {
             </AppBar>
             <Container>
                 {(props.history && props.history.length > 0) && props.history.map(dataRow => (
-                    <Paper key={dataRow[0]} style={{ maxHeight: 200, overflow: 'auto' }}>
+                    <Paper key={dataRow[0]} className={classes.historyStyling}>
                         <Card className={classes.cardRoot}>
                             <div className={classes.details}>
                                 <CardContent className={classes.content}>

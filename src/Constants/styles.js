@@ -92,4 +92,15 @@ export const style = {
     centerText: {
         textAlign: 'center'
     },
+    //inline style corrections
+    centeringText: {
+        textAlign: 'center'
+    },
+    paddingTypograph:{
+        padding :10 
+    },
+    historyStyling: {
+        maxHeight: 200, 
+        overflow: 'auto'
+    }
 }
