@@ -31,9 +31,9 @@ const initialState = {
 
 /**
  * Navigation reducers to update states pertaining to navigation such as route information, start/end locations
- * @Koh Tong Liang
- * @Version 1
- * @Since 31/10/2020
+ * @author Sky
+ * @version 1
+ * @since 31/10/2020
 */
 function NavigationReducer(state = initialState, action) {
     // determine what action to perform and which state to update

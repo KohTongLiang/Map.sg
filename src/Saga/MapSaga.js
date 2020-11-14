@@ -8,15 +8,15 @@ import { GET_TRAFFIC_IMAGES, GET_ERP_DATA, GET_TRAFFIC_IMAGES_SUCCEEDED, GET_ERP
 import axios from 'axios';
 
 
+
+
 /**
  * Map saga, used to handle side-effects like AJAX/API calls for map view.
  * Both functions used to get traffic images and erp rates will refresh in a set timing automatically
-
- * @author Koh Tong Liang
+ * @author Jeremiah
  * @version 1
  * @since 31/10/2020
  */
-
 // define the actions that the saga needs to listen for and attach a function handler
 // to define the function to execute once action has been performed
 export default function* MapSaga() {

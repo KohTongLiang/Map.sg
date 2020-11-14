@@ -74,10 +74,6 @@ export const style = {
     form: {
         padding: 20
     },
-    // root: {
-    //     display: 'flex',
-    //     margin: 5
-    // },
     content: {
         flex: '1 0 auto',
     },

@@ -12,16 +12,20 @@ import {
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-
 // import constants
 import * as STYLES from '../../Constants/styles';
 
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
+
+
+
 /* *
- * Navigation view contains views pertaining route planning and displaying on route data
- * @author Koh Tong Liang
+ * Navigation view contains views pertaining route planning and displaying on-route data. Used for displaying step-by-step instruction banner
+ * and traffic images.
+ * 
+ * @author Zhen Wei
  * @version 2
  * @since 31/10/2020
  * */
@@ -41,6 +45,7 @@ function Navigation(props) {
                     </Container>
                 </Paper>
             )}
+
             {/* Show Traffic images if any */}
             {props.onRoute && (
                 <div>

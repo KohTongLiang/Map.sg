@@ -12,7 +12,6 @@ import rootSaga from '../Saga';
  * @version 1.0
  * @since 30/10/2020
  * */
-
 // Define storeEnhancers and middlewares that will be used
 const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const sagaMiddleware = createSagaMiddleware();

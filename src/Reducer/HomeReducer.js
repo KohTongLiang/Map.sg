@@ -15,7 +15,7 @@ const initialState = {
 
 /**
  * Home reducers to update states belonging to Home view
- * @author Koh Tong Liang
+ * @author Delon
  * @version 1
  * @since 31/10/2020
 */

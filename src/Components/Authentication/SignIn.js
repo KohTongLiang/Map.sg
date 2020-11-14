@@ -39,15 +39,17 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
+
+
 /* *
  * Sign in page to allow user input to perform user authentication features.
- * @author Koh Tong Liang
+ *
+ * @author Jeremiah
  * @version 1.0
  * @since 19/10/2018
  * */
 const SignInView = (props) => {
     const classes = useStyles();
-    const [error, setError] = useState('');
     const [open, setOpen] = useState(true);
     const { register, handleSubmit, errors } = useForm();
     const history = useHistory();

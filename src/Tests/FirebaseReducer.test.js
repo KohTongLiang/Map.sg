@@ -2,6 +2,13 @@
 import FirebaseReducer from '../Reducer/FirebaseReducer'
 import {FirebaseState} from '../Reducer/FirebaseReducer'
 
+/* *
+   * Test unit for FirebaseReducer.
+   * 
+   * @author Zhen Wei
+   * @version 1.0
+   * @since 19/10/2018
+   * */
 describe('FirebaseReducer ', () => {
     test('should return the initial state', () => {
       expect(FirebaseReducer(undefined, {})).toMatchSnapshot()

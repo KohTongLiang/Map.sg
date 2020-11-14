@@ -21,59 +21,12 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        userLocation: state.HomeReducer.userLocation,
-        navigationRoute: state.NavigationReducer.navigationRoute,
-        startLocation: state.NavigationReducer.startLocation,
-        endLocation: state.NavigationReducer.endLocation,
-        mapMatchedRoute: state.NavigationReducer.mapMatchedRoute,
-        cameras: state.MapReducer.cameras,
-        ERP: state.MapReducer.ERP,
-        cameraMarkers: state.MapReducer.cameraMarkers,
-        stepNo: state.NavigationReducer.stepNo,
-        routeInstruction: state.NavigationReducer.routeInstruction,
-        lineString: state.MapReducer.lineString,
-        onRoute: state.NavigationReducer.onRoute,
-        user: state.FirebaseReducer.user,
-        routeName: state.NavigationReducer.routeName,
-        tripSummaryView: state.NavigationReducer.tripSummaryView,
-        mapPickerMode: state.NavigationReducer.mapPickerMode,
-    };
-    return appState;
-};
-
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    return {
-        overrideUserLocation: newCoords => dispatch(overrideUserLocation(newCoords)),
-        getTrafficImages: () => dispatch(getTrafficImages()),
-        getErpData: () => dispatch(getErpData()),
-        tripSummary: () => dispatch(tripSummary()),
-        mapMatching: routeCoordinates => dispatch(mapMatching(routeCoordinates)),
-        updateCameraMarkers: cameraMarker => dispatch(updateCameraMarkers(cameraMarker)),
-        updateSteps: stepNo => dispatch(updateSteps(stepNo)),
-        updateLineString: lineString => dispatch(updateLineString(lineString)),
-        reroute: (userLocation, endLocation) => dispatch(reroute(userLocation, endLocation)),
-        planRoute: (startLocation, endLocation) => dispatch(planRoute(startLocation, endLocation)),
-        cancelRoute: () => dispatch(cancelRoute()),
-        processStartLocation: startLocation => dispatch(processStartLocation(startLocation)),
-        processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
-        updateNextCamera: cameraArr => dispatch(updateNextCamera(cameraArr)),
-        filterRouteErp: filteredErp => dispatch(filterRouteErp(filteredErp)),
-        saveHistory: route => dispatch(saveHistory(route)),
-        loadHistory: userId => dispatch(loadHistory(userId)),
-        toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
-        toggleMapPicker: () => dispatch(toggleMapPicker()),
-        returnMapPickerResult: payload => dispatch(returnMapPickerResult(payload)),
-    }
-}
 
 
 
 /* *
-   * Custom functions used to manipulate/modify map properties
+   * Custom functions used to manipulate/modify map properties.
+   * Handles callback functions for when route is set/changed, userlocation change, mapPicker mode is selected, mapview first mounted and when user sign in/out
    * 
    * @author Koh Tong Liang
    * @version 1.0
@@ -91,17 +44,20 @@ function MapFunctions(props) {
     var marker = new mapboxgl.Marker();
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
+    // Call get images and get ERP data when component first mount
     useEffect(() => {
         props.getErpData();
         props.getTrafficImages();
     }, []);
 
+    // when user signs in/out
     useEffect(() => {
         if (props.user !== null) {
             props.loadHistory({ userId: props.user.uid });
         }
     }, [props.user])
 
+    // when maPicker mode is toggled
     useEffect(() => {
         if (props.mapPickerMode > 0) {
             map.on('click', (e) => {
@@ -130,10 +86,6 @@ function MapFunctions(props) {
     * When userlocation change, detect if user has reach waypoint, if user has reach the
     * waypoint, remove the marker on the waypoint and progress to next step in step by step
     * instruction
-    * 
-    * @Koh Tong Liang
-    * @Version 1.0
-    * @Since 19/10/2020
     * */
     useEffect(() => {
         if (map != null && props.userLocation.length > 0) {
@@ -224,7 +176,7 @@ function MapFunctions(props) {
 
   /* *
      * ROUTE PLOTTING
-     * When a route has been set, run the following code.
+     * When a route has been set, create waypoint markers, draw path on map, load all cameras along the path, load all necessary ERP data.
      */
     useEffect(() => {
         if (props.navigationRoute !== [] && props.navigationRoute.length > 0) {
@@ -363,6 +315,7 @@ function MapFunctions(props) {
         }
     }, [props.navigationRoute]);
 
+    // function to clear elements from map
     function clearMap() {
         pinnedCameraMarkers.map(c => {
             c.remove();
@@ -383,6 +336,63 @@ function MapFunctions(props) {
     return(<div></div>)
 }
 
+/**
+ * Pass in the app state found in the store and create an object as a means for components to access the app state.
+ */
+const mapStateToProps = (state) => {
+    const appState = {
+        userLocation: state.HomeReducer.userLocation,
+        navigationRoute: state.NavigationReducer.navigationRoute,
+        startLocation: state.NavigationReducer.startLocation,
+        endLocation: state.NavigationReducer.endLocation,
+        mapMatchedRoute: state.NavigationReducer.mapMatchedRoute,
+        cameras: state.MapReducer.cameras,
+        ERP: state.MapReducer.ERP,
+        cameraMarkers: state.MapReducer.cameraMarkers,
+        stepNo: state.NavigationReducer.stepNo,
+        routeInstruction: state.NavigationReducer.routeInstruction,
+        lineString: state.MapReducer.lineString,
+        onRoute: state.NavigationReducer.onRoute,
+        user: state.FirebaseReducer.user,
+        routeName: state.NavigationReducer.routeName,
+        tripSummaryView: state.NavigationReducer.tripSummaryView,
+        mapPickerMode: state.NavigationReducer.mapPickerMode,
+    };
+    return appState;
+};
+
+/**
+ * Pass in the dispatch function from Redux store and create an object that allows components to call dispatch function to dispatch specific redux actions
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        overrideUserLocation: newCoords => dispatch(overrideUserLocation(newCoords)),
+        getTrafficImages: () => dispatch(getTrafficImages()),
+        getErpData: () => dispatch(getErpData()),
+        tripSummary: () => dispatch(tripSummary()),
+        mapMatching: routeCoordinates => dispatch(mapMatching(routeCoordinates)),
+        updateCameraMarkers: cameraMarker => dispatch(updateCameraMarkers(cameraMarker)),
+        updateSteps: stepNo => dispatch(updateSteps(stepNo)),
+        updateLineString: lineString => dispatch(updateLineString(lineString)),
+        reroute: (userLocation, endLocation) => dispatch(reroute(userLocation, endLocation)),
+        planRoute: (startLocation, endLocation) => dispatch(planRoute(startLocation, endLocation)),
+        cancelRoute: () => dispatch(cancelRoute()),
+        processStartLocation: startLocation => dispatch(processStartLocation(startLocation)),
+        processEndLocation: endLocation => dispatch(processEndLocation(endLocation)),
+        updateNextCamera: cameraArr => dispatch(updateNextCamera(cameraArr)),
+        filterRouteErp: filteredErp => dispatch(filterRouteErp(filteredErp)),
+        saveHistory: route => dispatch(saveHistory(route)),
+        loadHistory: userId => dispatch(loadHistory(userId)),
+        toggleRoutePlanner: () => dispatch(toggleRoutePlanner()),
+        toggleMapPicker: () => dispatch(toggleMapPicker()),
+        returnMapPickerResult: payload => dispatch(returnMapPickerResult(payload)),
+    }
+}
+
+/**
+ * Pass in mapStateToProps and mapDispatchToProps function into Home component as props. Components within Home component will be able to access the
+ * functions to either dispatch a function or access an app state.
+ */
 export default connect(
     mapStateToProps,
     mapDispatchToProps,

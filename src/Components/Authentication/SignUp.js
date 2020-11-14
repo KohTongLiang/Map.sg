@@ -41,18 +41,21 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
+
+
+
 /* *
  * Sign Up Page takes in inputs given by users and does a check with Firebase service to determine
  * if the email has already been used. If it valid and available, create a user account using the input
  * provided.
- * @author Koh Tong Liang
+ * 
+ * @author Jeremiah
  * @version 1.0
  * @since 19/10/2018
  * */
 function SignUpView(props) {
     const { register, handleSubmit, control, errors } = useForm();
     const [open, setOpen] = useState(true);
-    const [authError, setAuthError] = useState('');
     const classes = useStyles();
     const [passwordStrength, setPasswordStrength] = useState(0);
     const passwordStrengthIndicator = ['very weak', 'weak', 'weak', 'medium', 'strong'];

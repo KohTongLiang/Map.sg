@@ -4,11 +4,14 @@ import { put, takeEvery, call } from 'redux-saga/effects';
 // import action types
 import { GET_USER_LOCATION, GET_USER_LOCATION_SUCCEEDED, PROCESS_START_LOCATION, SET_FAILURE_MESSAGE } from '../Constants/actionTypes';
 
+
+
+
 /**
  * Home saga, used to handle side-effects like AJAX/API calls for Home view.
- * @Koh Tong Liang
- * @Version 1
- * @Since 31/10/2020
+ * @author Delon
+ * @version 1
+ * @since 31/10/2020
  */
 // define the actions that the saga needs to listen for and attach a function handler
 // to define the function to execute once action has been performed

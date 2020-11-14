@@ -29,7 +29,61 @@ import * as STYLES from '../../Constants/styles';
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
-// allows states stored in redux store to be mapped to components
+
+
+
+/* *
+ * Home page serves as a parent component for the multiple different subcomponents to be mounted on. UI reflected on the
+ * application are divided into subcomponents and pieced together here.
+ * 
+ * @author Koh Tong Liang
+ * @Version 2
+ * @Since 31/10/2020
+ * */
+function Home(props) {
+    const [open, setOpen] = useState(true);
+    const classes = useStyles();
+
+    return (
+        <div className={classes.root}>
+            {/* Show get location button and toggle route planner button only when not enroute to a destination
+            or choosing location via map */}
+            {(!props.onRoute && !props.mapPickerMode) && (
+                <div>
+                    <Fab className={classes.navFab} color="primary">
+                        <MyLocationIcon onClick={() => props.getUserLocation()} />
+                    </Fab>
+                    <Fab className={classes.searchFab} color="primary">
+                        <DirectionsIcon onClick={() => props.toggleRoutePlanner()} />
+                    </Fab>
+                    <NavBar />
+                </div>
+            )}
+
+            {/* Mount all subcomponents and pass props down */}
+            <Navigation {...props} />
+            <Map {...props} />
+            <RoutePlanner {...props} />
+            <History {...props} />
+            <Bookmark {...props} />
+
+            {/* Gloabl error message snackbar for all components mounted on homeview */}
+            {props.errorMessage && (
+                <Snackbar
+                    open={open} color='red' autoHideDuration={600} message={props.errorMessage} action={
+                    <Button color="inherit" size="small" onClick={() => props.clearErrorMessage()}>
+                        X
+                    </Button>
+                    }
+                />
+            )}
+        </div>
+    )
+}
+
+/**
+ * Pass in the app state found in the store and create an object as a means for components to access the app state.
+ */
 const mapStateToProps = (state) => {
     const appState = {
         cameraMarkers: state.MapReducer.cameraMarkers,
@@ -58,8 +112,10 @@ const mapStateToProps = (state) => {
     return appState;
 };
 
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
+/**
+ * Pass in the dispatch function from Redux store and create an object that allows components to call dispatch function to dispatch specific redux actions
+ */
+const mapDispatchToProps = dispatch => {
     return {
         cancelRoute: () => dispatch(cancelRoute()),
         getUserLocation: () => dispatch(getUserLocation()),
@@ -129,63 +185,8 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-/* *
- * Home page serves as a parent component for the multiple different subcomponents to be mounted on. UI reflected on the
- * application are divided into subcomponents and pieced together here.
- * @author Koh Tong Liang
- * @Version 2
- * @Since 31/10/2020
- * */
-function HomeView(props) {
-    /* *
-       * const [x,setX] = useState() are essentially get and set for a variable/attribute
-       * they will be used throughout the program as a way to store global values among some
-       * of the components.
-       * */
-    const [open, setOpen] = useState(true);
-    const classes = useStyles();
-
-    return (
-        <div className={classes.root}>
-            {/* Show get location button and toggle route planner button only when not enroute to a destination
-            or choosing location via map */}
-            {(!props.onRoute && !props.mapPickerMode) && (
-                <div>
-                    <Fab className={classes.navFab} color="primary">
-                        <MyLocationIcon onClick={() => props.getUserLocation()} />
-                    </Fab>
-                    <Fab className={classes.searchFab} color="primary">
-                        <DirectionsIcon onClick={() => props.toggleRoutePlanner()} />
-                    </Fab>
-                    <NavBar />
-                </div>
-            )}
-
-            {/* Mount all subcomponents and pass props down */}
-            <Navigation {...props} />
-            <Map {...props} />
-            <RoutePlanner {...props} />
-            <History {...props} />
-            <Bookmark {...props} />
-
-            {/* Gloabl error message snackbar for all components mounted on homeview */}
-            {props.errorMessage && (
-                <Snackbar
-                    open={open} color='red' autoHideDuration={600} message={props.errorMessage} action={
-                    <Button color="inherit" size="small" onClick={() => props.clearErrorMessage()}>
-                        X
-                    </Button>
-                    }
-                />
-            )}
-        </div>
-    )
-}
-
-// bridge the view to redux actions and store
-const Home = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(HomeView);
-
-export default Home;
+/**
+ * Pass in mapStateToProps and mapDispatchToProps function into Home component as props. Components within Home component will be able to access the
+ * functions to either dispatch a function or access an app state.
+ */
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

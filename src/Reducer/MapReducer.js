@@ -17,11 +17,13 @@ const initialState = {
     map: [],
 }
 
+
+
 /**
  * Map Reducer serves to update the states pertaining to the map view. Such as camera and erp positions and list
- * @Koh Tong Liang
- * @Version 1
- * @Since 30/10/2020
+ * @author Jeremiah
+ * @version 1
+ * @since 30/10/2020
 */
 export default function MapReducer(state = initialState, action) {
     // determine what action to perform and which state to update

@@ -2,8 +2,13 @@ import NavigationReducer from '../Reducer/NavigationReducer'
 import {NavigationState} from '../Reducer/NavigationReducer'
 
 
-
-
+/* *
+   * Test unit for FirebaseReducer.
+   * 
+   * @author Sky
+   * @version 1.0
+   * @since 19/10/2018
+   * */
 describe('NavigationReducer ', () => {
     test('should return the initial state', () => {
       expect(NavigationReducer(undefined, {})).toMatchSnapshot()

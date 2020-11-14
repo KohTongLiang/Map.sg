@@ -20,10 +20,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const useStyles = makeStyles((theme) => (STYLES.style));
 
 
+
+
+
 /**
- * History view loads past routes taken by the user and load them into the view.
- * User can start specific route from here as well.
- * @author Koh Tong Liang
+ * History view loads past routes taken by the user and load them into a view. User can start a specific route from this component.
+ * 
+ * @author Zhen Wei
  * @version 1
  * @since 01/11/2020
  */

@@ -14,6 +14,9 @@ const initialState = {
     history: [],
 }
 
+
+
+
 /**
  * Firebase reducers to update states pertaining to states related to user accounts and data storage
  * @author Koh Tong Liang

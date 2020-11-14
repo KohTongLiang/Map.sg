@@ -19,33 +19,20 @@ import * as STYLES from '../../Constants/styles';
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
-// allows states stored in redux store to be mapped to components
-const mapStateToProps = (state) => {
-    const appState = {
-        loggedIn: state.FirebaseReducer.loggedIn,
-    };
-    return appState;
-};
 
-// allows view to call redux actions to perform a particular task
-function mapDispatchToProps(dispatch) {
-    return {
-        toggleHistoryView: () => dispatch(toggleHistoryView()),
-        toggleBookmarkView: () => dispatch(toggleBookmarkView()),
-    }
-}
+
 
 /* *
-  * Handle navigation bar events located at the bottom of the application
+  * Handle navigation bar events located at the bottom of the application. Allows user to switch between homepage, sign/out and show/hide bookmark and history view.
+  *
   * @author Koh Tong Liang
   * @version 1.0
   * @since 19/10/2018
   * */
-const NavbarView = (props) => {
+const NavBar = (props) => {
     const history = useHistory();
     const [value, setValue] = React.useState(0);
     const classes = useStyles();
-    const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -106,10 +93,31 @@ const NavbarView = (props) => {
     );
 }
 
-// bridge the view to redux actions and store
-const NavBar = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(NavbarView);
 
-export default NavBar;
+
+/**
+ * Pass in the app state found in the store and create an object as a means for components to access the app state.
+ */
+const mapStateToProps = (state) => {
+    const appState = {
+        loggedIn: state.FirebaseReducer.loggedIn,
+    };
+    return appState;
+};
+
+/**
+ * Pass in the dispatch function from Redux store and create an object that allows components to call dispatch function to dispatch specific redux actions
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        toggleHistoryView: () => dispatch(toggleHistoryView()),
+        toggleBookmarkView: () => dispatch(toggleBookmarkView()),
+    }
+}
+
+
+/**
+ * Pass in mapStateToProps and mapDispatchToProps function into Home component as props. Components within Home component will be able to access the
+ * functions to either dispatch a function or access an app state.
+ */
+export default  connect(mapStateToProps, mapDispatchToProps)(NavBar);

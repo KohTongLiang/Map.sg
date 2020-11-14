@@ -38,10 +38,6 @@ function MapBox(props) {
   /* *
      * On componenent mount/First render
      * Create a map object and render it on a div when Map component is mounted on home view.
-     * 
-     * @author Koh Tong Liang
-     * @version 1.0
-     * @since 19/10/2020
      * */
     useEffect(() => {
         // init map function

@@ -1,7 +1,13 @@
 import MapReducer from '../Reducer/MapReducer'
 import {MapState} from '../Reducer/MapReducer'
 
-
+/* *
+   * Test unit for FirebaseReducer.
+   * 
+   * @author Sky
+   * @version 1.0
+   * @since 19/10/2018
+   * */
 describe('MapReducer ', () => {
     test('should return the initial state', () => {
       expect(MapReducer(undefined, {})).toMatchSnapshot()

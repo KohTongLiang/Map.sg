@@ -15,13 +15,15 @@ import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 const accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
+
+
+
 /**
  * Navigation saga, used to handle side-effects like AJAX/API calls for navigation view
- * @author Koh Tong Liang
+ * @author Sky
  * @version 1
  * @since 31/10/2020
  */
-
 // define the actions that the saga needs to listen for and attach a function handler
 // to define the function to execute once action has been performed
 export default function* NavigationSaga() {

@@ -25,10 +25,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const useStyles = makeStyles((theme) => (STYLES.style));
 
 
+
+
+
 /* *
-* Routeplanner component that handle planning of route. User searches start and endlocation
-* and the data is stored in hooks and returned to the main component
-* @author Koh Tong Liang
+* Routeplanner component handles view pertaining to planning of route. User searches start and endlocation through different options and click
+* plan route to finalize and have the mapbox API generate the route.
+*
+* @author Delon
 * @version 2
 * @since 31/10/2020
 * */
@@ -101,7 +105,7 @@ function RoutePlanner(props) {
                         <FormGroup>
                             <FormLabel>
                                 {props.startLocationSearchResult && props.startLocationSearchResult.map(r => (
-                                    <Card className={classes.root}>
+                                    <Card className={classes.cardRoot}>
                                         <div className={classes.details}>
                                             <CardContent className={classes.content}>
                                                 <Typography component="p" variant="body1">
@@ -119,7 +123,7 @@ function RoutePlanner(props) {
                             </FormLabel>
                             <FormLabel>
                                 {props.endLocationSearchResult && props.endLocationSearchResult.map(r => (
-                                    <Card className={classes.root}>
+                                    <Card className={classes.cardRoot}>
                                         <div className={classes.details}>
                                             <CardContent className={classes.content}>
                                                 <Typography component="p" variant="body1">

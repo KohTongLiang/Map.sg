@@ -21,10 +21,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
+
+
+
 /**
- * Bookmark view loads bookmarked routes taken by the user and load them into the view.
- * User can start specific route from here as well.
- * @author Koh Tong Liang
+ * Bookmark view loads bookmarked routes taken by the user and load them into the view. User can start specific route from this component.
+ * 
+ * @author Zhen Wei
  * @version 1
  * @since 01/11/2020
  */

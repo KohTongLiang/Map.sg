@@ -12,9 +12,13 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
+
+
+
 /**
  * Sign out page to allow user to exit from current authenticated session
- * @author Koh Tong Liang
+ * 
+ * @author Jeremiah
  * @version 1.0
  * @since 19/10/2020
  */

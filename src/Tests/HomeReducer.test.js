@@ -1,7 +1,13 @@
 import HomeReducer from '../Reducer/HomeReducer'
 import {HomeReducerState} from '../Reducer/HomeReducer'
 
-
+/* *
+   * Test unit for FirebaseReducer.
+   * 
+   * @author Zhen Wei
+   * @version 1.0
+   * @since 19/10/2018
+   * */
 describe('HomeReducer ', () => {
     test('should return the initial state', () => {
       expect(HomeReducer(undefined, {})).toMatchSnapshot()
