@@ -99,18 +99,6 @@ function MapBox(props) {
                 setMap(map);
                 map.resize();
             });
-
-            map.on('click', (e) => {
-                /*
-                * FOR DEBUGGING and DEMO only
-                * on click set user current location to clicked position
-                * used as temporary override user location
-                */
-                props.overrideUserLocation({
-                    lng: e.lngLat.lng,
-                    lat: e.lngLat.lat,
-                });
-            });
         };
 
         if (!map) {

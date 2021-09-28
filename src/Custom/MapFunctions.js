@@ -22,8 +22,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
 
-
-
 /* *
    * Custom functions used to manipulate/modify map properties.
    * Handles callback functions for when route is set/changed, userlocation change, mapPicker mode is selected, mapview first mounted and when user sign in/out
@@ -63,22 +61,7 @@ function MapFunctions(props) {
             map.on('click', (e) => {
                 props.returnMapPickerResult([{lng: e.lngLat.lng, lat: e.lngLat.lat}]);
             });
-        } else if (map !== null) {
-            /**
-             * Reset DEBUGGING action listener
-             */
-            map.on('click', (e) => {
-                /*
-                * FOR DEBUGGING and DEMO only
-                * on click set user current location
-                * used as temporary override user location
-                */
-                props.overrideUserLocation({
-                    lng: e.lngLat.lng,
-                    lat: e.lngLat.lat,
-                });
-            });
-        }
+         }
     }, [props.mapPickerMode])
 
  /* *
