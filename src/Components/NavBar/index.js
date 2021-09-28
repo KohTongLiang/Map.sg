@@ -19,9 +19,6 @@ import * as STYLES from '../../Constants/styles';
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
 
-
-
-
 /* *
   * Handle navigation bar events located at the bottom of the application. Allows user to switch between homepage, sign/out and show/hide bookmark and history view.
   *

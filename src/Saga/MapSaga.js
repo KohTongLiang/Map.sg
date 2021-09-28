@@ -21,7 +21,7 @@ import axios from 'axios';
 // to define the function to execute once action has been performed
 export default function* MapSaga() {
     // yield takeLatest(GET_TRAFFIC_IMAGES, handleGetTrafficImages)
-    yield takeEvery(GET_ERP_DATA, handleGetErpData);
+    // yield takeEvery(GET_ERP_DATA, handleGetErpData);
     yield takeEvery(GET_TRAFFIC_IMAGES, handleGetTrafficImages);
 }
 

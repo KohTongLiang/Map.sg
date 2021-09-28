@@ -30,8 +30,6 @@ import * as STYLES from '../../Constants/styles';
 const useStyles = makeStyles((theme) => (STYLES.style));
 
 
-
-
 /* *
  * Home page serves as a parent component for the multiple different subcomponents to be mounted on. UI reflected on the
  * application are divided into subcomponents and pieced together here.

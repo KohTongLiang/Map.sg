@@ -10,10 +10,6 @@ import {
   SAVE_HISTORY, LOAD_HISTORY, SAVE_HISTORY_SUCCESS, LOAD_HISTORY_SUCCESS, DELETE_HISTORY, TOGGLE_BOOKMARK, SET_FAILURE_MESSAGE
 } from '../Constants/actionTypes';
 
-
-
-
-
 /**
  * Firebase saga, used to handle firebase authentication and interactions between app and firestore.
  * @author Koh Tong Liang
