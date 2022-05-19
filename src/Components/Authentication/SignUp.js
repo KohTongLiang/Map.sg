@@ -1,7 +1,7 @@
 // import node modules
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 
@@ -59,11 +59,11 @@ function SignUpView(props) {
     const classes = useStyles();
     const [passwordStrength, setPasswordStrength] = useState(0);
     const passwordStrengthIndicator = ['very weak', 'weak', 'weak', 'medium', 'strong'];
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (props.signUpSuccess) {
-            history.push('/');
+            navigate('/');
         }
     }, [props.signUpSuccess])
 
@@ -74,7 +74,7 @@ function SignUpView(props) {
 
     return (
         <Container>
-            <IconButton edge="start" color="inherit" onClick={() => history.push('/')} aria-label="close">
+            <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="close">
                 <CloseIcon />
             </IconButton>
             <h4>Sign Up</h4>

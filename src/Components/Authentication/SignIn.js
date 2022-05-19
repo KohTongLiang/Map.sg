@@ -1,7 +1,7 @@
 // import node modules
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 // import redux components
@@ -52,11 +52,11 @@ const SignInView = (props) => {
     const classes = useStyles();
     const [open, setOpen] = useState(true);
     const { register, handleSubmit, errors } = useForm();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (props.signInSuccess) {
-            history.push('/');
+            navigate('/');
         }
     }, [props.signInSuccess]);
 
@@ -68,7 +68,7 @@ const SignInView = (props) => {
     return (
         <Container>
             <Box>
-                <IconButton edge="start" color="inherit" onClick={() => history.push('/')} aria-label="close">
+                <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="close">
                     <CloseIcon />
                 </IconButton>
                 <h4>Sign In</h4>

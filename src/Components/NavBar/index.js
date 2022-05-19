@@ -1,7 +1,7 @@
 // import node modules
 import React from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // import redux components
 import { toggleHistoryView, toggleBookmarkView } from '../../Action/HomeActions';
@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme) => (STYLES.style));
   * @since 19/10/2018
   * */
 const NavBar = (props) => {
-    const history = useHistory();
     const [value, setValue] = React.useState(0);
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -49,7 +49,7 @@ const NavBar = (props) => {
                     variant="fullWidth"
                     indicatorColor="primary"
                 >
-                    <Tab icon={<HomeIcon />} onClick={() => history.push('/')} aria-label="phone" />
+                    <Tab icon={<HomeIcon />} onClick={() => navigate('/')} aria-label="phone" />
                     <Tab icon={<HistoryIcon />} onClick={() => props.toggleHistoryView()} color="inherit" />
                     <Tab icon={<BookmarkIcon />} onClick={() => props.toggleBookmarkView()} aria-label="person" />
                     {props.loggedIn && (
@@ -83,7 +83,7 @@ const NavBar = (props) => {
                             </Menu>
                         </div>
                     )}
-                    {!props.loggedIn && <Tab icon={<ExitToAppIcon />} onClick={() => history.push('/SignIn')} aria-label="person" />}
+                    {!props.loggedIn && <Tab icon={<ExitToAppIcon />} onClick={() => navigate('/SignIn')} aria-label="person" />}
                 </Tabs>
             </Paper>
         </div>

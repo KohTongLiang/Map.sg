@@ -1,7 +1,7 @@
 // import node modules
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { createTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 
 // import components
 import HomePage from './Components/Home';
@@ -24,7 +24,7 @@ function App() {
    * create a theme to allow usage of dark or light theme depending on user's device preference
    */
   const theme = React.useMemo(
-    () => createMuiTheme({
+    () => createTheme({
       palette: {
         type: true ? 'dark' : 'light',
       },
@@ -40,9 +40,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Route exact path={ROUTES.HOME} component={HomePage} />
-        <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-        <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+        <Routes>
+          <Route exact path={ROUTES.HOME} element={<HomePage />} />
+          <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
+          <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
+        </Routes>
       </Router>
       <CssBaseline />
     </ThemeProvider>
