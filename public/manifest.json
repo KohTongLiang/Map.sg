@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TDA",
+  "name": "The Driving Auxiliary",
   "icons": [
     {
       "src": "favicon.ico",

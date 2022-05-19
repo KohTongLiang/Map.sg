@@ -13,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 // import constants
-import * as STYLES from '../../Constants/styles';
+import * as STYLES from '../../../Constants/styles';
 
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));

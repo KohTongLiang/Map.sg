@@ -5,8 +5,6 @@ import { createTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 
 // import components
 import HomePage from './Components/Home';
-import SignInPage from './Components/Authentication/SignIn';
-import SignUpPage from './Components/Authentication/SignUp';
 
 // import constants
 import * as ROUTES from './Constants/routes';
@@ -42,8 +40,6 @@ function App() {
       <Router>
         <Routes>
           <Route exact path={ROUTES.HOME} element={<HomePage />} />
-          <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
-          <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
         </Routes>
       </Router>
       <CssBaseline />

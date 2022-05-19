@@ -10,7 +10,7 @@ import {
 } from '@material-ui/icons';
 
 // import constants
-import * as STYLES from '../../Constants/styles';
+import * as STYLES from '../../../Constants/styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

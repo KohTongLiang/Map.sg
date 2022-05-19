@@ -1,7 +1,9 @@
 // import action types
 import {
     GET_USER_LOCATION_SUCCEEDED, HISTORY_VIEW, 
-    TOGGLE_TRAFFIC_IMAGES_VIEW, BOOKMARK_VIEW, CLEAR_ERROR_MESSAGE, SET_FAILURE_MESSAGE, OVERRIDE_USER_LOCATION
+    TOGGLE_TRAFFIC_IMAGES_VIEW, BOOKMARK_VIEW, 
+    CLEAR_ERROR_MESSAGE, SET_FAILURE_MESSAGE, 
+    OVERRIDE_USER_LOCATION, TOGGLE_SIGN_IN_VIEW
 } from '../Constants/actionTypes';
 
 // Initialise initial values for state
@@ -10,6 +12,7 @@ const initialState = {
     userLocation: [],
     historyView: false,
     bookmarkView: false,
+    signInView: false,
     errorMessage: '',
 }
 
@@ -37,6 +40,10 @@ function HomeReducer(state = initialState, action) {
         case BOOKMARK_VIEW:
             return Object.assign({}, state, {
                 bookmarkView: !state.bookmarkView
+            });
+        case TOGGLE_SIGN_IN_VIEW:
+            return Object.assign({}, state, {
+                signInView: !state.signInView
             });
         case TOGGLE_TRAFFIC_IMAGES_VIEW:
             break;

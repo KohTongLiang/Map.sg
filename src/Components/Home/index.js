@@ -16,12 +16,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, Snackbar } from '@material-ui/core';
 
 // import view components
-import Map from '../Map';
-import NavBar from '../NavBar';
-import Navigation from '../Navigation';
-import History from '../Navigation/History';
-import Bookmark from '../Navigation/Bookmark';
-import RoutePlanner from '../Route/RoutePlanner';
+import Map from './Map';
+import NavBar from './NavBar';
+import Navigation from './Navigation';
+import History from './Navigation/History';
+import Bookmark from './Navigation/Bookmark';
+import RoutePlanner from './Route/RoutePlanner';
 
 // import constants
 import * as STYLES from '../../Constants/styles';

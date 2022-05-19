@@ -4,17 +4,17 @@ import * as turf from '@turf/turf';
 import { connect } from "react-redux";
 
 // import map context
-import MapContext from '../Context';
+import MapContext from '../../Context';
 
 // import gantry coordinates from json data
-import { GantryCoordinates } from '../json/GantryCoordinates';
+import { GantryCoordinates } from '../../json/GantryCoordinates';
 
 // import redux components
-import { overrideUserLocation, toggleRoutePlanner,toggleMapPicker, returnMapPickerResult } from '../Action/HomeActions';
-import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../Action/MapActions';
+import { overrideUserLocation, toggleRoutePlanner,toggleMapPicker, returnMapPickerResult } from '../../Action/HomeActions';
+import { getTrafficImages, getErpData, updateCameraMarkers, updateLineString, updateNextCamera } from '../../Action/MapActions';
 import { tripSummary, mapMatching, updateSteps, reroute, planRoute, cancelRoute, processEndLocation,
-    processStartLocation, filterRouteErp } from '../Action/NavigationActions';
-import { loadHistory, saveHistory } from '../Action/FirebaseAction';
+    processStartLocation, filterRouteErp } from '../../Action/NavigationActions';
+import { loadHistory, saveHistory } from '../../Action/FirebaseAction';
 
 // import mapbox modules
 import mapboxgl from 'mapbox-gl';

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 // import map context
-import MapContext from '../../Context';
+import MapContext from '../../../Context';
 
 // import material-ui modules
 import { Container, Slide, Dialog, Button} from '@material-ui/core';

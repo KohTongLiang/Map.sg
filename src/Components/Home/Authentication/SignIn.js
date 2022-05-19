@@ -11,7 +11,7 @@ import { clearErrorMessage } from '../../Action/HomeActions'
 // import material-ui modules
 import {
     Container, FormGroup, makeStyles, FormControl, Button,
-    Input, InputLabel, FormHelperText, Snackbar, Box, IconButton
+    Input, InputLabel, FormHelperText, Snackbar, Box, IconButton, Dialog
 } from '@material-ui/core';
 import { Close as CloseIcon } from '@material-ui/icons';
 
@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => (STYLES.style));
 const mapStateToProps = (state) => {
     const appState = {
         errorMessage: state.HomeReducer.errorMessage,
+        signinView: state.HomeReducer.signinView,
         signInSuccess: state.FirebaseReducer.signInSuccess,
     };
     return appState;
@@ -51,7 +52,9 @@ function mapDispatchToProps(dispatch) {
 const SignInView = (props) => {
     const classes = useStyles();
     const [open, setOpen] = useState(true);
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+
+    });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -60,14 +63,31 @@ const SignInView = (props) => {
         }
     }, [props.signInSuccess]);
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         props.signIn(data);
         setOpen(true);
     }
 
     return (
-        <Container>
-            <Box>
+        <Dialog
+            open={props.signinView}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => props.toggleBookmarkView()}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+        >
+            <AppBar className={classes.appBar}>
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" onClick={() => props.toggleBookmarkView()} aria-label="close">
+                        <CloseIcon />
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        Sign In
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Container>
                 <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="close">
                     <CloseIcon />
                 </IconButton>
@@ -76,7 +96,8 @@ const SignInView = (props) => {
                     <FormGroup>
                         <FormControl>
                             <InputLabel>Email</InputLabel>
-                            <Input name="email" inputRef={register({ required: true })} />
+                            {/* <Input name="email" inputRef={register({ required: true })} /> */}
+                            <Input { ...register('email', { required: true }) } />
                             <FormHelperText>Enter the email you used for registration</FormHelperText>
                             <FormHelperText>{errors.email && <span className={classes.errorText}>Email is required</span>}</FormHelperText>
                         </FormControl>
@@ -84,7 +105,8 @@ const SignInView = (props) => {
                     <FormGroup>
                         <FormControl>
                             <InputLabel>Password</InputLabel>
-                            <Input type="password" name="password" inputRef={register({ required: true })} />
+                            {/* <Input type="password" name="password" inputRef={register({ required: true })} /> */}
+                            <Input type="password" { ...register('password', { required: true }) } />
                             <FormHelperText>{errors.password && <span className={classes.errorText}>Password is required</span>}</FormHelperText>
                         </FormControl>
                     </FormGroup>
@@ -105,8 +127,8 @@ const SignInView = (props) => {
                         }
                     />
                 )}
-            </Box>
-        </Container>
+            </Container>
+        </Dialog>
     )
 }
 

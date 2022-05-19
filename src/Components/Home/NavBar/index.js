@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // import redux components
-import { toggleHistoryView, toggleBookmarkView } from '../../Action/HomeActions';
+import { toggleHistoryView, toggleBookmarkView, toggleSignInView } from '../../../Action/HomeActions';
 
 // import material-ui modules
 import { Paper, Tabs, Tab, makeStyles, Menu, MenuItem } from '@material-ui/core';
@@ -14,7 +14,7 @@ import { History as HistoryIcon, Home as HomeIcon, Bookmark as BookmarkIcon, Acc
 import SignOutButton from '../Authentication/SignOut';
 
 // import constants
-import * as STYLES from '../../Constants/styles';
+import * as STYLES from '../../../Constants/styles';
 
 // instantiate predefined styles into a constant variable
 const useStyles = makeStyles((theme) => (STYLES.style));
@@ -83,7 +83,7 @@ const NavBar = (props) => {
                             </Menu>
                         </div>
                     )}
-                    {!props.loggedIn && <Tab icon={<ExitToAppIcon />} onClick={() => navigate('/SignIn')} aria-label="person" />}
+                    {!props.loggedIn &&  <Tab icon={<ExitToAppIcon />} onClick={() => props.toggleSignInView()} aria-label="person" />}
                 </Tabs>
             </Paper>
         </div>

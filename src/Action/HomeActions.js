@@ -1,7 +1,7 @@
 // import action types
 import {
-    GET_USER_LOCATION, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW,
-    TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT, BOOKMARK_VIEW, OVERRIDE_USER_LOCATION,
+    GET_USER_LOCATION, HISTORY_VIEW, TOGGLE_ROUTE_PLANNER, TOGGLE_TRAFFIC_IMAGES_VIEW, TOGGLE_SIGN_IN_VIEW,
+    TOGGLE_MAP_PICKER, RETURN_MAP_PICKER_RESULT, BOOKMARK_VIEW, SIGN_IN_VIEW, OVERRIDE_USER_LOCATION,
     CLEAR_ERROR_MESSAGE
 } from '../Constants/actionTypes';
 
@@ -35,6 +35,11 @@ export function toggleHistoryView() {
 export function toggleBookmarkView() {
     return { type: BOOKMARK_VIEW }
 }
+
+export function toggleSignInView() {
+    return { type: TOGGLE_SIGN_IN_VIEW }
+}
+
 export function clearErrorMessage () {
     return { type: CLEAR_ERROR_MESSAGE, };
 }

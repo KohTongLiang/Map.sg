@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // import redux components
-import { signOut } from '../../Action/FirebaseAction';
+import { signOut } from '../../../Action/FirebaseAction';
 
 // allows view to call redux actions to perform a particular task
 function mapDispatchToProps(dispatch) {

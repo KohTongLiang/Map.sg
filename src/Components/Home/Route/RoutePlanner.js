@@ -14,7 +14,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 // import constants
-import * as STYLES from '../../Constants/styles';
+import * as STYLES from '../../../Constants/styles';
 
 // Transition element
 const Transition = React.forwardRef(function Transition(props, ref) {
