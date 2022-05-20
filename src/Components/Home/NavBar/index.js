@@ -109,6 +109,7 @@ function mapDispatchToProps(dispatch) {
     return {
         toggleHistoryView: () => dispatch(toggleHistoryView()),
         toggleBookmarkView: () => dispatch(toggleBookmarkView()),
+        toggleSignInView: () => dispatch(toggleSignInView()),
     }
 }
 

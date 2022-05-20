@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import { Fab } from '@material-ui/core';
 
 // import redux components
-import { getUserLocation, toggleRoutePlanner, clearErrorMessage, toggleMapPicker, toggleHistoryView, toggleBookmarkView, overrideUserLocation } from '../../Action/HomeActions';
+import { getUserLocation, toggleRoutePlanner, clearErrorMessage, toggleMapPicker, 
+    toggleHistoryView, toggleBookmarkView, overrideUserLocation, toggleSignInView } from '../../Action/HomeActions';
 import { cancelRoute, searchStartLocation, searchEndLocation, processEndLocation, processStartLocation, planRoute, saveRouteName,
     setStartLocationSearch, setEndLocationSearch, runHistory, toggleBookmark, tripSummary } from '../../Action/NavigationActions';
 import { getTrafficImages, getErpData } from '../../Action/MapActions';
-import { deleteHistory } from '../../Action/FirebaseAction';
+import { deleteHistory, signIn, signUp } from '../../Action/FirebaseAction';
 
 // import material-ui modules
 import { MyLocation as MyLocationIcon, Directions as DirectionsIcon } from '@material-ui/icons';
@@ -22,6 +23,7 @@ import Navigation from './Navigation';
 import History from './Navigation/History';
 import Bookmark from './Navigation/Bookmark';
 import RoutePlanner from './Route/RoutePlanner';
+import Authentication from './Authentication';
 
 // import constants
 import * as STYLES from '../../Constants/styles';
@@ -64,6 +66,7 @@ function Home(props) {
             <RoutePlanner {...props} />
             <History {...props} />
             <Bookmark {...props} />
+            <Authentication {...props} />
 
             {/* Gloabl error message snackbar for all components mounted on homeview */}
             {props.errorMessage && (
@@ -105,7 +108,9 @@ const mapStateToProps = (state) => {
         history: state.FirebaseReducer.history,
         user: state.FirebaseReducer.user,
         tripSummaryView: state.NavigationReducer.tripSummaryView,
-        historyView: state.HomeReducer.historyView
+        historyView: state.HomeReducer.historyView,
+        signInView: state.HomeReducer.signInView,
+        signInSuccess: state.FirebaseReducer.signInSuccess,
     };
     return appState;
 };
@@ -151,14 +156,12 @@ const mapDispatchToProps = dispatch => {
             }
             dispatch(setStartLocationSearch('User Location'));
         },
-        
         toggleHistoryView: () => dispatch(toggleHistoryView()),
         deleteHistory: historyId => dispatch(deleteHistory(historyId)),
         toggleBookmark: bookmark => dispatch(toggleBookmark(bookmark)),
         toggleBookmarkView: () => dispatch(toggleBookmarkView()),
         overrideUserLocation: newCoords => dispatch(overrideUserLocation(newCoords)),
         tripSummary: () => dispatch(tripSummary()),
-
         runHistory: dataRow => {
             dispatch(runHistory(
                 {
@@ -169,7 +172,6 @@ const mapDispatchToProps = dispatch => {
                 }));
             dispatch(toggleHistoryView());
         },
-
         runBookmark: dataRow => {
             dispatch(runHistory(
                 {
@@ -179,7 +181,10 @@ const mapDispatchToProps = dispatch => {
                     routeName: dataRow.route_name,
                 }));
             dispatch(toggleBookmarkView());
-        }
+        },
+        signIn: data => dispatch(signIn(data)),
+        signUp: data => dispatch(signUp(data)),
+        toggleSignInView: () => dispatch(toggleSignInView()),
     }
 }
 
