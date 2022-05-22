@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 // import material-ui modules
 import {
     Fab, Paper, Container, GridList, GridListTileBar, GridListTile,
-    Collapse, Typography, IconButton, Grid
+    Collapse, Typography, IconButton, Grid, Toolbar
 } from '@material-ui/core';
 import {
     Stop as StopIcon, ExpandLess as ExpandLessIcon, 
@@ -52,49 +52,49 @@ function Navigation(props) {
                     <div className={classes.collapseContainer}>
                         <Paper className={classes.slidePanel} elevation={5}>
                             <Container>
-                                {showImages === true && (
-                                    <IconButton onClick={() => setShowImages(!showImages)} >
-                                        <ExpandMoreIcon />
-                                    </IconButton>
-                                )}
-                                {showImages === false && (
-                                    <IconButton onClick={() => setShowImages(!showImages)} >
-                                        <ExpandLessIcon />
-                                    </IconButton>
-                                )}
+                                <Toolbar>
+                                    {showImages === true && (
+                                        <IconButton onClick={() => setShowImages(!showImages)} >
+                                            <ExpandMoreIcon />
+                                        </IconButton>
+                                    )}
+                                    {showImages === false && (
+                                        <IconButton onClick={() => setShowImages(!showImages)} >
+                                            <ExpandLessIcon />
+                                        </IconButton>
+                                    )}
+                                    <Typography className={classes.centeringText} gutterBottom variant="subtitle1">
+                                        Navigating
+                                    </Typography>
+                                </Toolbar>
                                 <Collapse in={showImages}>
-                                    <div >
-                                        <Typography className={classes.centeringText} gutterBottom variant="subtitle1">
-                                            Navigating
-                                        </Typography>
-                                        <Paper className={classes.paddingTypograph} theme="light" elevation={13} >
-                                            <Grid container spacing={1}>
-                                                <Grid item xs={13} sm container>
-                                                    <Grid item xs>
-                                                        <Typography gutterBottom variant="subtitle3">
-                                                            Next ERP zone:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}
-                                                        </Typography>
-                                                    </Grid>
-                                                </Grid>
-                                                <Grid item>
+                                    <Paper className={classes.paddingTypograph} theme="light" elevation={13} >
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={13} sm container>
+                                                <Grid item xs>
                                                     <Typography gutterBottom variant="subtitle3">
-                                                        ERP Charge S$:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ChargeAmount)}</span>)}
+                                                        Next ERP zone:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ZoneID)}</span>)}
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
-                                        </Paper>
-                                        <div className={classes.sliderGridList}>
-                                            <GridList className={classes.gridList} cols={1}>
-                                                {props.cameraMarkers.map((camera) => (
-                                                    <GridListTile key={camera.camera.image}>
-                                                        <img width='100%' src={camera.camera.image} alt='test' />
-                                                        <GridListTileBar
-                                                            title="Nearest Traffic Camera"
-                                                        />
-                                                    </GridListTile>
-                                                ))}
-                                            </GridList>
-                                        </div>
+                                            <Grid item>
+                                                <Typography gutterBottom variant="subtitle3">
+                                                    ERP Charge S$:{(props.erpFiltered && props.erpFiltered.length > 0) && (<span>{(props.erpFiltered[0][0].length > 0) && (props.erpFiltered[0][0][0].ChargeAmount)}</span>)}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+                                    <div className={classes.sliderGridList}>
+                                        <GridList className={classes.gridList} cols={1}>
+                                            {props.cameraMarkers.map((camera) => (
+                                                <GridListTile key={camera.camera.image}>
+                                                    <img width='100%' src={camera.camera.image} alt='test' />
+                                                    <GridListTileBar
+                                                        title="Traffic Camera"
+                                                    />
+                                                </GridListTile>
+                                            ))}
+                                        </GridList>
                                     </div>
                                 </ Collapse>
                             </Container>

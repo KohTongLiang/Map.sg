@@ -27,6 +27,7 @@
     "redux-saga-firebase": "^0.15.0",
     "redux-saga-location": "^1.6.0",
     "saga-geolocation-observer": "^1.1.7",
+    "worker-loader": "^3.0.8",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {

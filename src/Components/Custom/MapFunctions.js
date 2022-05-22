@@ -40,6 +40,7 @@ function MapFunctions(props) {
     const [pinnedCameraMarkers, setPinnedCameraMarkers] = useState([]);
     const [userMarker, setUserMarker] = useState(null);
     var marker = new mapboxgl.Marker();
+    const altitude = 30;
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
     // Call get images and get ERP data when component first mount
@@ -75,14 +76,19 @@ function MapFunctions(props) {
             if (userMarker !== null) {
                 userMarker.remove();
             }
+            const camera = map.getFreeCameraOptions();
 
-            // detect if user out of route
+            // detect if navigation mode
             if (props.onRoute) {
                 const routeOnMap = turf.lineString(props.navigationRoute[0].data.routes[0].geometry.coordinates);
                 const userLocation = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
                 const distance = turf.nearestPointOnLine(routeOnMap, userLocation, { units: 'metres' });
+                camera.position = mapboxgl.MercatorCoordinate.fromLngLat(userLocation.geometry.coordinates, altitude);
+                camera.lookAtPoint({lng: distance.geometry.coordinates[0], lat: distance.geometry.coordinates[1]});
+                map.setFreeCameraOptions(camera);
+                
+                // if user is 100m off the plotted route, do a reroute
                 if (distance.properties.dist > 100) {
-                    // if user is 100m off the plotted route, do a reroute
                     const endLocation = props.endLocation;
                     props.cancelRoute();
                     props.processStartLocation(props.userLocation);
@@ -167,6 +173,11 @@ function MapFunctions(props) {
                 center: [props.startLocation[0].lng, props.startLocation[0].lat]
             });
 
+            map.dragPan.disable();
+            map.dragRotate.disable();
+            map.touchZoomRotate.disableRotation();
+            map.scrollZoom.disable();
+
             // setting up path
             var steps = 1;
             props.navigationRoute[0].data.routes[0].legs[0].steps.forEach(instruction => {
@@ -188,6 +199,7 @@ function MapFunctions(props) {
             // display step by step instruction
             // plotting route on the map
             var coordinates = props.navigationRoute[0].data.routes[0].geometry;
+
             map.addSource('LineString', {
                 'type': 'geojson',
                 'data': coordinates
@@ -205,6 +217,15 @@ function MapFunctions(props) {
                     'line-width': 5
                 }
             });
+
+            // orientate camera
+            const camera = map.getFreeCameraOptions();
+            const routeOnMap = turf.lineString(props.navigationRoute[0].data.routes[0].geometry.coordinates);
+            const userLocation = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
+            const distance = turf.nearestPointOnLine(routeOnMap, userLocation, { units: 'metres' });
+            camera.position = mapboxgl.MercatorCoordinate.fromLngLat(userLocation.geometry.coordinates, altitude);
+            camera.lookAtPoint({lng: distance.geometry.coordinates[0], lat: distance.geometry.coordinates[1]});
+            map.setFreeCameraOptions(camera);
 
             // Detect if there is any traffic cameras on the way
             let cameraArr = [];
@@ -294,6 +315,10 @@ function MapFunctions(props) {
                 map.removeLayer('LineString');
                 map.removeSource('LineString');
                 clearMap();
+                map.dragPan.enable();
+                map.dragRotate.enable();
+                map.touchZoomRotate.enable();
+                map.scrollZoom.enable();
             }
         }
     }, [props.navigationRoute]);

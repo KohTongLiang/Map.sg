@@ -32,8 +32,9 @@ const useStyles = makeStyles((theme) => (STYLES.style));
 * Routeplanner component handles view pertaining to planning of route. User searches start and endlocation through different options and click
 * plan route to finalize and have the mapbox API generate the route.
 *
-* @author Delon
+* @author Koh Tong Liang
 * @version 2
+* @updated 20/05/2022
 * @since 31/10/2020
 * */
 function RoutePlanner(props) {
