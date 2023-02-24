@@ -173,10 +173,10 @@ function MapFunctions(props) {
                 center: [props.startLocation[0].lng, props.startLocation[0].lat]
             });
 
-            map.dragPan.disable();
-            map.dragRotate.disable();
-            map.touchZoomRotate.disableRotation();
-            map.scrollZoom.disable();
+            // map.dragPan.disable();
+            // map.dragRotate.disable();
+            // map.touchZoomRotate.disableRotation();
+            // map.scrollZoom.disable();
 
             // setting up path
             var steps = 1;
@@ -219,13 +219,13 @@ function MapFunctions(props) {
             });
 
             // orientate camera
-            const camera = map.getFreeCameraOptions();
-            const routeOnMap = turf.lineString(props.navigationRoute[0].data.routes[0].geometry.coordinates);
-            const userLocation = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
-            const distance = turf.nearestPointOnLine(routeOnMap, userLocation, { units: 'metres' });
-            camera.position = mapboxgl.MercatorCoordinate.fromLngLat(userLocation.geometry.coordinates, altitude);
-            camera.lookAtPoint({lng: distance.geometry.coordinates[0], lat: distance.geometry.coordinates[1]});
-            map.setFreeCameraOptions(camera);
+            // const camera = map.getFreeCameraOptions();
+            // const routeOnMap = turf.lineString(props.navigationRoute[0].data.routes[0].geometry.coordinates);
+            // const userLocation = turf.point([props.userLocation[0].lng, props.userLocation[0].lat]);
+            // const distance = turf.nearestPointOnLine(routeOnMap, userLocation, { units: 'metres' });
+            // camera.position = mapboxgl.MercatorCoordinate.fromLngLat(userLocation.geometry.coordinates, altitude);
+            // camera.lookAtPoint({lng: distance.geometry.coordinates[0], lat: distance.geometry.coordinates[1]});
+            // map.setFreeCameraOptions(camera);
 
             // Detect if there is any traffic cameras on the way
             let cameraArr = [];
@@ -315,10 +315,10 @@ function MapFunctions(props) {
                 map.removeLayer('LineString');
                 map.removeSource('LineString');
                 clearMap();
-                map.dragPan.enable();
-                map.dragRotate.enable();
-                map.touchZoomRotate.enable();
-                map.scrollZoom.enable();
+                // map.dragPan.enable();
+                // map.dragRotate.enable();
+                // map.touchZoomRotate.enable();
+                // map.scrollZoom.enable();
             }
         }
     }, [props.navigationRoute]);

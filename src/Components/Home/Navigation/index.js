@@ -7,7 +7,7 @@ import {
     Collapse, Typography, IconButton, Grid, Toolbar
 } from '@material-ui/core';
 import {
-    Stop as StopIcon, ExpandLess as ExpandLessIcon, 
+    Stop as StopIcon, ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,7 +36,7 @@ function Navigation(props) {
     return (
         <div className={classes.root}>
             {/* Show step by step instruction given by Mapbox API if any */}
-            {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
+            {/* {(props.routeInstruction && props.routeInstruction !== [] && props.routeInstruction.length > 0) && (
                 <Paper className={classes.turnInstruction} elevation={5}>
                     <Container>
                         <Typography variant="body1" className={classes.instr}>
@@ -44,7 +44,7 @@ function Navigation(props) {
                         </Typography>
                     </Container>
                 </Paper>
-            )}
+            )} */}
 
             {/* Show Traffic images if any */}
             {props.onRoute && (
@@ -67,7 +67,7 @@ function Navigation(props) {
                                         Navigating
                                     </Typography>
                                 </Toolbar>
-                                <Collapse in={showImages}>
+                                <Collapse in={showImages} >
                                     <Paper className={classes.paddingTypograph} theme="light" elevation={13} >
                                         <Grid container spacing={1}>
                                             <Grid item xs={13} sm container>
@@ -84,10 +84,10 @@ function Navigation(props) {
                                             </Grid>
                                         </Grid>
                                     </Paper>
-                                    <div className={classes.sliderGridList}>
+                                    <div className={classes.sliderGridList} >
                                         <GridList className={classes.gridList} cols={1}>
                                             {props.cameraMarkers.map((camera) => (
-                                                <GridListTile key={camera.camera.image}>
+                                                <GridListTile key={camera.camera.image} >
                                                     <img width='100%' src={camera.camera.image} alt='test' />
                                                     <GridListTileBar
                                                         title="Traffic Camera"

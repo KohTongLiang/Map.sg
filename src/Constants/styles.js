@@ -33,6 +33,12 @@ export const style = {
         width: '80%',
         position: 'fixed',
         bottom: '5%',
+        '@media (min-width: 768px)': {
+            width: "50vw"
+        },
+        '@media (min-width: 1200px)': {
+            width: "25vw"
+        }
     },
     collapseContainer: {
         display: 'flex',
