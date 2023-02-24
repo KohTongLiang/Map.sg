@@ -1,6 +1,14 @@
-# The Driving Auxiliary
+# Map.sg
 
-Previously known as Map.sg
+## Description
+
+Directions with step-by-step instruction web application with live traffic images (in Singapore). View history and bookmark frequent routes to start your journey immediately.
+
+## Hosted app
+
+Application is hosted on: https://cz2006-4bb77.web.app/
+
+## How to run locally
 
 After pulling into your workspace, run npm install to install the node-modules. Please ensure node.js is installed in your system.
 
